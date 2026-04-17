@@ -1,74 +1,391 @@
- <script>
-  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+import { useEffect, useMemo, useState } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input";
 
-  function renderJobs() {
-    let list = document.getElementById("jobList");
-    let search = document.getElementById("searchInput")?.value.toLowerCase() || "";
-    list.innerHTML = "";
+const STATUSES = ["Applied", "Interview", "Hired", "Rejected"]; const JOB_TYPES = ["Full-time", "Part-time", "Temp", "Contract", "Ride-along", "Interview only"]; const REMINDER_FILTERS = ["All", "Due now", "Upcoming", "Overdue"]; const STORAGE_KEY = "shiftstack_jobs";
 
-    jobs.forEach((job, index) => {
-      if (
-        !job.name.toLowerCase().includes(search) &&
-        !job.status.toLowerCase().includes(search)
-      ) {
-        return;
-      }
+const statusColors = { Applied: "bg-blue-100 text-blue-700", Interview: "bg-yellow-100 text-yellow-700", Hired: "bg-green-100 text-green-700", Rejected: "bg-red-100 text-red-700", };
 
-      let li = document.createElement("li");
+export default function ShiftStack() { const [streak, setStreak] = useState(0); const [dailyGoals, setDailyGoals] = useState({ apply: 3, follow: 2 }); const [todayCount, setTodayCount] = useState({ apply: 0, follow: 0 }); const [lastActiveDate, setLastActiveDate] = useState(new Date().toDateString());
 
-      let span = document.createElement("span");
-      span.innerHTML = `${job.name} | <strong class="${job.status}">${job.status}</strong> | ${job.date}`;
-      span.onclick = () => changeStatus(index);
+const incrementStreak = () => { checkNewDay(); setStreak(prev => prev + 1); };
 
-      let editBtn = document.createElement("button");
-      editBtn.textContent = "✏️";
-      editBtn.onclick = () => editJob(index);
+const checkNewDay = () => { const today = new Date().toDateString(); if (today !== lastActiveDate) { setTodayCount({ apply: 0, follow: 0 }); setLastActiveDate(today); setStreak(0); // reset streak if day missed } };
 
-      let deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "❌";
-      deleteBtn.onclick = () => deleteJob(index);
+const incrementDaily = (type) => { checkNewDay(); setTodayCount(prev => ({ ...prev, [type]: (prev[type] || 0) + 1, })); }; const togglePriority = (id) => { setJobs(jobs.map(job => job.id === id ? { ...job, priority: !job.priority } : job)); };
 
-      li.appendChild(span);
-      li.appendChild(editBtn);
-      li.appendChild(deleteBtn);
-      list.appendChild(li);
-    });
+const quickUpdate = (id, type) => { setJobs(jobs.map(job => { if (job.id !== id) return job;
+
+if (type === "called") {
+    incrementDaily("follow");
+    return { ...job, status: "Interview" };
   }
 
-  function addJob() {
-    let input = document.getElementById("jobInput");
-
-    if (input.value.trim() === "") return;
-
-    let job = {
-      name: input.value.trim(),
-      status: "Applied",
-      date: new Date().toLocaleDateString()
-    };
-
-    jobs.push(job);
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-
-    input.value = "";
-    renderJobs();
+  if (type === "followed") {
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 3);
+    incrementDaily("follow");
+    return { ...job, followUpDate: nextDate.toISOString().split("T")[0] };
   }
 
-  function editJob(index) {
-    let newName = prompt("Edit job name:", jobs[index].name);
-    if (!newName || !newName.trim()) return;
-
-    jobs[index].name = newName.trim();
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-    renderJobs();
+  if (type === "interviewed") {
+    incrementDaily("follow");
+    return { ...job, status: "Interview" };
   }
 
-  function deleteJob(index) {
-    jobs.splice(index, 1);
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-    renderJobs();
+  return job;
+}));
+
+incrementStreak();
+
+}; }
+
+if (type === "followed") {
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 3);
+    return { ...job, followUpDate: nextDate.toISOString().split("T")[0] };
   }
 
-  function changeStatus(index) {
-    let order = ["Applied", "Interview", "Hired", "Rejected"];
-    let current = jobs[index].status;
-    let next = order[(order.indexOf(current) +
+  if (type === "interviewed") {
+    return { ...job, status: "Interview" };
+  }
+
+  return job;
+}));
+
+}; const [activeTab, setActiveTab] = useState("Jobs"); const [sortBy, setSortBy] = useState("Newest"); const [showPriorityFirst, setShowPriorityFirst] = useState(true); const [jobs, setJobs] = useState([]); const [company, setCompany] = useState(""); const [status, setStatus] = useState("Applied"); const [dateApplied, setDateApplied] = useState(""); const [notes, setNotes] = useState(""); const [editingId, setEditingId] = useState(null); const [filter, setFilter] = useState("All"); const [payRate, setPayRate] = useState(""); const [jobType, setJobType] = useState("Full-time"); const [followUpDate, setFollowUpDate] = useState(""); const [search, setSearch] = useState(""); const [reminderFilter, setReminderFilter] = useState("All"); const [hoursPerWeek, setHoursPerWeek] = useState("");
+
+useEffect(() => { try { const saved = localStorage.getItem(STORAGE_KEY); if (saved) setJobs(JSON.parse(saved)); } catch (error) { console.error("Failed to load jobs", error); } }, []);
+
+useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs)); } catch (error) { console.error("Failed to save jobs", error); } }, [jobs]);
+
+const resetForm = () => { setCompany(""); setStatus("Applied"); setDateApplied(""); setNotes(""); setPayRate(""); setJobType("Full-time"); setFollowUpDate(""); setHoursPerWeek(""); setEditingId(null); };
+
+const addJob = () => { if (!company.trim()) return;
+
+const payload = {
+  company: company.trim(),
+  status,
+  dateApplied,
+  notes: notes.trim(),
+  payRate,
+  jobType,
+  followUpDate,
+  hoursPerWeek,
+};
+
+if (editingId) {
+  setJobs(jobs.map((job) => (job.id === editingId ? { ...job, ...payload } : job)));
+  resetForm();
+  return;
+}
+
+setJobs([{ id: crypto.randomUUID(), ...payload }, ...jobs]);
+resetForm();
+
+};
+
+const startEdit = (job) => { setEditingId(job.id); setCompany(job.company); setStatus(job.status); setDateApplied(job.dateApplied || ""); setNotes(job.notes || ""); setPayRate(job.payRate || ""); setJobType(job.jobType || "Full-time"); setFollowUpDate(job.followUpDate || ""); setHoursPerWeek(job.hoursPerWeek || ""); window.scrollTo({ top: 0, behavior: "smooth" }); };
+
+const deleteJob = (id) => { setJobs(jobs.filter((job) => job.id !== id)); if (editingId === id) resetForm(); };
+
+const daysSince = (date) => { if (!date) return null; const applied = new Date(date); const today = new Date(); applied.setHours(0, 0, 0, 0); today.setHours(0, 0, 0, 0); return Math.floor((today - applied) / (1000 * 60 * 60 * 24)); };
+
+const filteredJobs = useMemo(() => { let result = jobs;
+
+if (filter !== "All") {
+  result = result.filter((job) => job.status === filter);
+}
+
+if (search.trim()) {
+  const query = search.toLowerCase().trim();
+  result = result.filter(
+    (job) =>
+      job.company.toLowerCase().includes(query) ||
+      (job.notes || "").toLowerCase().includes(query) ||
+      (job.jobType || "").toLowerCase().includes(query)
+  );
+}
+
+return result;
+
+}, [jobs, filter, search]);
+
+const stats = useMemo(() => { return { total: jobs.length, applied: jobs.filter((job) => job.status === "Applied").length, interview: jobs.filter((job) => job.status === "Interview").length, hired: jobs.filter((job) => job.status === "Hired").length, rejected: jobs.filter((job) => job.status === "Rejected").length, }; }, [jobs]);
+
+const followUps = useMemo(() => { const today = new Date(); return jobs .filter((job) => job.followUpDate) .map((job) => ({ ...job, diff: Math.floor((new Date(job.followUpDate) - today) / (1000 * 60 * 60 * 24)), })) .sort((a, b) => a.diff - b.diff); }, [jobs]);
+
+const sortedJobs = useMemo(() => { let list = [...filteredJobs];
+
+if (showPriorityFirst) {
+  list.sort((a, b) => (b.priority === true) - (a.priority === true));
+}
+
+if (sortBy === "Newest") {
+  list.sort((a, b) => new Date(b.dateApplied || 0) - new Date(a.dateApplied || 0));
+}
+
+if (sortBy === "Pay") {
+  list.sort((a, b) => (b.payRate || 0) - (a.payRate || 0));
+}
+
+if (sortBy === "Follow-up") {
+  list.sort((a, b) => new Date(a.followUpDate || 9999999999999) - new Date(b.followUpDate || 9999999999999));
+}
+
+return list;
+
+}, [filteredJobs, sortBy, showPriorityFirst]);
+
+const moneyStats = useMemo(() => { const tracked = jobs.filter(j => j.payRate && j.hoursPerWeek);
+
+const estimatedWeekly = tracked.reduce((sum, j) => {
+  return sum + (Number(j.payRate) * Number(j.hoursPerWeek));
+}, 0);
+
+return {
+  trackedPayJobs: tracked.length,
+  estimatedWeekly
+};
+
+}, [jobs]);
+
+return ( <div className="p-4 max-w-3xl mx-auto grid gap-4"> <div className="flex flex-col items-center gap-2"> <div className="text-sm text-gray-500">🔥 Action Streak: {streak}</div> <Card> <CardContent className="p-3 grid gap-2"> <div className="text-sm font-medium">Daily Progress</div> <div className="text-xs text-gray-500">Apply: {todayCount.apply}/{dailyGoals.apply} • Follow: {todayCount.follow}/{dailyGoals.follow}</div> <div className="w-full bg-gray-200 rounded h-2 overflow-hidden"> <div className="h-2 bg-green-500" style={{ width: ${Math.min(100, ((todayCount.apply + todayCount.follow) / (dailyGoals.apply + dailyGoals.follow)) * 100)}% }} /> </div> </CardContent> </Card> <div className="flex gap-2 justify-center"> {["Jobs","Follow-ups","Money"].map(tab => ( <Button key={tab} variant={activeTab === tab ? "default" : "outline"} onClick={() => setActiveTab(tab)} > {tab} </Button> ))} </div>
+
+{activeTab === "Jobs" && (
+    <>
+      <div>
+        <h1 className="text-2xl font-bold">ShiftStack</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Track applications, interviews, follow-ups, and pay without losing the plot.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <Card><CardContent className="p-3"><div className="text-xs text-gray-500">Total</div><div className="text-2xl font-bold">{stats.total}</div></CardContent></Card>
+        <Card><CardContent className="p-3"><div className="text-xs text-gray-500">Applied</div><div className="text-2xl font-bold">{stats.applied}</div></CardContent></Card>
+        <Card><CardContent className="p-3"><div className="text-xs text-gray-500">Interview</div><div className="text-2xl font-bold">{stats.interview}</div></CardContent></Card>
+        <Card><CardContent className="p-3"><div className="text-xs text-gray-500">Hired</div><div className="text-2xl font-bold">{stats.hired}</div></CardContent></Card>
+        <Card><CardContent className="p-3"><div className="text-xs text-gray-500">Rejected</div><div className="text-2xl font-bold">{stats.rejected}</div></CardContent></Card>
+      </div>
+
+      {<Card>
+        <CardContent className="p-4 grid gap-3">
+          <Input
+            placeholder="Company name"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <select
+              className="border rounded-xl px-3 py-2 bg-white"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              {STATUSES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+
+            <Input
+              type="date"
+              value={dateApplied}
+              onChange={(e) => setDateApplied(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Input
+              type="number"
+              inputMode="decimal"
+              placeholder="Pay rate ($/hr)"
+              value={payRate}
+              onChange={(e) => setPayRate(e.target.value)}
+            />
+            <Input
+              type="number"
+              inputMode="decimal"
+              placeholder="Hours per week"
+              value={hoursPerWeek}
+              onChange={(e) => setHoursPerWeek(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <select
+              className="border rounded-xl px-3 py-2 bg-white"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            >
+              {JOB_TYPES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+
+            <Input
+              type="date"
+              value={followUpDate}
+              onChange={(e) => setFollowUpDate(e.target.value)}
+            />
+          </div>
+
+          <textarea
+            className="border rounded-xl px-3 py-2 min-h-24"
+            placeholder="Notes, contact name, shift details, follow-up info..."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={addJob}>{editingId ? "Save changes" : "Add job"}</Button>
+            {editingId ? (
+              <Button variant="outline" onClick={resetForm}>Cancel edit</Button>
+            ) : null}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4 grid gap-3">
+          <Input
+            placeholder="Search companies, job type, or notes"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div className="flex flex-wrap gap-2">
+            {["All", ...STATUSES].map((item) => (
+              <Button
+                key={item}
+                variant={filter === item ? "default" : "outline"}
+                onClick={() => setFilter(item)}
+              >
+                {item}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4 flex flex-wrap gap-2">
+          {["Newest","Pay","Follow-up"].map(option => (
+            <Button
+              key={option}
+              variant={sortBy === option ? "default" : "outline"}
+              onClick={() => setSortBy(option)}
+            >
+              Sort: {option}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-3">
+        {sortedJobs.length === 0 ? (
+          <Card>
+            <CardContent className="p-4 text-sm text-gray-500">
+              {filter === "All"
+                ? "No jobs added yet. Start with one application so your life has at least one organized corner."
+                : `No ${filter.toLowerCase()} jobs right now. That can be good or terrible depending on the filter.`}
+            </CardContent>
+          </Card>
+        ) : (
+          sortedJobs.map((job) => (
+            <Card key={job.id}>
+              <CardContent className="p-4 grid gap-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="grid gap-1">
+                    <div className="font-semibold text-lg">{job.company}</div>
+                    <div className={`text-xs px-2 py-1 rounded w-fit ${statusColors[job.status]}`}>
+                      {job.status}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {job.dateApplied ? `Applied ${job.dateApplied}` : "No apply date"}
+                      {job.dateApplied ? ` • ${daysSince(job.dateApplied)} days ago` : ""}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {job.jobType || "Full-time"}
+                      {job.payRate ? ` • $${job.payRate}/hr` : ""}
+                      {job.hoursPerWeek ? ` • ${job.hoursPerWeek} hrs/wk` : ""}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {job.followUpDate ? `Follow up ${job.followUpDate}` : "No follow-up set"}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Button size="sm" variant="outline" onClick={() => quickUpdate(job.id, "called")}>Called</Button>
+                    <Button size="sm" variant="outline" onClick={() => quickUpdate(job.id, "followed")}>Followed</Button>
+                    <Button size="sm" variant="outline" onClick={() => quickUpdate(job.id, "interviewed")}>Interview</Button>
+                    <Button
+                      variant={job.priority ? "default" : "outline"}
+                      onClick={() => togglePriority(job.id)}
+                    >
+                      ⭐
+                    </Button>
+                    <Button variant="outline" onClick={() => startEdit(job)}>
+                      Edit
+                    </Button>
+                    <Button variant="outline" onClick={() => deleteJob(job.id)}>
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+
+                {job.notes ? (
+                  <div className="text-sm text-gray-700 whitespace-pre-wrap">{job.notes}</div>
+                ) : null}
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>}
+    </>
+  )}
+
+  {activeTab === "Follow-ups" && (
+    <Card>
+      <CardContent className="p-4 grid gap-3">
+        <div className="font-semibold text-lg">Follow-ups</div>
+        {followUps.length === 0 ? (
+          <div className="text-sm text-gray-500">No follow-ups scheduled.</div>
+        ) : (
+          followUps.map((job) => (
+            <div key={job.id} className="border rounded-xl p-3">
+              <div className="font-medium">{job.company}</div>
+              <div className="text-sm text-gray-500">
+                {job.diff < 0
+                  ? `${Math.abs(job.diff)} days overdue`
+                  : job.diff === 0
+                  ? "Due now"
+                  : `${job.diff} days away`}
+              </div>
+            </div>
+          ))
+        )}
+      </CardContent>
+    </Card>
+  )}
+
+  {activeTab === "Money" && (
+    <div className="grid gap-3">
+      <Card>
+        <CardContent className="p-4">
+          <div className="text-sm text-gray-500">Tracked pay jobs</div>
+          <div className="text-2xl font-bold">{moneyStats.trackedPayJobs}</div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <div className="text-sm text-gray-500">Estimated weekly pay</div>
+          <div className="text-2xl font-bold">${moneyStats.estimatedWeekly.toFixed(0)}</div>
+        </CardContent>
+      </Card>
+    </div>
+  )}
+</div>
+
+);
