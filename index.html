@@ -95,17 +95,23 @@ function renderJobs() {
       div.className = "job";
 
       div.innerHTML = `
-        <strong>${job.name}</strong><br>
+        
+      
+        div.innerHTML = `
+  <strong>${job.name}</strong><br>
 
-        Status:
-        <select onchange="updateStatus(${index}, this.value)">
-          <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-          <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-          <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-        </select><br>
+  Status:
+  <select onchange="updateStatus(${index}, this.value)">
+    <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+    <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+    <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+  </select><br>
 
-        Applied: ${job.date}<br>
-        ${job.followUp ? "Follow up: " + job.followUp : ""}
+  Applied: ${job.date}<br>
+  ${job.followUp ? "Follow up: " + job.followUp : ""}
+
+  <button onclick="deleteJob(${index})">Delete</button>
+`;
       `;
 
       list.appendChild(div);
