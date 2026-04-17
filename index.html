@@ -53,69 +53,76 @@
   <div id="jobList"></div>
 
   <script>
-    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
-    function saveJobs() {
-      localStorage.setItem("jobs", JSON.stringify(jobs));
-    }
+  function saveJobs() {
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+  }
 
-    function addJob() {
-      const input = document.getElementById("jobInput");
-      const statusInput = document.getElementById("statusInput");
-      const followUpInput = document.getElementById("followUpInput");
+  function addJob() {
+    const input = document.getElementById("jobInput");
+    const statusInput = document.getElementById("statusInput");
+    const followUpInput = document.getElementById("followUpInput");
 
-      if (!input.value.trim()) return;
+    if (!input.value.trim()) return;
 
-      jobs.unshift({
-        name: input.value.trim(),
-        status: statusInput.value,
-        date: new Date().toLocaleDateString(),
-        followUp: followUpInput.value || ""
-      });
+    jobs.unshift({
+      name: input.value.trim(),
+      status: statusInput.value,
+      date: new Date().toLocaleDateString(),
+      followUp: followUpInput.value || ""
+    });
 
-      input.value = "";
-      followUpInput.value = "";
-      statusInput.value = "Applied";
+    input.value = "";
+    statusInput.value = "Applied";
+    followUpInput.value = "";
 
-      saveJobs();
-      renderJobs();
-    }
-
-    function renderJobs() {
-      const list = document.getElementById("jobList");
-      const search = document.getElementById("searchInput").value.toLowerCase();
-
-      list.innerHTML = "";
-
-      jobs
-        .filter(job => job.name.toLowerCase().includes(search))
-        .forEach(job => {
-          const div = document.createElement("div");
-          div.className = "job";
-
-          div.innerHTML = `
-  <strong>${job.name}</strong><br>
-
-  Status:
-  <select onchange="updateStatus(${index}, this.value)">
-    <option ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-    <option ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-    <option ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-  </select><br>
-
-  Applied: ${job.date}<br>
-  ${job.followUp ? "Follow up: " + job.followUp : ""}
-`;
-          `;
-
-          list.appendChild(div);
-        });
-    }
-
-    document.getElementById("searchInput").addEventListener("input", renderJobs);
-
+    saveJobs();
     renderJobs();
-  </script>
+  }
 
+  
+function renderJobs() {
+  const list = document.getElementById("jobList");
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
+  list.innerHTML = "";
+
+  jobs
+    .filter(job => job.name.toLowerCase().includes(search))
+    .forEach((job, index) => {
+      const div = document.createElement("div");
+      div.className = "job";
+
+      div.innerHTML = `
+        <strong>${job.name}</strong><br>
+
+        Status:
+        <select onchange="updateStatus(${index}, this.value)">
+          <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+          <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+          <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+        </select><br>
+
+        Applied: ${job.date}<br>
+        ${job.followUp ? "Follow up: " + job.followUp : ""}
+      `;
+
+      list.appendChild(div);
+    });
+}
+      
+
+  function updateStatus(index, newStatus) {
+    jobs[index].status = newStatus;
+    saveJobs();
+    renderJobs();
+  }
+
+  document.getElementById("searchInput").addEventListener("input", renderJobs);
+
+  renderJobs();
+  </script>
+    
 </body>
 </html>
