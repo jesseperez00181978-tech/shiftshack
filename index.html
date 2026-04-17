@@ -1,1 +1,74 @@
-<input id="searchInput" placeholder="Search jobs" oninput="renderJobs()">         
+ <script>
+  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+  function renderJobs() {
+    let list = document.getElementById("jobList");
+    let search = document.getElementById("searchInput")?.value.toLowerCase() || "";
+    list.innerHTML = "";
+
+    jobs.forEach((job, index) => {
+      if (
+        !job.name.toLowerCase().includes(search) &&
+        !job.status.toLowerCase().includes(search)
+      ) {
+        return;
+      }
+
+      let li = document.createElement("li");
+
+      let span = document.createElement("span");
+      span.innerHTML = `${job.name} | <strong class="${job.status}">${job.status}</strong> | ${job.date}`;
+      span.onclick = () => changeStatus(index);
+
+      let editBtn = document.createElement("button");
+      editBtn.textContent = "✏️";
+      editBtn.onclick = () => editJob(index);
+
+      let deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "❌";
+      deleteBtn.onclick = () => deleteJob(index);
+
+      li.appendChild(span);
+      li.appendChild(editBtn);
+      li.appendChild(deleteBtn);
+      list.appendChild(li);
+    });
+  }
+
+  function addJob() {
+    let input = document.getElementById("jobInput");
+
+    if (input.value.trim() === "") return;
+
+    let job = {
+      name: input.value.trim(),
+      status: "Applied",
+      date: new Date().toLocaleDateString()
+    };
+
+    jobs.push(job);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+
+    input.value = "";
+    renderJobs();
+  }
+
+  function editJob(index) {
+    let newName = prompt("Edit job name:", jobs[index].name);
+    if (!newName || !newName.trim()) return;
+
+    jobs[index].name = newName.trim();
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    renderJobs();
+  }
+
+  function deleteJob(index) {
+    jobs.splice(index, 1);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    renderJobs();
+  }
+
+  function changeStatus(index) {
+    let order = ["Applied", "Interview", "Hired", "Rejected"];
+    let current = jobs[index].status;
+    let next = order[(order.indexOf(current) +
