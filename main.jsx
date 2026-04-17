@@ -1,6 +1,8 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { useState, useEffect } from "react";
 
-export default function App() {
+function App() {
   const [jobs, setJobs] = useState([]);
   const [company, setCompany] = useState("");
 
@@ -14,8 +16,8 @@ export default function App() {
   }, [jobs]);
 
   const addJob = () => {
-    if (!company) return;
-    setJobs([{ id: Date.now(), company }, ...jobs]);
+    if (!company.trim()) return;
+    setJobs([{ id: Date.now(), company: company.trim() }, ...jobs]);
     setCompany("");
   };
 
@@ -39,3 +41,5 @@ export default function App() {
     </div>
   );
 }
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
