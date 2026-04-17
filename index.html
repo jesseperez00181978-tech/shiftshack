@@ -1,6 +1,2 @@
-jobs.unshift({
-  name: input.value.trim(),
-  status: statusInput.value,
-  date: new Date().toLocaleDateString(),
-  followUp: document.getElementById("followUpInput").value || ""
-});
+<div>${job.date}</div>
+<div>${job.followUp ? "Follow up: " + job.followUp : ""}</div>
