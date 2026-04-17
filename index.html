@@ -7,7 +7,8 @@
 
     jobs.forEach((job, index) => {
       let li = document.createElement("li");
-      li.textContent = job;
+
+      li.textContent = `${job.name} | ${job.status} | ${job.date}`;
 
       let btn = document.createElement("button");
       btn.textContent = "❌";
@@ -23,7 +24,13 @@
 
     if (input.value.trim() === "") return;
 
-    jobs.push(input.value);
+    let job = {
+      name: input.value,
+      status: "Applied",
+      date: new Date().toLocaleDateString()
+    };
+
+    jobs.push(job);
     localStorage.setItem("jobs", JSON.stringify(jobs));
 
     input.value = "";
