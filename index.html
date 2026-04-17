@@ -102,7 +102,7 @@
         const searchValue = document.getElementById("searchInput").value.toLowerCase();
 
 jobs.forEach((job, index) => {
-  if (!job.company.toLowerCase().includes(searchValue)) return;
+  if (!job.name.toLowerCase().includes(searchValue)) return;
           const div = document.createElement("div");
           div.className = "job";
 
