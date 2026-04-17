@@ -113,13 +113,8 @@ jobs.forEach((job, index) => {
   onchange="updateStatus(${index}, this.value)" 
   style="color:${getStatusColor(job.status)}"
 >
-       function getStatusColor(status) {
-  if (status === "Applied") return "gray";
-  if (status === "Interview") return "blue";
-  if (status === "Offer") return "green";
-  if (status === "Rejected") return "darkred";
-  return "black";
-}       <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+    
+     <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
               <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
               <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
             </select><br>
