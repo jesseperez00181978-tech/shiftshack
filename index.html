@@ -4,7 +4,28 @@
   <title>ShiftStack</title>
 </head>
 <body>
-  <h1>ShiftStack is LIVE 💪</h1>
-  <p>Your job tracker is coming to life.</p>
+
+  <h1>ShiftStack 💼</h1>
+
+  <input id="jobInput" placeholder="Enter job name">
+  <button onclick="addJob()">Add Job</button>
+
+  <ul id="jobList"></ul>
+
+  <script>
+    function addJob() {
+      let input = document.getElementById("jobInput");
+      let list = document.getElementById("jobList");
+
+      if (input.value.trim() === "") return;
+
+      let li = document.createElement("li");
+      li.textContent = input.value;
+
+      list.appendChild(li);
+      input.value = "";
+    }
+  </script>
+
 </body>
 </html>
