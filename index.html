@@ -94,10 +94,18 @@
           div.className = "job";
 
           div.innerHTML = `
-            <strong>${job.name}</strong><br>
-            Status: ${job.status}<br>
-            Applied: ${job.date}<br>
-            ${job.followUp ? "Follow up: " + job.followUp : ""}
+  <strong>${job.name}</strong><br>
+
+  Status:
+  <select onchange="updateStatus(${index}, this.value)">
+    <option ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+    <option ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+    <option ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+  </select><br>
+
+  Applied: ${job.date}<br>
+  ${job.followUp ? "Follow up: " + job.followUp : ""}
+`;
           `;
 
           list.appendChild(div);
