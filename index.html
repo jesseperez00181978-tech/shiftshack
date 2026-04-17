@@ -127,9 +127,13 @@
     }
 
     function deleteJob(index) {
-      jobs.splice(index, 1);
-      saveJobs();
-      renderJobs();
+  const confirmed = window.confirm("Are you sure you want to delete this job?");
+  if (!confirmed) return;
+
+  jobs.splice(index, 1);
+  saveJobs();
+  renderJobs();
+    }
     }
 
     document.getElementById("searchInput").addEventListener("input", renderJobs);
