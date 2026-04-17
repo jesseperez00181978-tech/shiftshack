@@ -8,12 +8,17 @@
     jobs.forEach((job, index) => {
       let li = document.createElement("li");
 
-      li.textContent = `${job.name} | ${job.status} | ${job.date}`;
+      let span = document.createElement("span");
+      span.textContent = `${job.name} | ${job.status} | ${job.date}`;
+
+      // tap to change status
+      span.onclick = () => changeStatus(index);
 
       let btn = document.createElement("button");
       btn.textContent = "❌";
       btn.onclick = () => deleteJob(index);
 
+      li.appendChild(span);
       li.appendChild(btn);
       list.appendChild(li);
     });
@@ -39,6 +44,17 @@
 
   function deleteJob(index) {
     jobs.splice(index, 1);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    renderJobs();
+  }
+
+  function changeStatus(index) {
+    let order = ["Applied", "Interview", "Hired", "Rejected"];
+
+    let current = jobs[index].status;
+    let next = order[(order.indexOf(current) + 1) % order.length];
+
+    jobs[index].status = next;
     localStorage.setItem("jobs", JSON.stringify(jobs));
     renderJobs();
   }
