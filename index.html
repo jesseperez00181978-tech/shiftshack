@@ -1,63 +1,37 @@
-<script>
-  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-  function renderJobs() {
-    let list = document.getElementById("jobList");
-    list.innerHTML = "";
-
-    jobs.forEach((job, index) => {
-      let li = document.createElement("li");
-
-      let span = document.createElement("span");
-      span.textContent = `${job.name} | ${job.status} | ${job.date}`;
-
-      // tap to change status
-      span.onclick = () => changeStatus(index);
-
-      let btn = document.createElement("button");
-      btn.textContent = "❌";
-      btn.onclick = () => deleteJob(index);
-
-      li.appendChild(span);
-      li.appendChild(btn);
-      list.appendChild(li);
-    });
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
   }
 
-  function addJob() {
-    let input = document.getElementById("jobInput");
-
-    if (input.value.trim() === "") return;
-
-    let job = {
-      name: input.value,
-      status: "Applied",
-      date: new Date().toLocaleDateString()
-    };
-
-    jobs.push(job);
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-
-    input.value = "";
-    renderJobs();
+  h1 {
+    text-align: center;
   }
 
-  function deleteJob(index) {
-    jobs.splice(index, 1);
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-    renderJobs();
+  input, button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
   }
 
-  function changeStatus(index) {
-    let order = ["Applied", "Interview", "Hired", "Rejected"];
-
-    let current = jobs[index].status;
-    let next = order[(order.indexOf(current) + 1) % order.length];
-
-    jobs[index].status = next;
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-    renderJobs();
+  ul {
+    list-style: none;
+    padding: 0;
   }
 
-  renderJobs();
-</script>
+  li {
+    background: white;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .Applied { color: blue; }
+  .Interview { color: orange; }
+  .Hired { color: green; }
+  .Rejected { color: red; }
+</style>
