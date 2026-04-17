@@ -1,31 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>ShiftStack</title>
-</head>
-<body>
+<script>
+  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
-  <h1>ShiftStack 💼</h1>
+  function renderJobs() {
+    let list = document.getElementById("jobList");
+    list.innerHTML = "";
 
-  <input id="jobInput" placeholder="Enter job name">
-  <button onclick="addJob()">Add Job</button>
-
-  <ul id="jobList"></ul>
-
-  <script>
-    function addJob() {
-      let input = document.getElementById("jobInput");
-      let list = document.getElementById("jobList");
-
-      if (input.value.trim() === "") return;
-
+    jobs.forEach((job, index) => {
       let li = document.createElement("li");
-      li.textContent = input.value;
+      li.textContent = job;
 
+      let btn = document.createElement("button");
+      btn.textContent = "❌";
+      btn.onclick = () => deleteJob(index);
+
+      li.appendChild(btn);
       list.appendChild(li);
-      input.value = "";
-    }
-  </script>
+    });
+  }
 
-</body>
-</html>
+  function addJob() {
+    let input = document.getElementById("jobInput");
+
+    if (input.value.trim() === "") return;
+
+    jobs.push(input.value);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+
+    input.value = "";
+    renderJobs();
+  }
+
+  function deleteJob(index) {
+    jobs.splice(index, 1);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    renderJobs();
+  }
+
+  renderJobs();
+</script>
