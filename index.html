@@ -112,7 +112,15 @@
               <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
             </select><br>
             Applied: ${job.date}<br>
-            ${job.followUp ? "Follow up: " + job.followUp + "<br>" : ""}
+            ${job.followUp ? 
+  (() => {
+    const today = new Date().toISOString().split("T")[0];
+    const isOverdue = job.followUp < today;
+    return `<span style="color:${isOverdue ? 'red' : 'black'}">
+      Follow up: ${job.followUp} ${isOverdue ? '(Overdue)' : ''}
+    </span>`;
+  })()
+: ""}
             <button onclick="deleteJob(${index})">Delete</button>
           `;
 
