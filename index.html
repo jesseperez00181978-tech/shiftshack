@@ -1,187 +1,150 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>ShiftStack</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f5f5f5;
-      margin: 0;
-    }
+import { useEffect, useState } from "react";
+import "./App.css";
 
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+function App() {
+  const [jobs, setJobs] = useState(() => {
+    const savedJobs = localStorage.getItem("jobs");
+    return savedJobs ? JSON.parse(savedJobs) : [];
+  });
 
-    #stats {
-      margin-bottom: 15px;
-      font-weight: bold;
-      text-align: center;
-    }
+  const [jobInput, setJobInput] = useState("");
+  const [statusInput, setStatusInput] = useState("Applied");
+  const [followUpInput, setFollowUpInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
+  useEffect(() => {
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+  }, [jobs]);
 
-    .job {
-      background: white;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 8px;
-    }
+  function addJob() {
+    if (!jobInput.trim()) return;
 
-    .job select {
-      width: auto;
-      display: inline-block;
-      margin-left: 6px;
-    }
+    const newJob = {
+      name: jobInput.trim(),
+      status: statusInput,
+      date: new Date().toLocaleDateString(),
+      followUp: followUpInput || "",
+    };
 
-    .job button {
-      width: auto;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-  <h1>ShiftStack 💼</h1>
+    setJobs([newJob, ...jobs]);
+    setJobInput("");
+    setStatusInput("Applied");
+    setFollowUpInput("");
+  }
 
-  <div id="stats"></div>
+  function updateStatus(index, newStatus) {
+    const updatedJobs = [...jobs];
+    updatedJobs[index].status = newStatus;
+    setJobs(updatedJobs);
+  }
 
-  <input id="jobInput" placeholder="Company name">
+  function deleteJob(index) {
+    const confirmed = window.confirm("Are you sure you want to delete this job?");
+    if (!confirmed) return;
 
-  <select id="statusInput">
-    <option>Applied</option>
-    <option>Interview</option>
-    <option>Offer</option>
-    <option>Rejected</option>
-  </select>
+    const updatedJobs = jobs.filter((_, i) => i !== index);
+    setJobs(updatedJobs);
+  }
 
-  <label for="followUpInput">Follow-up date</label>
-  <input id="followUpInput" type="date" style="background:white;">
+  function getStatusColor(status) {
+    if (status === "Applied") return "gray";
+    if (status === "Interview") return "blue";
+    if (status === "Offer") return "green";
+    if (status === "Rejected") return "darkred";
+    return "black";
+  }
 
-  <input id="searchInput" placeholder="Search jobs">
+  const total = jobs.length;
+  const interviews = jobs.filter((job) => job.status === "Interview").length;
+  const offers = jobs.filter((job) => job.status === "Offer").length;
 
-  <button onclick="addJob()">Add Job</button>
+  const filteredJobs = jobs.filter((job) =>
+    job.name.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
-  <div id="jobList"></div>
+  const today = new Date().toISOString().split("T")[0];
 
-  <script>
-    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+  return (
+    <div className="app">
+      <h1>ShiftStack 💼</h1>
 
-    function saveJobs() {
-      localStorage.setItem("jobs", JSON.stringify(jobs));
-    }
+      <div id="stats">
+        Total: {total} | Interviews: {interviews} | Offers: {offers}
+      </div>
 
-    function updateStats() {
-      const total = jobs.length;
-      const interviews = jobs.filter(job => job.status === "Interview").length;
-      const offers = jobs.filter(job => job.status === "Offer").length;
+      <input
+        value={jobInput}
+        onChange={(e) => setJobInput(e.target.value)}
+        placeholder="Company name"
+      />
 
-      document.getElementById("stats").innerText =
-        `Total: ${total} | Interviews: ${interviews} | Offers: ${offers}`;
-    }
+      <select
+        value={statusInput}
+        onChange={(e) => setStatusInput(e.target.value)}
+      >
+        <option>Applied</option>
+        <option>Interview</option>
+        <option>Offer</option>
+        <option>Rejected</option>
+      </select>
 
-    function getStatusColor(status) {
-      if (status === "Applied") return "gray";
-      if (status === "Interview") return "blue";
-      if (status === "Offer") return "green";
-      if (status === "Rejected") return "darkred";
-      return "black";
-    }
+      <label htmlFor="followUpInput">Follow-up date</label>
+      <input
+        id="followUpInput"
+        type="date"
+        value={followUpInput}
+        onChange={(e) => setFollowUpInput(e.target.value)}
+      />
 
-    function addJob() {
-      const input = document.getElementById("jobInput");
-      const statusInput = document.getElementById("statusInput");
-      const followUpInput = document.getElementById("followUpInput");
+      <input
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Search jobs"
+      />
 
-      if (!input.value.trim()) return;
+      <button onClick={addJob}>Add Job</button>
 
-      jobs.unshift({
-        name: input.value.trim(),
-        status: statusInput.value,
-        date: new Date().toLocaleDateString(),
-        followUp: followUpInput.value || ""
-      });
+      <div id="jobList">
+        {filteredJobs.map((job, index) => {
+          const isOverdue = job.followUp && job.followUp < today;
 
-      input.value = "";
-      statusInput.value = "Applied";
-      followUpInput.value = "";
+          return (
+            <div className="job" key={index}>
+              <strong>{job.name}</strong>
+              <br />
 
-      saveJobs();
-      updateStats();
-      renderJobs();
-    }
+              <span>Status: </span>
+              <select
+                value={job.status}
+                onChange={(e) => updateStatus(index, e.target.value)}
+                style={{ color: getStatusColor(job.status), width: "auto" }}
+              >
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <br />
 
-    function renderJobs() {
-      const list = document.getElementById("jobList");
-      const searchValue = document.getElementById("searchInput").value.toLowerCase();
+              <span>Applied: {job.date}</span>
+              <br />
 
-      list.innerHTML = "";
+              {job.followUp && (
+                <>
+                  <span style={{ color: isOverdue ? "red" : "black" }}>
+                    Follow up: {job.followUp} {isOverdue ? "(Overdue)" : ""}
+                  </span>
+                  <br />
+                </>
+              )}
 
-      jobs.forEach((job, index) => {
-        if (!job.name.toLowerCase().includes(searchValue)) return;
+              <button onClick={() => deleteJob(index)}>Delete</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
-        const div = document.createElement("div");
-        div.className = "job";
-
-        const today = new Date().toISOString().split("T")[0];
-        const isOverdue = job.followUp && job.followUp < today;
-
-        div.innerHTML = `
-          <strong>${job.name}</strong><br>
-          Status:
-          <select 
-            onchange="updateStatus(${index}, this.value)" 
-            style="color:${getStatusColor(job.status)}"
-          >
-            <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-            <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-            <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-            <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-          </select><br>
-          Applied: ${job.date}<br>
-          ${
-            job.followUp
-              ? `<span style="color:${isOverdue ? 'red' : 'black'}">
-                  Follow up: ${job.followUp} ${isOverdue ? '(Overdue)' : ''}
-                </span><br>`
-              : ""
-          }
-          <button onclick="deleteJob(${index})">Delete</button>
-        `;
-
-        list.appendChild(div);
-      });
-    }
-
-    function updateStatus(index, newStatus) {
-      jobs[index].status = newStatus;
-      saveJobs();
-      updateStats();
-      renderJobs();
-    }
-
-    function deleteJob(index) {
-      const confirmed = window.confirm("Are you sure you want to delete this job?");
-      if (!confirmed) return;
-
-      jobs.splice(index, 1);
-      saveJobs();
-      updateStats();
-      renderJobs();
-    }
-
-    document.getElementById("searchInput").addEventListener("input", renderJobs);
-
-    updateStats();
-    renderJobs();
-  </script>
-</body>
-</html>
+export default App;
