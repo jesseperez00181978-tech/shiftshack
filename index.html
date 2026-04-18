@@ -4,6 +4,20 @@
   <title>ShiftStack</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    .container {
+  max-width: 500px;
+  margin: auto;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -43,18 +57,30 @@
   <input type="file" onchange="importJobs(event)">
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
 
-  <input id="jobInput" placeholder="Company name">
+  
+    <option>Applied</option>
+    <option>Interview</option>
+    <option>Offer</option>
+    <option>Rejected</option>
+  </select>
+<div class="section">
+  <label>Follow-up date</label>
+  <input id="followUpInput" type="date">
+</div>
 
+<div class="section">
+  <input id="jobInput" placeholder="Company name">
+</div>
+  
+
+<div class="section">
   <select id="statusInput">
     <option>Applied</option>
     <option>Interview</option>
     <option>Offer</option>
     <option>Rejected</option>
   </select>
-
-  <label>Follow-up date</label>
-  <input id="followUpInput" type="date">
-
+</div>
   <input id="searchInput" placeholder="Search jobs">
 
   <select id="filterStatus">
