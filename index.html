@@ -92,7 +92,17 @@ function renderJobs() {
 
   list.innerHTML="";
 
-jobs.sort((a, b) => new Date(b.date) - new Date(a.date));
+jobs.sort((a, b) => {
+  const today = new Date().toISOString().split("T")[0];
+
+  const aOverdue = a.followUp && a.followUp < today;
+  const bOverdue = b.followUp && b.followUp < today;
+
+  if (aOverdue && !bOverdue) return -1;
+  if (!aOverdue && bOverdue) return 1;
+
+  return new Date(b.date) - new Date(a.date);
+});
 
 const statsDiv = document.getElementById("stats");
 const total = jobs.length;
