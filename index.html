@@ -14,7 +14,7 @@
     h1 {
       text-align: center;
     }
-
+<button onclick="exportJobs()">Export Jobs</button>
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -22,7 +22,7 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-
+<input type="file" onchange="importJobs(event)">
     .job {
       background: white;
       padding: 12px;
@@ -224,6 +224,24 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
     renderJobs();
+    function importJobs(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      jobs = JSON.parse(e.target.result);
+      saveJobs();
+      renderJobs();
+    } catch {
+      alert("Invalid file");
+    }
+  };
+
+  reader.readAsText(file);
+    }
   </script>
 </body>
 </html>
