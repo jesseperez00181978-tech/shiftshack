@@ -101,6 +101,10 @@ jobs.sort((a, b) => {
   if (aOverdue && !bOverdue) return -1;
   if (!aOverdue && bOverdue) return 1;
 
+  // rejected last
+  if (a.status === "Rejected" && b.status !== "Rejected") return 1;
+  if (a.status !== "Rejected" && b.status === "Rejected") return -1;
+
   return new Date(b.date) - new Date(a.date);
 });
 
