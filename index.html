@@ -206,13 +206,13 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
           }
 
           if (job.status === "Applied") {
-            div.style.borderLeft = "6px solid gold";
-          } else if (job.status === "Interview") {
-            div.style.borderLeft = "6px solid blue";
-          } else if (job.status === "Rejected") {
-            div.style.borderLeft = "6px solid red";
-          } else if (job.status === "Offer") {
-            div.style.borderLeft = "6px solid green";
+  div.style.borderLeft = "6px solid blue";
+} else if (job.status === "Interview") {
+  div.style.borderLeft = "6px solid orange";
+} else if (job.status === "Offer") {
+  div.style.borderLeft = "6px solid green";
+} else if (job.status === "Rejected") {
+  div.style.borderLeft = "6px solid red";
           }
 
           div.innerHTML = `
