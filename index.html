@@ -41,12 +41,17 @@
 <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
 <input id="jobInput" placeholder="Company name">
 
-<select id="statusInput">
-  <option>Applied</option>
-  <option>Interview</option>
-  <option>Offer</option>
-  <option>Rejected</option>
+<input id="searchInput" placeholder="Search jobs">
+
+<select id="filterStatus">
+  <option value="All">All Statuses</option>
+  <option value="Applied">Applied</option>
+  <option value="Interview">Interview</option>
+  <option value="Offer">Offer</option>
+  <option value="Rejected">Rejected</option>
 </select>
+
+<button onclick="addJob()">Add Job</button>
 
 <label>Follow-up date</label>
 <input id="followUpInput" type="date">
@@ -89,7 +94,7 @@ function addJob() {
 function renderJobs() {
   const list = document.getElementById("jobList");
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
-
+const filterStatus = document.getElementById("filterStatus").value;
   list.innerHTML="";
 
 jobs.sort((a, b) => {
@@ -115,9 +120,16 @@ const rejected = jobs.filter(j => j.status === "Rejected").length;
 
 statsDiv.innerHTML = `
   Total: ${total} | Interviews: ${interviews} | Rejected: ${rejected}
-`;
-  jobs.forEach((job, index) => {
-    if (!job.name.toLowerCase().includes(search)) return;
+`; jobs
+  .filter(job => {
+    const matchesSearch = job.name.toLowerCase().includes(search);
+    const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+    return matchesSearch && matchesStatus;
+  })
+  .forEach((job, index) => {
+  
+  
+    
 
 const today = new Date().toISOString().split("T")[0];
     
