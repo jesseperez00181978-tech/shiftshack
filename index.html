@@ -70,8 +70,11 @@
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
 
-    function addJob() {
-      const input = document.getElementById("jobInput");
+    function addJob() {const followUpInput = document.getElementById("followUpInput");
+     const today = new Date();
+const followUpDate = new Date(today);
+followUpDate.setDate(today.getDate() + 3);
+const formattedFollowUp = followUpDate.toISOString().split("T")[0]; const input = document.getElementById("jobInput");
       const statusInput = document.getElementById("statusInput");
       const followUpInput = document.getElementById("followUpInput");
 
