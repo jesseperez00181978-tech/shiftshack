@@ -218,13 +218,17 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
           div.innerHTML = `
             <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
-            <div>Status:</div>
-            <select onchange="updateStatus(${index}, this.value)">
-              <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-              <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-              <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-              <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-            </select>
+          
+  <div>Status:</div>
+<select onchange="updateStatus(${index}, this.value)">
+ <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+<option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+<option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+<option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option> 
+</select>
+
+            
+            
 
             <div>Applied: ${job.date}</div>
 
@@ -257,7 +261,23 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
       saveJobs();
       renderJobs();
     }
+function updateName(index, newName) {
+  jobs[index].name = newName;
+  saveJobs();
+  renderJobs();
+}
 
+function updateStatus(index, value) {
+  jobs[index].status = value;
+  saveJobs();
+  renderJobs();
+}
+
+function updateFollowUp(index, value) {
+  jobs[index].followUp = value;
+  saveJobs();
+  renderJobs();
+}
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
       jobs.splice(index, 1);
