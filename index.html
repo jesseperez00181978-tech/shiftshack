@@ -90,7 +90,13 @@
       saveJobs();
       renderJobs();
     }
-
+function getStatusColor(status) {
+  if (status === "Applied") return "gray";
+  if (status === "Interview") return "blue";
+  if (status === "Offer") return "green";
+  if (status === "Rejected") return "darkred";
+  return "black";
+}
     function renderJobs() {
       const list = document.getElementById("jobList");
       const search = document.getElementById("searchInput").value.toLowerCase();
@@ -109,7 +115,8 @@ jobs.forEach((job, index) => {
           div.innerHTML = `
             <strong>${job.name}</strong><br>
             Status:
-            <select 
+            
+<select 
   onchange="updateStatus(${index}, this.value)" 
   style="color:${getStatusColor(job.status)}"
 >
