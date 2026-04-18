@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ShiftStack</title>
+  <title>ShiftStack</title><div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -77,7 +77,14 @@ followUpDate.setDate(today.getDate() + 3);
 const formattedFollowUp = followUpDate.toISOString().split("T")[0]; const input = document.getElementById("jobInput");
       const statusInput = document.getElementById("statusInput");
       const followUpInput = document.getElementById("followUpInput");
+function updateStats() {
+  const total = jobs.length;
+  const interviews = jobs.filter(j => j.status === "Interview").length;
+  const offers = jobs.filter(j => j.status === "Offer").length;
 
+  document.getElementById("stats").innerText =
+    `Total: ${total} | Interviews: ${interviews} | Offers: ${offers}`;
+}
       if (!input.value.trim()) return;
 
       jobs.unshift({
@@ -162,7 +169,7 @@ jobs.forEach((job, index) => {
     
 
     document.getElementById("searchInput").addEventListener("input", renderJobs);
-
+updateStats();
     renderJobs();
   </script>
 </body>
