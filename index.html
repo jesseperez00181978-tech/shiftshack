@@ -105,17 +105,16 @@ statsDiv.innerHTML = `
   jobs.forEach((job, index) => {
     if (!job.name.toLowerCase().includes(search)) return;
 
-    const today = new Date().toISOString().split("T")[0];
+const today = new Date().toISOString().split("T")[0];
+    
     const isOverdue = job.followUp && job.followUp < today;
-
+const isToday = job.followUp === today;
     const div = document.createElement("div");
     div.className = "job";
-if (job.status === "Applied") {
-  div.style.borderLeft = "6px solid gold";
-} else if (job.status === "Interview") {
-  div.style.borderLeft = "6px solid blue";
-} else if (job.status === "Rejected") {
-  div.style.borderLeft = "6px solid red";
+if (isOverdue) {
+  div.style.backgroundColor = "#ffe6e6";
+} else if (isToday) {
+  div.style.backgroundColor = "#fff4e6";
 }
 if (job.status === "Applied") {
   div.style.borderLeft = "6px solid gold";
