@@ -209,10 +209,13 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
           div.className = "job";
 
           if (isOverdue) {
-            div.style.backgroundColor = "#ffe6e6";
-          } else if (isToday) {
-            div.style.backgroundColor = "#fff4e6";
+  div.style.backgroundColor = "#ffdddd";
+  div.style.borderLeft = "6px solid red";
+} else if (isToday) {
+  div.style.backgroundColor = "#fff3cd";
+  div.style.borderLeft = "6px solid orange";
           }
+          
 
           if (job.status === "Applied") {
   div.style.borderLeft = "6px solid blue";
