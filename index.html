@@ -90,9 +90,11 @@ function renderJobs() {
   const list = document.getElementById("jobList");
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
 
-  list.innerHTML = "";
-const statsDiv = document.getElementById("stats");
+  list.innerHTML"";
 
+jobs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+const statsDiv = document.getElementById("stats");
 const total = jobs.length;
 const interviews = jobs.filter(j => j.status === "Interview").length;
 const rejected = jobs.filter(j => j.status === "Rejected").length;
