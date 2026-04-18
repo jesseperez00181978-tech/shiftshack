@@ -270,7 +270,11 @@ if (job.status === "Offer") {
       saveJobs();
       renderJobs();
     }
-
+function updateNotes(index, value) {
+  jobs[index].notes = value;
+  saveJobs();
+  renderJobs();
+}
     function updateFollowUp(index, newDate) {
       jobs[index].followUp = newDate;
       saveJobs();
