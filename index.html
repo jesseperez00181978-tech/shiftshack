@@ -139,20 +139,24 @@ if (job.status === "Applied") {
 }
 
     div.innerHTML = `
-      <input value="${job.name}" onchange="updateName(${index}, this.value)" /><br>
-      Status:
-      <select onchange="updateStatus(${index}, this.value)">
-        <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-        <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-        <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-        <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-      </select><br>
-      Applied: ${job.date}<br>
-      ${job.followUp ? `<span style="color:${isOverdue ? 'red' : 'black'}">
-        Follow up: ${job.followUp} ${isOverdue ? '(Overdue)' : ''}
-      </span><br>` : ""}
-      <button onclick="deleteJob(${index})">Delete</button>
-    `;
+<input value="${job.name}" onchange="updateName(${index}, this.value)" /><br>
+
+Status:
+<select onchange="updateStatus(${index}, this.value)">
+  <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+  <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+  <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+  <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+</select><br>
+
+Applied: ${job.date}<br>
+
+<label>Follow up:</label><br>
+<input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)" /><br>
+${isOverdue ? '<span style="color:red">(Overdue)</span><br>' : isToday ? '<span style="color:orange">(Today)</span><br>' : ""}
+<button onclick="deleteJob(${index})">Delete</button>
+`;
+    
 
     list.appendChild(div);
   });
