@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ShiftStack</title>
-  <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
+  <title>ShiftStack</title><div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -78,13 +77,6 @@ followUpDate.setDate(today.getDate() + 3);
 const formattedFollowUp = followUpDate.toISOString().split("T")[0]; const input = document.getElementById("jobInput");
       const statusInput = document.getElementById("statusInput");
       const followUpInput = document.getElementById("followUpInput");
-
-      jobs.unshift({
-        name: input.value.trim(),
-        status: statusInput.value,
-        date: new Date().toLocaleDateString(),
-        followUp: followUpInput.value || ""
-      });
 function updateStats() {
   const total = jobs.length;
   const interviews = jobs.filter(j => j.status === "Interview").length;
@@ -93,6 +85,15 @@ function updateStats() {
   document.getElementById("stats").innerText =
     `Total: ${total} | Interviews: ${interviews} | Offers: ${offers}`;
 }
+      if (!input.value.trim()) return;
+
+      jobs.unshift({
+        name: input.value.trim(),
+        status: statusInput.value,
+        date: new Date().toLocaleDateString(),
+        followUp: followUpInput.value || ""
+      });
+
       input.value = "";
       statusInput.value = "Applied";
       followUpInput.value = "";
@@ -149,15 +150,7 @@ jobs.forEach((job, index) => {
 
           list.appendChild(div);
         });
-    }function updateStats() {
-  const total = jobs.length;
-  const interviews = jobs.filter(j => j.status === "Interview").length;
-  const offers = jobs.filter(j => j.status === "Offer").length;
-
-  document.getElementById("stats").innerText =
-    `Total: ${total} | Interviews: ${interviews} | Offers: ${offers}`;
-    }}
-function updateStats() {
+    }
 
     function updateStatus(index, newStatus) {
       jobs[index].status = newStatus;
@@ -176,9 +169,8 @@ function updateStats() {
     
 
     document.getElementById("searchInput").addEventListener("input", renderJobs);
-
-    renderJobs();function renderJobs() {
-  updateStats();
+updateStats();
+    renderJobs();
   </script>
 </body>
 </html>
