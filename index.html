@@ -91,7 +91,15 @@ function renderJobs() {
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
 
   list.innerHTML = "";
+const statsDiv = document.getElementById("stats");
 
+const total = jobs.length;
+const interviews = jobs.filter(j => j.status === "Interview").length;
+const rejected = jobs.filter(j => j.status === "Rejected").length;
+
+statsDiv.innerHTML = `
+  Total: ${total} | Interviews: ${interviews} | Rejected: ${rejected}
+`;
   jobs.forEach((job, index) => {
     if (!job.name.toLowerCase().includes(search)) return;
 
