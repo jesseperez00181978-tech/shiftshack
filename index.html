@@ -126,7 +126,7 @@ if (job.status === "Applied") {
 }
 
     div.innerHTML = `
-      <strong>${job.name}</strong><br>
+      <input value="${job.name}" onchange="updateName(${index}, this.value)" /><br>
       Status:
       <select onchange="updateStatus(${index}, this.value)">
         <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
@@ -149,8 +149,12 @@ function updateStatus(index, value) {
   jobs[index].status = value;
   saveJobs();
   renderJobs();
-}
-
+} 
+function updateName(index, newName) {
+  jobs[index].name = newName;
+  saveJobs();
+  renderJobs();
+  }
 function deleteJob(index) {
   if (!confirm("Delete this job?")) return;
   jobs.splice(index, 1);
