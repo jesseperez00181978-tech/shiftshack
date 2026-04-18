@@ -281,29 +281,14 @@ function updateNotes(index, value) {
       renderJobs();
     }
 
-}
+
     function updateName(index, newName) {
   jobs[index].name = newName;
   saveJobs();
   renderJobs();
 }
 
-function updateStatus(index, value) {
-  jobs[index].status = value;
-  saveJobs();
-  renderJobs();
-}
 
-function updateFollowUp(index, value) {
-  jobs[index].followUp = value;
-  saveJobs();
-  renderJobs();
-}
-function updateNotes(index, value) {
-  jobs[index].notes = value;
-  saveJobs();
-  renderJobs();
-}    
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
       jobs.splice(index, 1);
