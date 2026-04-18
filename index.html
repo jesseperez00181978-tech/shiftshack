@@ -28,6 +28,23 @@ label {
     h1 {
       text-align: center;
     }
+.job button {
+  width: auto;
+  margin-top: 10px;
+}
+
+
+.import-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  background: #ddd;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 
     input, select, button {
       width: 100%;
@@ -54,7 +71,8 @@ label {
 
   <h1>ShiftStack 💼</h1>
 <button onclick="exportJobs()">Export Jobs</button>
-  <input type="file" onchange="importJobs(event)">
+  <label for="importFile" class="import-btn">Import Jobs</label>
+<input type="file" id="importFile" onchange="importJobs(event)" hidden>
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
 
   
