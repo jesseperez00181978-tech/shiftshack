@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>ShiftStack</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -20,6 +20,7 @@
       padding: 10px;
       margin: 8px 0;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     .job {
@@ -37,177 +38,178 @@
 </head>
 <body>
 
-<h1>ShiftStack 💼</h1>
+  <h1>ShiftStack 💼</h1>
 
-<div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
+  <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
 
-<input id="jobInput" placeholder="Company name">
+  <input id="jobInput" placeholder="Company name">
 
-<select id="statusInput">
-  <option>Applied</option>
-  <option>Interview</option>
-  <option>Offer</option>
-  <option>Rejected</option>
-</select>
+  <select id="statusInput">
+    <option>Applied</option>
+    <option>Interview</option>
+    <option>Offer</option>
+    <option>Rejected</option>
+  </select>
 
-<label>Follow-up date</label>
-<input id="followUpInput" type="date">
+  <label>Follow-up date</label>
+  <input id="followUpInput" type="date">
 
-<input id="searchInput" placeholder="Search jobs">
+  <input id="searchInput" placeholder="Search jobs">
 
-<select id="filterStatus">
-  <option value="All">All Statuses</option>
-  <option value="Applied">Applied</option>
-  <option value="Interview">Interview</option>
-  <option value="Offer">Offer</option>
-  <option value="Rejected">Rejected</option>
-</select>
+  <select id="filterStatus">
+    <option value="All">All Statuses</option>
+    <option value="Applied">Applied</option>
+    <option value="Interview">Interview</option>
+    <option value="Offer">Offer</option>
+    <option value="Rejected">Rejected</option>
+  </select>
 
-<button onclick="addJob()">Add Job</button>
+  <button onclick="addJob()">Add Job</button>
 
-<div id="jobList"></div>
+  <div id="jobList"></div>
 
+  <script>
+    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
+    function saveJobs() {
+      localStorage.setItem("jobs", JSON.stringify(jobs));
+    }
 
-<input id="searchInput" 
+    function addJob() {
+      const name = document.getElementById("jobInput").value.trim();
+      const status = document.getElementById("statusInput").value;
+      const followUp = document.getElementById("followUpInput").value;
 
+      if (!name) return;
 
+      jobs.unshift({
+        name,
+        status,
+        date: new Date().toLocaleDateString(),
+        followUp
+      });
 
+      document.getElementById("jobInput").value = "";
+      document.getElementById("statusInput").value = "Applied";
+      document.getElementById("followUpInput").value = "";
 
+      saveJobs();
+      renderJobs();
+    }
 
-<script>
-let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    function renderJobs() {
+      const list = document.getElementById("jobList");
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const filterStatus = document.getElementById("filterStatus").value;
 
-function saveJobs() {
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-}
+      list.innerHTML = "";
 
-function addJob() {
-  const name = document.getElementById("jobInput").value.trim();
-  const status = document.getElementById("statusInput").value;
-  const followUp = document.getElementById("followUpInput").value;
+      jobs.sort((a, b) => {
+        const today = new Date().toISOString().split("T")[0];
 
-  if (!name) return;
+        const aOverdue = a.followUp && a.followUp < today;
+        const bOverdue = b.followUp && b.followUp < today;
 
-  jobs.unshift({
-    name,
-    status,
-    date: new Date().toLocaleDateString(),
-    followUp
-  });
+        if (aOverdue && !bOverdue) return -1;
+        if (!aOverdue && bOverdue) return 1;
 
-  document.getElementById("jobInput").value = "";
-  document.getElementById("statusInput").value = "Applied";
-  document.getElementById("followUpInput").value = "";
+        if (a.status === "Rejected" && b.status !== "Rejected") return 1;
+        if (a.status !== "Rejected" && b.status === "Rejected") return -1;
 
-  saveJobs();
-  renderJobs();
-}
+        return new Date(b.date) - new Date(a.date);
+      });
 
-function renderJobs() {
-  const list = document.getElementById("jobList");
-  const search = document.getElementById("searchInput").value.toLowerCase().trim();
-const filterStatus = document.getElementById("filterStatus").value;
-  list.innerHTML="";
+      const statsDiv = document.getElementById("stats");
+      const total = jobs.length;
+      const interviews = jobs.filter(j => j.status === "Interview").length;
+      const rejected = jobs.filter(j => j.status === "Rejected").length;
 
-jobs.sort((a, b) => {
-  const today = new Date().toISOString().split("T")[0];
+      statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Rejected: ${rejected}`;
 
-  const aOverdue = a.followUp && a.followUp < today;
-  const bOverdue = b.followUp && b.followUp < today;
+      jobs
+        .filter(job => {
+          const matchesSearch = job.name.toLowerCase().includes(search);
+          const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+          return matchesSearch && matchesStatus;
+        })
+        .forEach((job, index) => {
+          const today = new Date().toISOString().split("T")[0];
+          const isOverdue = job.followUp && job.followUp < today;
+          const isToday = job.followUp === today;
 
-  if (aOverdue && !bOverdue) return -1;
-  if (!aOverdue && bOverdue) return 1;
+          const div = document.createElement("div");
+          div.className = "job";
 
-  // rejected last
-  if (a.status === "Rejected" && b.status !== "Rejected") return 1;
-  if (a.status !== "Rejected" && b.status === "Rejected") return -1;
+          if (isOverdue) {
+            div.style.backgroundColor = "#ffe6e6";
+          } else if (isToday) {
+            div.style.backgroundColor = "#fff4e6";
+          }
 
-  return new Date(b.date) - new Date(a.date);
-});
+          if (job.status === "Applied") {
+            div.style.borderLeft = "6px solid gold";
+          } else if (job.status === "Interview") {
+            div.style.borderLeft = "6px solid blue";
+          } else if (job.status === "Rejected") {
+            div.style.borderLeft = "6px solid red";
+          } else if (job.status === "Offer") {
+            div.style.borderLeft = "6px solid green";
+          }
 
-const statsDiv = document.getElementById("stats");
-const total = jobs.length;
-const interviews = jobs.filter(j => j.status === "Interview").length;
-const rejected = jobs.filter(j => j.status === "Rejected").length;
+          div.innerHTML = `
+            <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
-statsDiv.innerHTML = `
-  Total: ${total} | Interviews: ${interviews} | Rejected: ${rejected}
-`; jobs
-  .filter(job => {
-    const matchesSearch = job.name.toLowerCase().includes(search);
-    const matchesStatus = filterStatus === "All" || job.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  })
-  .forEach((job, index) => {
-  
-  
-    
+            <div>Status:</div>
+            <select onchange="updateStatus(${index}, this.value)">
+              <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+              <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+              <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+              <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+            </select>
 
-const today = new Date().toISOString().split("T")[0];
-    
-    const isOverdue = job.followUp && job.followUp < today;
-const isToday = job.followUp === today;
-    const div = document.createElement("div");
-    div.className = "job";
-if (isOverdue) {
-  div.style.backgroundColor = "#ffe6e6";
-} else if (isToday) {
-  div.style.backgroundColor = "#fff4e6";
-}
-if (job.status === "Applied") {
-  div.style.borderLeft = "6px solid gold";
-} else if (job.status === "Interview") {
-  div.style.borderLeft = "6px solid blue";
-} else if (job.status === "Rejected") {
-  div.style.borderLeft = "6px solid red";
-}
+            <div>Applied: ${job.date}</div>
 
-    div.innerHTML = `
-<input value="${job.name}" onchange="updateName(${index}, this.value)" /><br>
+            <label>Follow up:</label>
+            <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)" />
 
-Status:
-<select onchange="updateStatus(${index}, this.value)">
-  <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-  <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-  <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-  <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-</select><br>
+            ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
 
-Applied: ${job.date}<br>
+            <button onclick="deleteJob(${index})">Delete</button>
+          `;
 
-<label>Follow up:</label><br>
-<input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)" /><br>
-${isOverdue ? '<span style="color:red">(Overdue)</span><br>' : isToday ? '<span style="color:orange">(Today)</span><br>' : ""}
-<button onclick="deleteJob(${index})">Delete</button>
-`;
-    
+          list.appendChild(div);
+        });
+    }
 
-    list.appendChild(div);
-  });
-}
+    function updateStatus(index, value) {
+      jobs[index].status = value;
+      saveJobs();
+      renderJobs();
+    }
 
-function updateStatus(index, value) {
-  jobs[index].status = value;
-  saveJobs();
-  renderJobs();
-} 
-function updateName(index, newName) {
-  jobs[index].name = newName;
-  saveJobs();
-  renderJobs();
-  }
-function deleteJob(index) {
-  if (!confirm("Delete this job?")) return;
-  jobs.splice(index, 1);
-  saveJobs();
-  renderJobs();
-}
+    function updateName(index, newName) {
+      jobs[index].name = newName;
+      saveJobs();
+      renderJobs();
+    }
 
-document.getElementById("searchInput").addEventListener("input", renderJobs);
+    function updateFollowUp(index, newDate) {
+      jobs[index].followUp = newDate;
+      saveJobs();
+      renderJobs();
+    }
 
-renderJobs();
-</script>
+    function deleteJob(index) {
+      if (!confirm("Delete this job?")) return;
+      jobs.splice(index, 1);
+      saveJobs();
+      renderJobs();
+    }
 
+    document.getElementById("searchInput").addEventListener("input", renderJobs);
+    document.getElementById("filterStatus").addEventListener("change", renderJobs);
+
+    renderJobs();
+  </script>
 </body>
 </html>
