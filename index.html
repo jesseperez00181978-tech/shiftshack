@@ -275,7 +275,12 @@ if (job.status === "Offer") {
       saveJobs();
       renderJobs();
     }
-function updateName(index, newName) {
+function updateNotes(index, value) {
+  jobs[index].notes = value;
+  saveJobs();
+  renderJobs();
+}
+    function updateName(index, newName) {
   jobs[index].name = newName;
   saveJobs();
   renderJobs();
