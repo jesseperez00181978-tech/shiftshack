@@ -38,9 +38,11 @@
 <body>
 
 <h1>ShiftStack 💼</h1>
+
 <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
+
 <input id="jobInput" placeholder="Company name">
-</button>
+
 <select id="statusInput">
   <option>Applied</option>
   <option>Interview</option>
@@ -62,14 +64,16 @@
 </select>
 
 <button onclick="addJob()">Add Job</button>
-<label>Follow-up date</label>
-<input id="followUpInput" type="date">
-
-<input id="searchInput" placeholder="Search jobs">
-
-<button onclick="addJob()">Add Job</button>
 
 <div id="jobList"></div>
+
+
+
+<input id="searchInput" 
+
+
+
+
 
 <script>
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
