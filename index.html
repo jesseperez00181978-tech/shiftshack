@@ -115,6 +115,20 @@
 
         if (a.status === "Rejected" && b.status !== "Rejected") return 1;
         if (a.status !== "Rejected" && b.status === "Rejected") return -1;
+if (a.status === "Rejected" && b.status !== "Rejected") return 1;
+if (a.status !== "Rejected" && b.status === "Rejected") return -1;
+
+const priority = {
+  "Offer": 1,
+  "Interview": 2,
+  "Applied": 3,
+  "Rejected": 4
+};
+
+if (priority[a.status] !== priority[b.status]) {
+  return priority[a.status] - priority[b.status];
+}
+
 
         return new Date(b.date) - new Date(a.date);
       });
