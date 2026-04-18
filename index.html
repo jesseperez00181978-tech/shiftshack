@@ -191,6 +191,15 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
           const matchesStatus = filterStatus === "All" || job.status === filterStatus;
           return matchesSearch && matchesStatus;
         })
+        .sort((a, b) => {
+  const order = {
+    "Offer": 1,
+    "Interview": 2,
+    "Applied": 3,
+    "Rejected": 4
+  };
+  return order[a.status] - order[b.status];
+})
         .forEach((job, index) => {
           const today = new Date().toISOString().split("T")[0];
           const isOverdue = job.followUp && job.followUp < today;
