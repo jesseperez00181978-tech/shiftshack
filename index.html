@@ -106,7 +106,7 @@
           div.innerHTML = `
             <strong>${job.name}</strong><br>
             Status:
-            <select onchange="updateStatus(${index}, this.value)">
+            <select onchange="updateStatus(${index}, this.value)" style="color: ${getStatusColor(job.status)};">
               <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
               <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
               <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
