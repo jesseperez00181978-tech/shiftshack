@@ -223,7 +223,9 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
 } else if (job.status === "Rejected") {
   div.style.borderLeft = "6px solid red";
           }
-
+if (job.status === "Offer") {
+  div.style.boxShadow = "0 0 10px lime";
+}
           div.innerHTML = `
             <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
