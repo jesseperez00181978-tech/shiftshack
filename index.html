@@ -268,7 +268,21 @@ if (job.status === "Offer") {
       saveJobs();
       renderJobs();
     }
+function exportJobs() {
+  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
+  if (!jobs.length) {
+    alert("No jobs to export.");
+    return;
+  }
+
+  const data = JSON.stringify(jobs, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  
+  window.open(url, "_blank");
+}
     function updateName(index, newName) {
       jobs[index].name = newName;
       saveJobs();
