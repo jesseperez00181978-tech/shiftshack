@@ -302,7 +302,7 @@ function exportJobs() {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  alert("Jobs exported successfully");
+}
 
     function updateName(index, newName) {
   jobs[index].name = newName;
@@ -327,7 +327,6 @@ function clearJobs() {
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
     renderJobs();
-  alert("Import triggered");
     function importJobs(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -335,18 +334,17 @@ function clearJobs() {
   const reader = new FileReader();
 
   reader.onload = function(e) {
-  try {
-    jobs = JSON.parse(e.target.result);
-    saveJobs();
-    renderJobs();
-    alert("Jobs imported successfully");
-  } catch (err) {
-    alert("Invalid file");
-  }
-};
+    try {
+      jobs = JSON.parse(e.target.result);
+      saveJobs();
+      renderJobs();
+    } catch {
+      alert("Invalid file");
+    }
+  };
 
   reader.readAsText(file);
     }
   </script>
 </body>
-</html>
+</html> 
