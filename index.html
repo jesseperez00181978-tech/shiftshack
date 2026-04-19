@@ -254,7 +254,7 @@ if (job.status === "Offer") {
             <button onclick="deleteJob(${index})">Delete</button>
           `;
 
-          list.appendChild(div);
+          list.prepend(div);
         });
     }
 
