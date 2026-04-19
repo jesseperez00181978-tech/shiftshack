@@ -120,7 +120,13 @@ label {
     function saveJobs() {
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
+function getTimestamp() {
+  return new Date().toLocaleString();
+}
 
+function addJob() {
+  // your code...
+}
     function addJob() {
       const name = document.getElementById("jobInput").value.trim();
       const status = document.getElementById("statusInput").value;
