@@ -97,7 +97,7 @@ label {
   <label>Follow-up date</label>
   <input id="followUpInput" type="date">
  </div>
-  <input id="searchInput" placeholder="Search jobs">
+  <input id="searchInput" placeholder="Search jobs" oninput="renderJobs()">
 <select id="filterStatus" onchange="renderJobs()">
   
     <option value="All">All Statuses</option>
