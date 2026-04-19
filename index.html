@@ -52,9 +52,12 @@ label {
       margin: 8px 0;
       font-size: 16px;
       box-sizing: border-box;
-    }
-<input type="file" onchange="importJobs(event)">
-    .job {
+    } <button onclick="document.getElementById('importFile').click()">
+  Import Jobs
+</button>
+
+<input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
+{
       background: white;
       padding: 12px;
       margin-top: 12px;
