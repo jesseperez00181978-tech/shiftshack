@@ -303,12 +303,7 @@ function updateNotes(index, value) {
   a.href = url;
   a.download = "shiftstack-jobs.json";
   document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  URL.revokeObjectURL(url);
-    }
-
+  window.location.href = url;
 
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
