@@ -338,6 +338,7 @@ function clearJobs() {
       jobs = JSON.parse(e.target.result);
       saveJobs();
       renderJobs();
+   alert("Jobs imported successfully");
     } catch {
       alert("Invalid file");
     }
