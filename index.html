@@ -286,6 +286,8 @@ function updateNotes(index, value) {
     }
 
 function exportJobs() {
+  alert("Export clicked");
+
   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
   if (!jobs.length) {
