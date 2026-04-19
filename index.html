@@ -327,6 +327,7 @@ function clearJobs() {
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
     renderJobs();
+  alert("Import triggered");
     function importJobs(event) {
   const file = event.target.files[0];
   if (!file) return;
