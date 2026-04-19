@@ -111,7 +111,7 @@ label {
   </select>
 <button onclick="addJob()">Add Job</button>
 <button onclick="clearJobs()">Clear All</button>
-  <p id="lastUpdated" style="font-size: 12px; opacity: 0.6;"></p>
+  
   <div id="jobList"></div>
 
   <script>
@@ -204,32 +204,11 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
   };
   return order[a.status] - order[b.status];
 })
-        let sortedJobs = [...jobs];
-
-const sortBy = document.getElementById("sortBy")?.value || "newest";
-
-if (sortBy === "newest") {
-  sortedJobs.reverse();
-}
-
-let sortedJobs = [...jobs];
-const sortBy = document.getElementById("sortBy")?.value || "newest";
-
-if (sortBy === "follow") {
-  sortedJobs.sort((a, b) => {
-    return new Date(a.followUp || "9999-12-31") - new Date(b.followUp || "9999-12-31");
-  });
-}
-
-if (sortBy === "status") {
-  sortedJobs.sort((a, b) => a.status.localeCompare(b.status));
-}
-
-jobs.forEach((job, index) => {
+        .forEach((job, index) => {
           const today = new Date().toISOString().split("T")[0];
           const isOverdue = job.followUp && job.followUp < today;
           const isToday = job.followUp === today;
-if (sortBy === "follow") {
+
           const div = document.createElement("div");
           div.className = "job";
 
@@ -306,50 +285,26 @@ function updateNotes(index, value) {
       renderJobs();
     }
 
-function exportJobs() {
-  alert("Export clicked");
 
-  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-  if (!jobs.length) {
-    alert("No jobs to export.");
-    return;
-  }
-
-  const data = JSON.stringify(jobs, null, 2);
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "shiftstack-jobs.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+    function updateName(index, newName) {
+  jobs[index].name = newName;
+  saveJobs();
+  renderJobs();
 }
-    function updateLastUpdated() {
-  const el = document.getElementById("lastUpdated");
-  el.textContent = "Last updated: " + new Date().toLocaleString();
-    }
 
 
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
       jobs.splice(index, 1);
       saveJobs();
-      renderJobs(); 
-      
- updateLastUpdated(); 
+      renderJobs();
     }
-      function clearJobs() {
+function clearJobs() {
   if (!confirm("Delete ALL jobs?")) return;
   jobs = [];
   saveJobs();
   renderJobs();
-updateLastUpdated();
-      }
+}
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
@@ -365,7 +320,6 @@ updateLastUpdated();
       jobs = JSON.parse(e.target.result);
       saveJobs();
       renderJobs();
-    updateLastUpdated();
     } catch {
       alert("Invalid file");
     }
