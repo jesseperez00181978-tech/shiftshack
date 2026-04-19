@@ -73,7 +73,9 @@ label {
 <body>
 
   <h1>ShiftStack 💼</h1>
-<button onclick="exportJobs()">EXPORT TEST 123</button>
+function exportJobs() {
+  alert("EXPORT FUNCTION IS RUNNING");
+}
   <label for="importFile" class="import-btn">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)" hidden>
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
