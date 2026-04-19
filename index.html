@@ -124,7 +124,8 @@ label {
       const followUp = document.getElementById("followUpInput").value;
 
       if (!name) return;
-
+document.getElementById("jobInput").value = "";
+document.getElementById("followUpInput").value = "";
       jobs.unshift({
         name,
         status,
