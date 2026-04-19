@@ -285,12 +285,28 @@ function updateNotes(index, value) {
       renderJobs();
     }
 
+function exportJobs() {
+  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
-    function updateName(index, newName) {
-  jobs[index].name = newName;
-  saveJobs();
-  renderJobs();
+  if (!jobs.length) {
+    alert("No jobs to export.");
+    return;
+  }
+
+  const data = JSON.stringify(jobs, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shiftstack-jobs.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+    
 
 
     function deleteJob(index) {
