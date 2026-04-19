@@ -268,7 +268,7 @@ if (job.status === "Offer") {
       saveJobs();
       renderJobs();
     }
-function exportJobs() {
+async function exportJobs() {
   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
   if (!jobs.length) {
@@ -277,12 +277,15 @@ function exportJobs() {
   }
 
   const data = JSON.stringify(jobs, null, 2);
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+
+  try {
+    await navigator.clipboard.writeText(data);
+    alert("Jobs copied to clipboard.");
+  } catch (error) {
+    prompt("Copy your jobs manually:", data);
+  }
 
   
-  window.open(url, "_blank");
-}
     function updateName(index, newName) {
       jobs[index].name = newName;
       saveJobs();
@@ -300,11 +303,7 @@ function updateNotes(index, value) {
     }
 
 
-    function updateName(index, newName) {
-  jobs[index].name = newName;
-  saveJobs();
-  renderJobs();
-}
+    
 
 
     function deleteJob(index) {
