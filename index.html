@@ -111,7 +111,7 @@ label {
   </select>
 <button onclick="addJob()">Add Job</button>
 <button onclick="clearJobs()">Clear All</button>
-  
+  <p id="lastUpdated" style="font-size: 12px; opacity: 0.6;"></p>
   <div id="jobList"></div>
 
   <script>
@@ -308,7 +308,10 @@ function exportJobs() {
 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-    
+    function updateLastUpdated() {
+  const el = document.getElementById("lastUpdated");
+  el.textContent = "Last updated: " + new Date().toLocaleString();
+    }
 
 
     function deleteJob(index) {
