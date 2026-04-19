@@ -318,14 +318,17 @@ function exportJobs() {
       if (!confirm("Delete this job?")) return;
       jobs.splice(index, 1);
       saveJobs();
-      renderJobs();
+      renderJobs(); 
+      
+ updateLastUpdated(); 
     }
-function clearJobs() {
+      function clearJobs() {
   if (!confirm("Delete ALL jobs?")) return;
   jobs = [];
   saveJobs();
   renderJobs();
-}
+updateLastUpdated();
+      }
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
@@ -341,6 +344,7 @@ function clearJobs() {
       jobs = JSON.parse(e.target.result);
       saveJobs();
       renderJobs();
+    updateLastUpdated();
     } catch {
       alert("Invalid file");
     }
