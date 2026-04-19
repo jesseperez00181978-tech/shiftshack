@@ -120,13 +120,7 @@ label {
     function saveJobs() {
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
-function getTimestamp() {
-  return new Date().toLocaleString();
-}
 
-function addJob() {
-  // your code...
-}
     function addJob() {
       const name = document.getElementById("jobInput").value.trim();
       const status = document.getElementById("statusInput").value;
@@ -292,24 +286,12 @@ function updateNotes(index, value) {
     }
 
 
-    function exportJobs() {
-  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    function updateName(index, newName) {
+  jobs[index].name = newName;
+  saveJobs();
+  renderJobs();
+}
 
-  if (!jobs.length) {
-    alert("No jobs to export.");
-    return;
-  }
-
-  const data = JSON.stringify(jobs, null, 2);
-
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "shiftstack-jobs.json";
-  document.body.appendChild(a);
-  window.location.href = url;
 
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
