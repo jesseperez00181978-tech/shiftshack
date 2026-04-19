@@ -111,7 +111,7 @@ label {
   </select>
 <button onclick="addJob()">Add Job</button>
 <button onclick="clearJobs()">Clear All</button>
-  
+  <p id="jobCount" style="font-size:14px;"></p>
   <div id="jobList"></div>
 
   <script>
@@ -181,7 +181,8 @@ if (priority[a.status] !== priority[b.status]) {
 
         return new Date(b.date) - new Date(a.date);
       });
-
+const countEl = document.getElementById("jobCount");
+if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
       const statsDiv = document.getElementById("stats");
       const total = jobs.length;
       const interviews = jobs.filter(j => j.status === "Interview").length;
