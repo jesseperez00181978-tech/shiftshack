@@ -206,11 +206,14 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
 })
         let sortedJobs = [...jobs];
 
-const sortBy = document.getElementById("sortBy").value;
+const sortBy = document.getElementById("sortBy")?.value || "newest";
 
 if (sortBy === "newest") {
   sortedJobs.reverse();
 }
+
+let sortedJobs = [...jobs];
+const sortBy = document.getElementById("sortBy")?.value || "newest";
 
 if (sortBy === "follow") {
   sortedJobs.sort((a, b) => {
@@ -222,7 +225,7 @@ if (sortBy === "status") {
   sortedJobs.sort((a, b) => a.status.localeCompare(b.status));
 }
 
-sortedJobs.forEach((job, index) => {
+jobs.forEach((job, index) => {
           const today = new Date().toISOString().split("T")[0];
           const isOverdue = job.followUp && job.followUp < today;
           const isToday = job.followUp === today;
