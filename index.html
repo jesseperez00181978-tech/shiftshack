@@ -98,8 +98,8 @@ label {
   <input id="followUpInput" type="date">
  </div>
   <input id="searchInput" placeholder="Search jobs">
-
-  <select id="filterStatus">
+<select id="filterStatus" onchange="renderJobs()">
+  
     <option value="All">All Statuses</option>
     <option value="Applied">Applied</option>
     <option value="Interview">Interview</option>
