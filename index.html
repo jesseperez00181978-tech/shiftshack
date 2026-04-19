@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+in<!DOCTYPE html>
 <html>
 <head>
   <title>ShiftStack</title>
@@ -284,7 +284,22 @@ function updateNotes(index, value) {
       saveJobs();
       renderJobs();
     }
+function exportJobs() {
+  const dataStr = JSON.stringify(jobs, null, 2);
 
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shiftstack_jobs.json";
+
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
     function updateName(index, newName) {
   jobs[index].name = newName;
