@@ -123,7 +123,7 @@ label {
       const status = document.getElementById("statusInput").value;
       const followUp = document.getElementById("followUpInput").value;
 
-      if (!name) return;
+      if (!name){return;}
 document.getElementById("jobInput").value = "";
 document.getElementById("followUpInput").value = "";
       jobs.unshift({
@@ -135,8 +135,9 @@ document.getElementById("followUpInput").value = "";
 });
 
       document.getElementById("jobInput").value = "";
-      document.getElementById("statusInput").value = "Applied";
       document.getElementById("followUpInput").value = "";
+      document.getElementById("statusInput").value = "Applied";
+      
 
       saveJobs();
       renderJobs();
