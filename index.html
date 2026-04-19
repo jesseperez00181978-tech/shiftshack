@@ -56,7 +56,7 @@ label {
   Import Jobs
 </button>
 
-<input type="file" id="importFile" accept="*/*"onchange="importJobs(event)" style="display:none;">
+<input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
 {
       background: white;
       padding: 12px;
@@ -73,13 +73,7 @@ label {
 <body>
 
   <h1>ShiftStack 💼</h1>
-
 <button onclick="exportJobs()">Export Jobs</button>
-
-<button onclick="document.getElementById('importFile').click()">
-  Import Jobs
-</button>
-
   <label for="importFile" class="import-btn">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)" hidden>
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
@@ -274,24 +268,7 @@ if (job.status === "Offer") {
       saveJobs();
       renderJobs();
     }
-async function exportJobs() {
-  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
-  if (!jobs.length) {
-    alert("No jobs to export.");
-    return;
-  }
-
-  const data = JSON.stringify(jobs, null, 2);
-
-  try {
-    await navigator.clipboard.writeText(data);
-    alert("Jobs copied to clipboard.");
-  } catch (error) {
-    prompt("Copy your jobs manually:", data);
-  }
-
-  
     function updateName(index, newName) {
       jobs[index].name = newName;
       saveJobs();
@@ -309,7 +286,11 @@ function updateNotes(index, value) {
     }
 
 
-    
+    function updateName(index, newName) {
+  jobs[index].name = newName;
+  saveJobs();
+  renderJobs();
+}
 
 
     function deleteJob(index) {
