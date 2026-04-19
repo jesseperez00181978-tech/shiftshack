@@ -108,7 +108,7 @@ label {
   </select>
 
   <button onclick="addJob()">Add Job</button>
-
+<button onclick="clearJobs()">Clear All</button>
   <div id="jobList"></div>
 
   <script>
@@ -293,7 +293,12 @@ function updateNotes(index, value) {
       saveJobs();
       renderJobs();
     }
-
+function clearJobs() {
+  if (!confirm("Delete ALL jobs?")) return;
+  jobs = [];
+  saveJobs();
+  renderJobs();
+}
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
