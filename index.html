@@ -285,20 +285,22 @@ function updateNotes(index, value) {
       renderJobs();
     }
 function exportJobs() {
-  const dataStr = JSON.stringify(jobs, null, 2);
+  const raw = localStorage.getItem("jobs");
 
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+  if (!raw || raw === "[]") {
+    alert("No jobs to export");
+    return;
+  }
+
+  const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(raw);
 
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "shiftstack_jobs.json";
+  a.href = dataUri;
+  a.download = "jobs.json";
 
   document.body.appendChild(a);
   a.click();
-
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
     function updateName(index, newName) {
