@@ -73,7 +73,7 @@ label {
 <body>
 
   <h1>ShiftStack 💼</h1>
-  <button>Find Jobs</button>
+  <button onclick="searchIndeed()">Find Jobs</button>
 <button id="exportBtn" onclick="exportJobs()">Export Jobs</button>
   <label for="importFile" class="import-btn">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)" hidden>
@@ -314,8 +314,7 @@ function searchIndeed() {
   const query = document.getElementById("jobInput").value || "jobs";
   const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
   window.open(url, "_blank");
-   const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
-  window.open(url, "_blank");
+   
 } 
 
     
