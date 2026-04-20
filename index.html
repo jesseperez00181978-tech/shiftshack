@@ -239,7 +239,7 @@ const matchesSearch =
 
           const div = document.createElement("div");
           div.className = "job " + job.status.toLowerCase();
-
+div.textContent = div.className;
           if (isOverdue) {
   div.style.backgroundColor = "#ffdddd";
   div.style.borderLeft = "6px solid red";
