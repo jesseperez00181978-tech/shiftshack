@@ -203,7 +203,12 @@ function renderJobs() {
 
     const div = document.createElement("div");
     div.className = "job";
-
+if (index === filteredJobs.length - 1) {
+  div.style.outline = "2px solid cyan";
+  setTimeout(() => {
+    div.style.outline = "none";
+  }, 2000);
+}
     if (isOverdue) {
       div.style.backgroundColor = "#ffe5e5";
       div.style.borderLeft = "6px solid #ff4d4d";
