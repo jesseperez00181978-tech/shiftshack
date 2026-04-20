@@ -52,47 +52,27 @@ label {
       margin: 8px 0;
       font-size: 16px;
       box-sizing: border-box;
-    } 
+    } <button onclick="document.getElementById('importFile').click()">
+  Import Jobs
+</button>
 
+<input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
+{
+      background: white;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+    }
 
-
-    .job {
-  padding: 12px;
-  margin-top: 12px;
-  border-radius: 8px;
-}
-
-.job button {
-  width: auto;
-  margin-top: 10px;
-}
-
-.applied {
-  background-color: #dbeafe;
-  border-left: 6px solid blue;
-}
-
-.interview {
-  background-color: #fef3c7;
-  border-left: 6px solid orange;
-}
-
-.offer {
-  background-color: #dcfce7;
-  border-left: 6px solid green;
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
-}
-
-.rejected {
-  background-color: #fee2e2;
-  border-left: 6px solid red;
-}  
-    
+    .job button {
+      width: auto;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>ShiftStack TEST 💼</h1>
+  <h1>ShiftStack 💼</h1>
   <button onclick="searchIndeed()">Find Jobs</button>
 <button id="exportBtn" onclick="exportJobs()">Export Jobs</button>
   <label for="importFile" class="import-btn">Import Jobs</label>
@@ -150,8 +130,6 @@ label {
       if (!name){return;}
 document.getElementById("jobInput").value = "";
 document.getElementById("followUpInput").value = "";
-document.getElementById("jobInput").focus();
-      if (!name.trim()) return;
       jobs.unshift({
   name,
   status,
@@ -177,7 +155,7 @@ renderJobs();
       const filterStatus = document.getElementById("filterStatus").value;
 
       list.innerHTML = "";
-document.getElementById("jobCount").textContent = `${jobs.length} jobs tracked`;
+
       jobs.sort((a, b) => {
         const today = new Date().toISOString().split("T")[0];
 
@@ -217,13 +195,7 @@ const offers = jobs.filter(j => j.status === "Offer").length;
 statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
       jobs
         .filter(job => {
-          const text = search.value.toLowerCase();
-
-const matchesSearch =
-  job.name.toLowerCase().includes(text) ||
-  (job.notes && job.notes.toLowerCase().includes(text)) ||
-  job.status.toLowerCase().includes(text);
-          
+          const matchesSearch = job.name.toLowerCase().includes(search);
           const matchesStatus = filterStatus === "All" || job.status === filterStatus;
           return matchesSearch && matchesStatus;
         })
@@ -244,13 +216,27 @@ const matchesSearch =
           const div = document.createElement("div");
           div.className = "job";
 
-if (job.status) {
-  div.classList.add(job.status.toLowerCase());
-}
-
+          if (isOverdue) {
+  div.style.backgroundColor = "#ffdddd";
+  div.style.borderLeft = "6px solid red";
+} else if (isToday) {
+  div.style.backgroundColor = "#ffe066";
+  div.style.borderLeft = "6px solid orange";
+          }
           
 
-
+          if (job.status === "Applied") {
+  div.style.borderLeft = "6px solid blue";
+} else if (job.status === "Interview") {
+  div.style.borderLeft = "6px solid orange";
+} else if (job.status === "Offer") {
+  div.style.borderLeft = "6px solid green";
+} else if (job.status === "Rejected") {
+  div.style.borderLeft = "6px solid red";
+          }
+if (job.status === "Offer") {
+  div.style.boxShadow = "0 0 20px lime";
+}
           div.innerHTML = `
             <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
@@ -372,4 +358,4 @@ function clearJobs() {
     }
   </script>
 </body>
-</html>     
+</html> 
