@@ -136,8 +136,10 @@ document.getElementById("followUpInput").value = "";
   date: new Date().toLocaleDateString(),
   followUp,
   notes: ""
-});
 
+});
+saveJobs();
+renderJobs();
       document.getElementById("jobInput").value = "";
       document.getElementById("followUpInput").value = "";
       document.getElementById("statusInput").value = "Applied";
