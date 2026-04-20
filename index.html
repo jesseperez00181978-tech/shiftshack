@@ -212,21 +212,23 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
 })
         .forEach((job, index) => {
           const today = new Date().toISOString().split("T")[0];
-          const isOverdue = job.followUp && job.followUp < today && job.followUp >= job.dateApplied;
-          const isToday = job.followUp === today;
 
-}
-          const div = document.createElement("div");
-          div.className = "job";
+const isOverdue = job.followUp && job.followUp < today;
+const isToday = job.followUp === today;
 
-          if (isOverdue) { div.style.backgroundColor = "#ffe5e5";
-  div.style.borderLeft = "6px solid #ff4d4d"; // red
+const div = document.createElement("div");
+div.className = "job";
+
+if (isOverdue) {
+  div.style.backgroundColor = "#ffe5e5";
+  div.style.borderLeft = "6px solid #ff4d4d";
 } else if (isToday) {
   div.style.backgroundColor = "#fff4cc";
-  div.style.borderLeft = "6px solid #ffa500"; // orange
+  div.style.borderLeft = "6px solid #ffa500";
 } else {
   div.style.backgroundColor = "#ffffff";
-  div.style.borderLeft = "6px solid #4CAF50"; // green = upcoming
+  div.style.borderLeft = "6px solid #4CAF50";
+}
           }
   
           
