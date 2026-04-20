@@ -58,31 +58,37 @@ label {
 
 <input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
 {
-      background: white;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 8px;
-    }
+    .job {
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+}
 
-    .job button {
-      width: auto;
-      margin-top: 10px;
-    }
-  .applied {
+.job button {
+  width: auto;
+  margin-top: 10px;
+}
+
+.applied {
   background-color: #dbeafe;
+  border-left: 6px solid blue;
 }
 
 .interview {
   background-color: #fef3c7;
+  border-left: 6px solid orange;
 }
 
 .offer {
   background-color: #dcfce7;
+  border-left: 6px solid green;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
 }
 
 .rejected {
   background-color: #fee2e2;
-}
+  border-left: 6px solid red;
+}  
     
   </style>
 </head>
