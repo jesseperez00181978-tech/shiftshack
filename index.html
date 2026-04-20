@@ -73,7 +73,7 @@ label {
 <body>
 
   <h1>ShiftStack 💼</h1>
-<button id="onclick="exportJobs()">Export Jobs</button>
+<button id="exportBtn" onclick="exportJobs()">Export Jobs</button>
   <label for="importFile" class="import-btn">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)" hidden>
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
@@ -147,12 +147,7 @@ document.getElementById("followUpInput").value = "";
     }
 
     function renderJobs() {
-      function renderJobs() {
-
-  const exportBtn = document.getElementById("exportBtn");
-  if (exportBtn) exportBtn.disabled = jobs.length === 0;
-
-  const list = document.getElementById...
+      const list = document.getElementById("jobList");
       const search = document.getElementById("searchInput").value.toLowerCase().trim();
       const filterStatus = document.getElementById("filterStatus").value;
 
@@ -301,19 +296,13 @@ function exportJobs() {
   const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(raw);
 
   const a = document.createElement("a");
-  a.href=dataUri);
+  a.href = dataUri;
   a.download = "jobs.json";
 
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-
-
 }
-
-
-      
-      
 
     function updateName(index, newName) {
   jobs[index].name = newName;
