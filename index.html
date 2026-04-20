@@ -153,63 +153,117 @@ renderJobs();
       const list = document.getElementById("jobList");
       const search = document.getElementById("searchInput").value.toLowerCase().trim();
       const filterStatus = document.getElementById("filterStatus").value;
-const list = document.getElementById("jobList");
+
       list.innerHTML = "";
 
-      function renderJobs() {
-  const list = document.getElementById("jobList");
-  const searchInput = document.getElementById("searchInput");
-  const filterStatusInput = document.getElementById("filterStatus");
+      jobs.sort((a, b) => {
+        const today = new Date().toISOString().split("T")[0];
 
-  if (!list) return;
+        const aOverdue = a.followUp && a.followUp < today;
+        const bOverdue = b.followUp && b.followUp < today;
 
-  const search = searchInput ? searchInput.value.toLowerCase() : "";
-  const filterStatus = filterStatusInput ? filterStatusInput.value : "All";
+        if (aOverdue && !bOverdue) return -1;
+        if (!aOverdue && bOverdue) return 1;
 
-  list.innerHTML = "";
+        if (a.status === "Rejected" && b.status !== "Rejected") return 1;
+        if (a.status !== "Rejected" && b.status === "Rejected") return -1;
+if (a.status === "Rejected" && b.status !== "Rejected") return 1;
+if (a.status !== "Rejected" && b.status === "Rejected") return -1;
 
-  jobs
-    .filter(job => {
-      const matchesSearch = (job.name || "").toLowerCase().includes(search);
-      const matchesStatus = filterStatus === "All" || job.status === filterStatus;
-      return matchesSearch && matchesStatus;
-    })
-    .forEach((job, index) => {
-      const div = document.createElement("div");
-      div.className = "job-card";
+const priority = {
+  "Offer": 1,
+  "Interview": 2,
+  "Applied": 3,
+  "Rejected": 4
+};
 
-      let followUpLabel = "";
-      if (job.followUp) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+if (priority[a.status] !== priority[b.status]) {
+  return priority[a.status] - priority[b.status];
+}
 
-        const followDate = new Date(job.followUp);
-        followDate.setHours(0, 0, 0, 0);
 
-        if (followDate < today) {
-          followUpLabel = `<div style="color:red;font-weight:bold;">Overdue</div>`;
-        } else if (followDate.getTime() === today.getTime()) {
-          followUpLabel = `<div style="color:orange;font-weight:bold;">Due Today</div>`;
-        }
-      }
+        return new Date(b.date) - new Date(a.date);
+      });
+const countEl = document.getElementById("jobCount");
+if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
+      const statsDiv = document.getElementById("stats");
+      const total = jobs.length;
+      const interviews = jobs.filter(j => j.status === "Interview").length;
+      const rejected = jobs.filter(j => j.status === "Rejected").length;
+const offers = jobs.filter(j => j.status === "Offer").length;
+      
+statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
+      jobs
+        .filter(job => {
+          const matchesSearch = job.name.toLowerCase().includes(search);
+          const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+          return matchesSearch && matchesStatus;
+        })
+        .sort((a, b) => {
+  const order = {
+    "Offer": 1,
+    "Interview": 2,
+    "Applied": 3,
+    "Rejected": 4
+  };
+  return order[a.status] - order[b.status];
+})
+        .forEach((job, index) => {
+          const today = new Date().toISOString().split("T")[0];
+          const isOverdue = job.followUp && job.followUp < today;
+          const isToday = job.followUp === today;
 
-      div.innerHTML = `
-        <h3>${job.name || ""}</h3>
-        <p>Status: ${job.status || "Applied"}</p>
-        <p>Applied: ${job.date || ""}</p>
-        <p>Follow-up: ${job.followUp || "None"}</p>
-        ${followUpLabel}
-        <textarea onchange="updateNotes(${index}, this.value)">${job.notes || ""}</textarea>
-        <br>
-        <button onclick="deleteJob(${index})">Delete</button>
-      `;
+          const div = document.createElement("div");
+          div.className = "job";
 
-      list.appendChild(div);
-    });
-      }
+          if (isOverdue) {
+  div.style.backgroundColor = "#ffdddd";
+  div.style.borderLeft = "6px solid red";
+} else if (isToday) {
+  div.style.backgroundColor = "#ffe066";
+  div.style.borderLeft = "6px solid orange";
+          }
+          
+
+          if (job.status === "Applied") {
+  div.style.borderLeft = "6px solid blue";
+} else if (job.status === "Interview") {
+  div.style.borderLeft = "6px solid orange";
+} else if (job.status === "Offer") {
+  div.style.borderLeft = "6px solid green";
+} else if (job.status === "Rejected") {
+  div.style.borderLeft = "6px solid red";
+          }
+if (job.status === "Offer") {
+  div.style.boxShadow = "0 0 20px lime";
+}
+          div.innerHTML = `
+            <input value="${job.name}" onchange="updateName(${index}, this.value)" />
+
+          
+  <div>Status:</div>
+<select onchange="updateStatus(${index}, this.value)">
+ <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+<option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+<option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+<option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option> 
+</select>
 
             
-        
+            
+
+            <div>Applied: ${job.date}</div>
+
+            <label>Follow up:</label>
+            <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)" />
+
+            ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+<div>Notes:</div>
+<input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
+            <button onclick="deleteJob(${index})">Delete</button>
+          `;
+
+          list.appendChild(div);
         });
     }
 
@@ -283,7 +337,7 @@ function clearJobs() {
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
-    
+    renderJobs();
     function importJobs(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -302,8 +356,6 @@ function clearJobs() {
 
   reader.readAsText(file);
     }
- renderJobs();
-      alert("JS is running");
   </script>
 </body>
-</html> 
+</html>     
