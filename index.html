@@ -270,6 +270,7 @@ if (job.status === "Offer") {
 
             <label>Follow up:</label>
             <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)" />
+
 <div><strong>Follow-up state:</strong> ${statusText}</div>
 ${job.link ? `<div><a href="${job.link}" target="_blank" rel="noopener noreferrer">Open Job</a></div>` : ""}
            ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
