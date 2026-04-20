@@ -251,8 +251,9 @@ if (isOverdue) {
 if (job.status === "Offer") {
   div.style.boxShadow = "0 0 20px lime";
 }
-          div.innerHTML = `
-    div.innerHTML = `
+         
+      div.innerHTML = `
+    
   <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
   <div>Status:</div>
@@ -271,7 +272,7 @@ if (job.status === "Offer") {
             
             
 
-          <div><strong>Follow-up state:</strong> ${statusText}</div>  
+        
 ${job.link ? `<div><a href="${job.link}" target="_blank" rel="noopener noreferrer">Open Job</a></div>` : ""}
            ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
 <div>Notes:</div>
