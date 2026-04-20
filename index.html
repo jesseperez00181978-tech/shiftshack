@@ -186,14 +186,16 @@ if (priority[a.status] !== priority[b.status]) {
       });
 const countEl = document.getElementById("jobCount");
 if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
-      const statsDiv = document.getElementById("stats");
-      const total = jobs.length;
-      const interviews = jobs.filter(j => j.status === "Interview").length;
-      const rejected = jobs.filter(j => j.status === "Rejected").length;
+
+const statsDiv = document.getElementById("stats");
+const total = jobs.length;
+const interviews = jobs.filter(j => j.status === "Interview").length;
 const offers = jobs.filter(j => j.status === "Offer").length;
-      
+const rejected = jobs.filter(j => j.status === "Rejected").length;
+
 statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
-     const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+const searchTerm = document.getElementById("searchInput").value.toLowerCase();
 const filterStatus = document.getElementById("filterStatus").value;
       
       jobs
