@@ -147,7 +147,12 @@ document.getElementById("followUpInput").value = "";
     }
 
     function renderJobs() {
-      const list = document.getElementById("jobList");
+      function renderJobs() {
+
+  const exportBtn = document.getElementById("exportBtn");
+  if (exportBtn) exportBtn.disabled = jobs.length === 0;
+
+  const list = document.getElementById...
       const search = document.getElementById("searchInput").value.toLowerCase().trim();
       const filterStatus = document.getElementById("filterStatus").value;
 
