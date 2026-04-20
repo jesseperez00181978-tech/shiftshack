@@ -239,28 +239,10 @@ const matchesSearch =
 
           const div = document.createElement("div");
           div.className = "job " + job.status.toLowerCase();
-div.textContent = div.className;
-          if (isOverdue) {
-  div.style.backgroundColor = "#ffdddd";
-  div.style.borderLeft = "6px solid red";
-} else if (isToday) {
-  div.style.backgroundColor = "#ffe066";
-  div.style.borderLeft = "6px solid orange";
-          }
+
           
 
-          if (job.status === "Applied") {
-  div.style.borderLeft = "6px solid blue";
-} else if (job.status === "Interview") {
-  div.style.borderLeft = "6px solid orange";
-} else if (job.status === "Offer") {
-  div.style.borderLeft = "6px solid green";
-} else if (job.status === "Rejected") {
-  div.style.borderLeft = "6px solid red";
-          }
-if (job.status === "Offer") {
-  div.style.boxShadow = "0 0 20px lime";
-}
+
           div.innerHTML = `
             <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
