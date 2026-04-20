@@ -184,7 +184,8 @@ if (priority[a.status] !== priority[b.status]) {
 
         return new Date(b.date) - new Date(a.date);
       });
-const countEl = document.getElementById("jobCount");
+function renderJobs() {
+      const countEl = document.getElementById("jobCount");
 if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
 
 const statsDiv = document.getElementById("stats");
@@ -341,7 +342,7 @@ function clearJobs() {
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
 
-    renderJobs();
+    
     function importJobs(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -360,6 +361,7 @@ function clearJobs() {
 
   reader.readAsText(file);
     }
-  </script>
+ renderJobs();
+      </script>
 </body>
 </html> 
