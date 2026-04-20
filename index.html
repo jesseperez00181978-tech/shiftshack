@@ -301,7 +301,7 @@ function exportJobs() {
   const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(raw);
 
   const a = document.createElement("a");
-  a.setAttribute("href", dataUri);
+  a.href=dataUri);
   a.download = "jobs.json";
 
   document.body.appendChild(a);
