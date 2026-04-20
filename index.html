@@ -130,6 +130,8 @@ label {
       if (!name){return;}
 document.getElementById("jobInput").value = "";
 document.getElementById("followUpInput").value = "";
+document.getElementById("jobInput").focus();
+      if (!name.trim()) return;
       jobs.unshift({
   name,
   status,
