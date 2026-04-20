@@ -161,8 +161,8 @@ renderJobs();
       jobs.sort((a, b) => {
         const today = new Date().toISOString().split("T")[0];
 
-        const aOverdue = a.followUp && a.followUp < today;
-        const bOverdue = b.followUp && b.followUp < today;
+        const aOverdue = a.followUp && a.followUp < today && a.followUp >= a.dateApplied;
+const bOverdue = b.followUp && b.followUp < today && b.followUp >= b.dateApplied;
 
         if (aOverdue && !bOverdue) return -1;
         if (!aOverdue && bOverdue) return 1;
@@ -212,7 +212,7 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
 })
         .forEach((job, index) => {
           const today = new Date().toISOString().split("T")[0];
-          const isOverdue = job.followUp && job.followUp < today;
+          const isOverdue = job.followUp && job.followUp < today && job.followUp >= job.dateApplied;
           const isToday = job.followUp === today;
 
           const div = document.createElement("div");
