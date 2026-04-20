@@ -150,134 +150,110 @@ renderJobs();
       saveJobs();
       renderJobs();
     }
+function renderJobs() {
+  const list = document.getElementById("jobList");
+  const search = document.getElementById("searchInput").value.toLowerCase().trim();
+  const filterStatus = document.getElementById("filterStatus").value;
 
-    function renderJobs() {
-      const list = document.getElementById("jobList");
-      const search = document.getElementById("searchInput").value.toLowerCase().trim();
-      const filterStatus = document.getElementById("filterStatus").value;
+  list.innerHTML = "";
 
-      list.innerHTML = "";
-
-      jobs.sort((a, b) => {
-        const today = new Date().toISOString().split("T")[0];
-
-        const aOverdue = a.followUp && a.followUp < today && a.followUp >= a.dateApplied;
-const bOverdue = b.followUp && b.followUp < today && b.followUp >= b.dateApplied;
-
-        if (aOverdue && !bOverdue) return -1;
-        if (!aOverdue && bOverdue) return 1;
-
-        if (a.status === "Rejected" && b.status !== "Rejected") return 1;
-        if (a.status !== "Rejected" && b.status === "Rejected") return -1;
-if (a.status === "Rejected" && b.status !== "Rejected") return 1;
-if (a.status !== "Rejected" && b.status === "Rejected") return -1;
-
-const priority = {
-  "Offer": 1,
-  "Interview": 2,
-  "Applied": 3,
-  "Rejected": 4
-};
-
-if (priority[a.status] !== priority[b.status]) {
-  return priority[a.status] - priority[b.status];
-}
-
-
-        return new Date(b.date) - new Date(a.date);
-      });
-const countEl = document.getElementById("jobCount");
-if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
-      const statsDiv = document.getElementById("stats");
-      const total = jobs.length;
-      const interviews = jobs.filter(j => j.status === "Interview").length;
-      const rejected = jobs.filter(j => j.status === "Rejected").length;
-const offers = jobs.filter(j => j.status === "Offer").length;
-      
-statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
-      jobs
-        .filter(job => {
-          const matchesSearch = job.name.toLowerCase().includes(search);
-          const matchesStatus = filterStatus === "All" || job.status === filterStatus;
-          return matchesSearch && matchesStatus;
-        })
-        .sort((a, b) => {
-  const order = {
-    "Offer": 1,
-    "Interview": 2,
-    "Applied": 3,
-    "Rejected": 4
+  const priority = {
+    Offer: 1,
+    Interview: 2,
+    Applied: 3,
+    Rejected: 4
   };
-  return order[a.status] - order[b.status];
-})
-        .forEach((job, index) => {
-          const today = new Date().toISOString().split("T")[0];
 
-const isOverdue = job.followUp && job.followUp < today;
-const isToday = job.followUp === today;
+  const today = new Date().toISOString().split("T")[0];
 
-const div = document.createElement("div");
-div.className = "job";
+  const filteredJobs = jobs
+    .filter(job => {
+      const matchesSearch = job.name.toLowerCase().includes(search);
+      const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      const aOverdue = a.followUp && a.followUp < today;
+      const bOverdue = b.followUp && b.followUp < today;
 
-if (isOverdue) {
-  div.style.backgroundColor = "#ffe5e5";
-  div.style.borderLeft = "6px solid #ff4d4d";
-} else if (isToday) {
-  div.style.backgroundColor = "#fff4cc";
-  div.style.borderLeft = "6px solid #ffa500";
-} else {
-  div.style.backgroundColor = "#ffffff";
-  div.style.borderLeft = "6px solid #4CAF50";
-}
-          
-  
-          
-          
+      if (aOverdue && !bOverdue) return -1;
+      if (!aOverdue && bOverdue) return 1;
 
-          if (job.status === "Applied") {
-  div.style.borderLeft = "6px solid blue";
-} else if (job.status === "Interview") {
-  div.style.borderLeft = "6px solid orange";
-} else if (job.status === "Offer") {
-  div.style.borderLeft = "6px solid green";
-} else if (job.status === "Rejected") {
-  div.style.borderLeft = "6px solid red";
-          }
-if (job.status === "Offer") {
-  div.style.boxShadow = "0 0 20px lime";
-}
-         
-      div.innerHTML = `
-    
-  <input value="${job.name}" onchange="updateName(${index}, this.value)" />
+      if (priority[a.status] !== priority[b.status]) {
+        return priority[a.status] - priority[b.status];
+      }
 
-  <div>Status:</div>
-  <select onchange="updateStatus(${index}, this.value)">
-    <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-    <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-    <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-    <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-  </select>
+      return new Date(b.date) - new Date(a.date);
+    });
 
-  <div>Applied: ${job.date}</div>
-  <label>Follow up:</label>
-  <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
-        
+  const countEl = document.getElementById("jobCount");
+  if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
 
-            
-            
+  const statsDiv = document.getElementById("stats");
+  const total = jobs.length;
+  const interviews = jobs.filter(j => j.status === "Interview").length;
+  const offers = jobs.filter(j => j.status === "Offer").length;
+  const rejected = jobs.filter(j => j.status === "Rejected").length;
 
-        
-${job.link ? `<div><a href="${job.link}" target="_blank" rel="noopener noreferrer">Open Job</a></div>` : ""}
-           ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
-<div>Notes:</div>
-<input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
-            <button onclick="deleteJob(${index})">Delete</button>
-          `;
+  statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
 
-          list.appendChild(div);
-        });
+  filteredJobs.forEach((job, index) => {
+    const isOverdue = job.followUp && job.followUp < today;
+    const isToday = job.followUp === today;
+
+    const div = document.createElement("div");
+    div.className = "job";
+
+    if (isOverdue) {
+      div.style.backgroundColor = "#ffe5e5";
+      div.style.borderLeft = "6px solid #ff4d4d";
+    } else if (isToday) {
+      div.style.backgroundColor = "#fff4cc";
+      div.style.borderLeft = "6px solid #ffa500";
+    } else {
+      div.style.backgroundColor = "#ffffff";
+      div.style.borderLeft = "6px solid #4CAF50";
     }
+
+    if (job.status === "Applied") {
+      div.style.borderLeft = "6px solid blue";
+    } else if (job.status === "Interview") {
+      div.style.borderLeft = "6px solid orange";
+    } else if (job.status === "Offer") {
+      div.style.borderLeft = "6px solid green";
+      div.style.boxShadow = "0 0 20px lime";
+    } else if (job.status === "Rejected") {
+      div.style.borderLeft = "6px solid red";
+    }
+
+    div.innerHTML = `
+      <input value="${job.name}" onchange="updateName(${index}, this.value)" />
+
+      <div>Status:</div>
+      <select onchange="updateStatus(${index}, this.value)">
+        <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+        <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+        <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+        <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+      </select>
+
+      <div>Applied: ${job.date}</div>
+      <label>Follow up:</label>
+      <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
+
+      ${job.link ? `<div><a href="${job.link}" target="_blank" rel="noopener noreferrer">Open Job</a></div>` : ""}
+      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+
+      <div>Notes:</div>
+      <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
+      <button onclick="deleteJob(${index})">Delete</button>
+    `;
+
+    list.appendChild(div);
+  });
+        }
+     
+    
 
     function updateStatus(index, value) {
       jobs[index].status = value;
