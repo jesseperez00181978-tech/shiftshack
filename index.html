@@ -157,7 +157,7 @@ renderJobs();
       const filterStatus = document.getElementById("filterStatus").value;
 
       list.innerHTML = "";
-
+document.getElementById("jobCount").textContent = `${jobs.length} jobs tracked`;
       jobs.sort((a, b) => {
         const today = new Date().toISOString().split("T")[0];
 
