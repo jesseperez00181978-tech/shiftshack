@@ -193,11 +193,13 @@ if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
 const offers = jobs.filter(j => j.status === "Offer").length;
       
 statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
+     const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+const filterStatus = document.getElementById("filterStatus").value;
+      
       jobs
+        
         .filter(job => {
-          const matchesSearch = job.name.toLowerCase().includes(search);
-          const matchesStatus = filterStatus === "All" || job.status === filterStatus;
-          return matchesSearch && matchesStatus;
+          
         })
         .sort((a, b) => {
   const order = {
