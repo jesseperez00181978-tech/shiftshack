@@ -238,7 +238,7 @@ const matchesSearch =
           const isToday = job.followUp === today;
 
           const div = document.createElement("div");
-          div.className = "job";
+          div.className = "job " + job.status.toLowerCase();
 
           if (isOverdue) {
   div.style.backgroundColor = "#ffdddd";
