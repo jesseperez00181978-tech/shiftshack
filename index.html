@@ -214,14 +214,7 @@ statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${of
           const today = new Date().toISOString().split("T")[0];
           const isOverdue = job.followUp && job.followUp < today && job.followUp >= job.dateApplied;
           const isToday = job.followUp === today;
-let statusText = "";
 
-if (isOverdue) {
-  statusText = "Overdue";
-} else if (isToday) {
-  statusText = "Today";
-} else {
-  statusText = "Upcoming";
 }
           const div = document.createElement("div");
           div.className = "job";
@@ -235,8 +228,8 @@ if (isOverdue) {
   div.style.backgroundColor = "#ffffff";
   div.style.borderLeft = "6px solid #4CAF50"; // green = upcoming
           }
-  div
-          }
+  
+          
           
 
           if (job.status === "Applied") {
@@ -267,7 +260,7 @@ if (job.status === "Offer") {
   <div>Applied: ${job.date}</div>
   <label>Follow up:</label>
   <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
-  <div><strong>Follow-up state:</strong> ${statusText}</div>        
+        
 
             
             
