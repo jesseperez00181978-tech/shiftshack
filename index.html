@@ -314,7 +314,12 @@ function searchIndeed() {
   const query = document.getElementById("jobInput").value || "jobs";
   const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
   window.open(url, "_blank");
-    }
+   const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
+  window.open(url, "_blank");
+} 
+
+    
+    
 
     function deleteJob(index) {
       if (!confirm("Delete this job?")) return;
