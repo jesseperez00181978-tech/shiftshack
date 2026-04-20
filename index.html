@@ -130,12 +130,14 @@ label {
       if (!name){return;}
 document.getElementById("jobInput").value = "";
 document.getElementById("followUpInput").value = "";
+      const link = prompt("Paste job link (optional):") || "";
       jobs.unshift({
   name,
   status,
   date: new Date().toLocaleDateString(),
   followUp,
-  notes: ""
+  notes: "",
+  link    
 
 });
 saveJobs();
