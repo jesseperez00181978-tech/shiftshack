@@ -238,6 +238,33 @@ if (index === filteredJobs.length - 1) {
     }
 
     div.innerHTML = `
+     ${isOverdue ? `
+  <div style="
+    background:red;
+    color:white;
+    padding:6px;
+    border-radius:6px;
+    font-weight:bold;
+    margin-bottom:8px;
+  text-align:center;
+  letter-spacing:1px;
+">
+    ⚠️ FOLLOW UP OVERDUE
+  </div>
+` : isToday ? `
+  <div style="
+    background:orange;
+    color:white;
+    padding:6px;
+    border-radius:6px;
+    font-weight:bold;
+    margin-bottom:8px;
+  text-align:center;
+  letter-spacing:1px;
+  ">
+    ⏰ FOLLOW UP TODAY
+  </div>
+` : ""}
       <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
       <div>Status:</div>
