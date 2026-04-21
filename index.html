@@ -130,12 +130,18 @@ label {
       if (!name){return;}
 document.getElementById("jobInput").value = "";
 document.getElementById("followUpInput").value = "";
-      const link = prompt("Paste job link (optional):") || "";
+    const link = prompt("Paste job link (optional):") || "";
+const today = new Date().toISOString().split("T")[0];
+
+const followUpDate = new Date();
+followUpDate.setDate(followUpDate.getDate() + 2);
+
+const autoFollowUp = followUpDate.toISOString().split("T")[0];      
       jobs.unshift({
-  name,
-  status,
-  date: new Date().toLocaleDateString(),
-  followUp,
+  name,  
+ status: "Applied",
+date: today,
+followUp: autoFollowUp,
   notes: "",
   link    
 
