@@ -262,7 +262,7 @@ statsDiv.style.margin = "10px 0";
     const isToday = job.followUp === today;
 
     const div = document.createElement("div");
-    div.style.transition = "0.2s";
+    div.style.transition = "all 0.25s ease";
 
 div.onmouseover = () => {
   div.style.transform = "scale(1.02)";
@@ -281,7 +281,7 @@ div.style.marginBottom = "10px";
 div.style.padding = "12px";
 div.style.marginBottom = "10px";
 div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
-div.style.transition = "all 0.2s ease";
+div.style.transition = "all 0.25s ease";
 div.style.background = "#ffffff";
     div.className = "job";
 if (index === filteredJobs.length - 1) {
