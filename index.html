@@ -260,6 +260,7 @@ if (index === filteredJobs.length - 1) {
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
       ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
+      <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
     `;
 
