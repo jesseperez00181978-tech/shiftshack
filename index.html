@@ -80,7 +80,7 @@ label {
   <div id="stats" style="margin-bottom: 15px; font-weight: bold;"></div>
 
 <div class="section">
-  <label>Follow-up date</label>
+  
   <input id="followUpInput" type="date">
 </div>
 
@@ -124,6 +124,14 @@ label {
   <script>
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 setTimeout(() => {
+  document.querySelectorAll("input, select").forEach(el => {
+    el.style.borderRadius = "10px";
+    el.style.padding = "10px";
+    el.style.marginBottom = "10px";
+    el.style.border = "1px solid #ccc";
+  });
+}, 100);
+    setTimeout(() => {
   document.querySelectorAll("button").forEach(btn => {
     btn.style.borderRadius = "10px";
     btn.style.padding = "10px";
@@ -246,7 +254,9 @@ return matchesSearch && matchesStatus && matchesQuick;
   const rejected = jobs.filter(j => j.status === "Rejected").length;
 
   statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
-
+statsDiv.style.fontWeight = "bold";
+statsDiv.style.fontSize = "18px";
+statsDiv.style.margin = "10px 0";
   filteredJobs.forEach((job, index) => {
     const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
