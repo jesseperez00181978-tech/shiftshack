@@ -118,6 +118,13 @@ label {
   <script>
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
+
+let quickFilter = "all";
+
+function setQuickFilter(filter) {
+  quickFilter = filter;
+  renderJobs();
+}
     function saveJobs() {
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
@@ -176,7 +183,19 @@ function renderJobs() {
     .filter(job => {
       const matchesSearch = job.name.toLowerCase().includes(search);
       const matchesStatus = filterStatus === "All" || job.status === filterStatus;
-      return matchesSearch && matchesStatus;
+      const today = new Date().toISOString().split("T")[0];
+
+const isOverdue = job.followUp && job.followUp < today;
+const isToday = job.followUp === today;
+const noLink = !job.link;
+
+let matchesQuick = true;
+
+if (quickFilter === "overdue") matchesQuick = isOverdue;
+else if (quickFilter === "today") matchesQuick = isToday;
+else if (quickFilter === "nolink") matchesQuick = noLink;
+
+return matchesSearch && matchesStatus && matchesQuick;
     })
     .sort((a, b) => {
       const aOverdue = a.followUp && a.followUp < today;
