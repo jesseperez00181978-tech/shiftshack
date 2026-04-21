@@ -277,11 +277,13 @@ function updateNotes(index, value) {
   saveJobs();
   renderJobs();
 }
-    function updateFollowUp(index, newDate) {
-      jobs[index].followUp = newDate;
-      saveJobs();
-      renderJobs();
+    function updateFollowUp(index, value) {
+  jobs[index].followUp = value;
+  saveJobs();
+  renderJobs();
     }
+    
+    
 function exportJobs() {
   const raw = localStorage.getItem("jobs");
 
