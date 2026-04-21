@@ -268,7 +268,15 @@ if (index === filteredJobs.length - 1) {
   });
         }
      
-    
+    function editLink(index) {
+  const newLink = prompt("Enter new job link:");
+
+  if (!newLink) return;
+
+  jobs[index].link = newLink;
+  saveJobs();
+  renderJobs();
+    }
 
     function updateStatus(index, value) {
       jobs[index].status = value;
