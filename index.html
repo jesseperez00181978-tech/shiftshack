@@ -113,6 +113,12 @@ label {
 <button onclick="addJob()">Add Job</button>
 <button onclick="clearJobs()">Clear All</button>
   <p id="jobCount" style="font-size:14px;"></p>
+  <div id="quickFilters" style="margin-bottom:10px;">
+  <button id="filter-all" onclick="setQuickFilter('all')">All</button>
+  <button id="filter-overdue" onclick="setQuickFilter('overdue')">Overdue</button>
+  <button id="filter-today" onclick="setQuickFilter('today')">Today</button>
+  <button id="filter-nolink" onclick="setQuickFilter('nolink')">No Link</button>
+  </div>
   <div id="jobList"></div>
 
   <script>
