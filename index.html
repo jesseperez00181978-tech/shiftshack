@@ -247,7 +247,23 @@ if (index === filteredJobs.length - 1) {
         <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
         <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
       </select>
-
+<div style="
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+  margin:6px 0;
+  color:white;
+  background:${
+    job.status === "Offer" ? "green" :
+    job.status === "Interview" ? "orange" :
+    job.status === "Rejected" ? "red" :
+    "blue"
+  };
+">
+  ${job.status}
+</div>
       <div>Applied: ${job.date}</div>
       <label>Follow up:</label>
       <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
