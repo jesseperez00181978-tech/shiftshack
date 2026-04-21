@@ -409,15 +409,12 @@ div.onmouseout = () => {
   });
         }
      
-    function editLink(index) {
-  const newLink = prompt("Enter new job link:");
+    
 
-  if (!newLink) return;
-
-  jobs[index].link = newLink;
+  function updateLink(index, value) {
+  jobs[index].link = value;
   saveJobs();
-  renderJobs();
-    }
+  }
 
     function updateStatus(index, value) {
       jobs[index].status = value;
