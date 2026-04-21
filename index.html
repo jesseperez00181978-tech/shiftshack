@@ -251,6 +251,7 @@ if (index === filteredJobs.length - 1) {
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
+      ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
       <button onclick="deleteJob(${index})">Delete</button>
     `;
 
@@ -263,25 +264,31 @@ if (index === filteredJobs.length - 1) {
 
     function updateStatus(index, value) {
       jobs[index].status = value;
+      jobs[index].lastUpdated = new Date().toLocaleTimeString();
       saveJobs();
       renderJobs();
     }
 
     function updateName(index, newName) {
       jobs[index].name = newName;
+      jobs[index].lastUpdated = new Date().toLocaleTimeString();
       saveJobs();
       renderJobs();
     }
 function updateNotes(index, value) {
   jobs[index].notes = value;
+  
+jobs[index].lastUpdated = new Date().toLocaleTimeString();
   saveJobs();
   renderJobs();
 }
     function updateFollowUp(index, value) {
   jobs[index].followUp = value;
+  jobs[index].lastUpdated = new Date().toLocaleTimeString();
   saveJobs();
   renderJobs();
     }
+      
     
     
 function exportJobs() {
