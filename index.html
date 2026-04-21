@@ -262,6 +262,21 @@ statsDiv.style.margin = "10px 0";
     const isToday = job.followUp === today;
 
     const div = document.createElement("div");
+    div.style.transition = "0.2s";
+
+div.onmouseover = () => {
+  div.style.transform = "scale(1.02)";
+  div.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
+};
+
+div.onmouseout = () => {
+  div.style.transform = "scale(1)";
+  div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+};
+
+div.style.borderRadius = "12px";
+div.style.padding = "12px";
+div.style.marginBottom = "10px";
     div.style.borderRadius = "12px";
 div.style.padding = "12px";
 div.style.marginBottom = "10px";
