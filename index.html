@@ -158,6 +158,7 @@ function setQuickFilter(filter) {
   quickFilter = filter;
   renderJobs();
 }
+   
     function saveJobs() {
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
@@ -195,8 +196,16 @@ saveJobs();
 
       
       renderJobs();
+    
+ 
+setTimeout(() => {
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
+}, 100); 
     }
-function renderJobs() {
+      function renderJobs() {
   const list = document.getElementById("jobList");
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
   const filterStatus = document.getElementById("filterStatus").value;
