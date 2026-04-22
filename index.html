@@ -286,6 +286,10 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     div.style.cursor = "pointer";   
     div.style.transition = "all 0.25s ease";
 div.onclick = () => {
+  document.querySelectorAll(".job").forEach(el => {
+    el.style.outline = "";
+    el.style.background = "#ffffff";
+  });
   if (div.style.outline) {
     div.style.outline = "";
     div.style.background = "#ffffff"; 
