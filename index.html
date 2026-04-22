@@ -151,7 +151,12 @@ setTimeout(() => {
     };
   });
 }, 100);
-
+const statusColors = {
+  Offer: "green",
+  Interview: "orange",
+  Rejected: "red",
+  Applied: "blue"
+};
 let quickFilter = "all";
 
 function setQuickFilter(filter) {
@@ -273,12 +278,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   </div>
 `;
   filteredJobs.forEach((job, index) => {
-    const statusColors = {
-  Offer: "green",
-  Interview: "orange",
-  Rejected: "red",
-  Applied: "blue"
-    };
+    
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
 
