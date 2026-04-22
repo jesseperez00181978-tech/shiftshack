@@ -273,7 +273,13 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   </div>
 `;
   filteredJobs.forEach((job, index) => {
-    const isOverdue = job.followUp && job.followUp < today;
+    const statusColors = {
+  Offer: "green",
+  Interview: "orange",
+  Rejected: "red",
+  Applied: "blue"
+    };
+      const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
 
     const div = document.createElement("div");
@@ -377,12 +383,9 @@ font-size:14px;
   font-weight:bold;
   margin:6px 0;
   color:white;
-  background:${
-    job.status === "Offer" ? "green" :
-    job.status === "Interview" ? "orange" :
-    job.status === "Rejected" ? "red" :
-    "blue"
-  };
+  
+
+background: ${statusColors[job.status] || "gray"};
 ">
   ${job.status}
 </div>
