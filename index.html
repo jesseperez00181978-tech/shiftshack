@@ -249,9 +249,9 @@ return matchesSearch && matchesStatus && matchesQuick;
 
   const statsDiv = document.getElementById("stats");
   const total = jobs.length;
-  const interviews = jobs.filter(j => j.status === "Interview").length;
-  const offers = jobs.filter(j => j.status === "Offer").length;
-  const rejected = jobs.filter(j => j.status === "Rejected").length;
+  const interviews = filteredJobs.filter(j => j.status === "Interview");
+const offers = filteredJobs.filter(j => j.status === "Offer");
+const rejected = filteredJobs.filter(j => j.status === "Rejected");
 
   statsDiv.innerHTML = `
   <div style="
