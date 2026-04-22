@@ -123,7 +123,7 @@ label {
 
   <script>
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-let selectedJobIndex = localStorage.getItem("selectedJobIndex");
+let selectedJobIndex = parseInt(localStorage.getItem("selectedJobIndex"));
     setTimeout(() => {
   
   document.querySelectorAll("input, select").forEach(el => {
@@ -283,13 +283,14 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
-let selectedJobIndex = parseInt(localStorage.getItem("selectedJobIndex"));
-  div.style.outline = "2px solid #007bff";
-  div.style.background = "rgba(0,123,255,0.1)";
-}
+
     
     const div = document.createElement("div");
-    div.style.cursor = "pointer";   
+    if (selectedJobIndex == index) {
+  div.style.outline = "2px solid #007bff";
+  div.style.background = "rgba(0,123,255,0.1)";
+    }
+        div.style.cursor = "pointer";   
     div.style.transition = "all 0.25s ease";
 div.onclick = () => {
   document.querySelectorAll(".job").forEach(el => {
