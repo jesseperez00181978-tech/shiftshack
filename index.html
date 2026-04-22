@@ -152,10 +152,10 @@ setTimeout(() => {
   });
 }, 100);
 const statusColors = {
-  Offer: "green",
-  Interview: "orange",
-  Rejected: "red",
-  Applied: "blue"
+  Offer: "#22c55e",     
+  Interview: "#f59e0b", 
+  Rejected: "#ef4444", 
+  Applied: "#3b82f6"    
 };
 let quickFilter = "all";
 
@@ -272,12 +272,15 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     font-size:18px;
     font-weight:bold;
     margin:18px 0 12px 0;
-    color: ${offers.length > 0 ? "green" : "#222"};
+    color: ${offers.length > 0 ? "green" : "#333"};
   ">
     Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
   </div>
 `;
-  filteredJobs.forEach((job, index) => {
+  filteredJobs.sort((a, b) => {
+  return new Date(a.followUp || 0) - new Date(b.followUp || 0);
+});
+        filteredJobs.forEach((job, index) => {
     
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
@@ -286,9 +289,9 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     div.style.transition = "all 0.25s ease";
 
 div.onmouseover = () => {
+  div.style.cursor = "pointer";
   div.style.transform = "scale(1.02)";
-  div.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
-};
+  div.style.boxShadow = "0 12px 30px rgba(0,0,0,0.2)";
 
 div.onmouseout = () => {
   div.style.transform = "scale(1)";
@@ -298,7 +301,7 @@ div.onmouseout = () => {
 div.style.borderRadius = "12px";
 div.style.padding = "12px";
 div.style.marginBottom = "10px";
-    
+    div.style.cursor = "pointer";
 div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
 div.style.transition = "all 0.25s ease";
 div.style.background = "#ffffff";
