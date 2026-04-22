@@ -258,7 +258,7 @@ return matchesSearch && matchesStatus && matchesQuick;
     font-size:18px;
     font-weight:bold;
     margin:18px 0 12px 0;
-    color:#222;
+    color: ${offers.length > 0 ? "green" : "#222"};
   ">
     Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
   </div>
