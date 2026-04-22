@@ -302,10 +302,14 @@ div.onclick = () => {
   if (div.style.outline) {
     div.style.outline = "";
     div.style.background = "#ffffff"; 
+  div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+  
   } else {
     div.style.outline = "2px solid #3b82f6";
-    div.style.background = "rgba(59,130,246,0.08)";   
-  }
+    div.style.background = "rgba(59,130,246,0.12)";   
+  div.style.boxShadow = "0 8px 20px rgba(0,0,0,0.12)";
+}
+}
 };
   
   
