@@ -253,10 +253,16 @@ return matchesSearch && matchesStatus && matchesQuick;
   const offers = jobs.filter(j => j.status === "Offer").length;
   const rejected = jobs.filter(j => j.status === "Rejected").length;
 
-  statsDiv.innerHTML = `Total: ${total} | Interviews: ${interviews} | Offers: ${offers} | Rejected: ${rejected}`;
-statsDiv.style.fontWeight = "bold";
-statsDiv.style.fontSize = "18px";
-statsDiv.style.margin = "10px 0";
+  statsDiv.innerHTML = `
+  <div style="
+    font-size:18px;
+    font-weight:bold;
+    margin:18px 0 12px 0;
+    color:#222;
+  ">
+    Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
+  </div>
+`;
   filteredJobs.forEach((job, index) => {
     const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
