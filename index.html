@@ -1,4 +1,4 @@
-in<!DOCTYPE html> 
+in<!DOCTYPE html>
 <html>
 <head>
   <title>ShiftStack</title>
@@ -152,10 +152,10 @@ setTimeout(() => {
   });
 }, 100);
 const statusColors = {
-  Offer: "#22c55e",     
-  Interview: "#f59e0b", 
-  Rejected: "#ef4444", 
-  Applied: "#3b82f6"    
+  Offer: "green",
+  Interview: "orange",
+  Rejected: "red",
+  Applied: "blue"
 };
 let quickFilter = "all";
 
@@ -277,10 +277,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
   </div>
 `;
-  filteredJobs.sort((a, b) => {
-  return new Date(a.followUp || 0) - new Date(b.followUp || 0);
-});
-        filteredJobs.forEach((job, index) => {
+  filteredJobs.forEach((job, index) => {
     
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
@@ -289,9 +286,9 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     div.style.transition = "all 0.25s ease";
 
 div.onmouseover = () => {
-  div.style.cursor = "pointer";
-div.style.transform = "scale(1.02)";
-  div.style.boxShadow = "0 12px 30px rgba(0,0,0,0.2)";
+  div.style.transform = "scale(1.02)";
+  div.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
+};
 
 div.onmouseout = () => {
   div.style.transform = "scale(1)";
@@ -386,7 +383,7 @@ font-size:14px;
   color:white;
   
 
-background: ${statusColors[job.status] || "#9ca3af"};
+background: ${statusColors[job.status] || "gray"};
 ">
   ${job.status}
 </div>
@@ -407,7 +404,7 @@ background: ${statusColors[job.status] || "#9ca3af"};
   oninput="updateLink(${index}, this.value)"
   style="margin-top:6px;"
 />
-    
+      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
