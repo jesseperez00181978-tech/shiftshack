@@ -298,9 +298,7 @@ div.onmouseout = () => {
 div.style.borderRadius = "12px";
 div.style.padding = "12px";
 div.style.marginBottom = "10px";
-    div.style.borderRadius = "12px";
-div.style.padding = "12px";
-div.style.marginBottom = "10px";
+    
 div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
 div.style.transition = "all 0.25s ease";
 div.style.background = "#ffffff";
@@ -414,15 +412,9 @@ background: ${statusColors[job.status] || "gray"};
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
     `;
-div.onmouseover = () => {
-  div.style.transform = "scale(1.02)";
-  div.style.boxShadow = "0 8px 20px rgba(0,0,0,0.2)";
-};
 
-div.onmouseout = () => {
-  div.style.transform = "scale(1)";
-  div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
-};
+
+
     list.appendChild(div);
  div.scrollIntoView({ behavior: "smooth" }); 
   });
