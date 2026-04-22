@@ -123,7 +123,9 @@ label {
 
   <script>
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-setTimeout(() => {
+let selectedJobIndex = localStorage.getItem("selectedJobIndex");
+    setTimeout(() => {
+  
   document.querySelectorAll("input, select").forEach(el => {
     el.style.borderRadius = "10px";
     el.style.padding = "10px";
@@ -290,6 +292,7 @@ div.onclick = () => {
     el.style.outline = "";
     el.style.background = "#ffffff";
   });
+  localStorage.setItem("selectedJobIndex", index);
   if (div.style.outline) {
     div.style.outline = "";
     div.style.background = "#ffffff"; 
