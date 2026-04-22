@@ -272,7 +272,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     font-size:18px;
     font-weight:bold;
     margin:18px 0 12px 0;
-    color: ${offers.length > 0 ? "green" : "#333"};
+    color: ${offers.length > 0 ? "green" : "#222"};
   ">
     Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
   </div>
@@ -289,7 +289,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     div.style.transition = "all 0.25s ease";
 
 div.onmouseover = () => {
-  
+  div.style.cursor = "pointer";
 div.style.transform = "scale(1.02)";
   div.style.boxShadow = "0 12px 30px rgba(0,0,0,0.2)";
 
@@ -386,7 +386,7 @@ font-size:14px;
   color:white;
   
 
-background: ${statusColors[job.status] || "gray"};
+background: ${statusColors[job.status] || "#9ca3af"};
 ">
   ${job.status}
 </div>
@@ -407,7 +407,7 @@ background: ${statusColors[job.status] || "gray"};
   oninput="updateLink(${index}, this.value)"
   style="margin-top:6px;"
 />
-      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+    
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
