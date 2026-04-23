@@ -153,26 +153,8 @@ setTimeout(() => {
     el.style.border = "1px solid #ccc";
   });
 }, 100);
-    setTimeout(() => {
-  document.querySelectorAll("button").forEach(btn => {
-    btn.style.borderRadius = "10px";
-    btn.style.padding = "10px";
-    btn.style.fontWeight = "bold";
-    btn.style.background = "linear-gradient(135deg, #4facfe, #00f2fe)";
-    btn.style.color = "#fff";
-    btn.style.border = "none";
-    btn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
-    btn.style.transition = "0.2s";
     
-    btn.onmouseover = () => {
-      btn.style.transform = "scale(1.05)";
-    };
-    
-    btn.onmouseout = () => {
-      btn.style.transform = "scale(1)";
-    };
-  });
-}, 100);
+
 const statusColors = {
   Offer: "green",
   Interview: "orange",
