@@ -492,9 +492,10 @@ background: ${statusColors[job.status] || "gray"};
     list.appendChild(div);
  div.scrollIntoView({ behavior: "smooth" }); 
   });
-        }
+    updateQuickFilterButtons();    
+      }
      
-    updateQuickFilterButtons();
+    
 
   function updateLink(index, value) {
   jobs[index].link = value;
