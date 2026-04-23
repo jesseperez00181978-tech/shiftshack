@@ -115,7 +115,7 @@ label {
 <button onclick="addJob()">Add Job</button>
 <button onclick="clearJobs()">Clear All</button>
   <p id="jobCount" style="font-size:14px;"></p>
-  <div id="quickFilters" style="margin-bottom:10px;">
+  <div id="quickFilters" style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
   <button id="filter-all" onclick="setQuickFilter('all')">All</button>
   <button id="filter-overdue" onclick="setQuickFilter('overdue')">Overdue</button>
   <button id="filter-today" onclick="setQuickFilter('today')">Today</button>
@@ -166,8 +166,50 @@ let quickFilter = "all";
 function setQuickFilter(filter) {
   quickFilter = filter;
   renderJobs();
+  updateQuickFilterButtons();
 }
-   
+
+function updateQuickFilterButtons() {
+  const buttonMap = [
+    { id: "filter-all", value: "all", bg: "#111111", color: "white" },
+    { id: "filter-overdue", value: "overdue", bg: "#d32f2f", color: "white" },
+    { id: "filter-today", value: "today", bg: "#f57c00", color: "white" },
+    { id: "filter-nolink", value: "nolink", bg: "#616161", color: "white" }
+  ];
+
+  buttonMap.forEach(btnInfo => {
+    const btn = document.getElementById(btnInfo.id);
+    if (!btn) return;
+
+    btn.style.padding = "14px 12px";
+    btn.style.borderRadius = "12px";
+    btn.style.fontSize = "16px";
+    btn.style.fontWeight = "bold";
+  
+btn.style.cursor = "pointer";
+ btn.style.transition = "all 0.2s ease";
+btn.style.border = "1px solid rgba(0,0,0,0.12)";
+btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+
+if (quickFilter === btnInfo.value) {
+  if (btnInfo.value === "all") {
+    btn.style.background = "#111";
+  } else if (btnInfo.value === "overdue") {
+    btn.style.background = "#d32f2f";
+  } else if (btnInfo.value === "today") {
+    btn.style.background = "#f57c00";
+  } else if (btnInfo.value === "nolink") {
+    btn.style.background = "#616161";
+  }
+
+  btn.style.color = "white";
+  btn.style.transform = "scale(1.05)";
+  btn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+} else {
+  btn.style.background = "#f3f3f3";
+  btn.style.color = "#111";
+  btn.style.transform = "scale(1)";
+}  
     function saveJobs() {
       localStorage.setItem("jobs", JSON.stringify(jobs));
     }
