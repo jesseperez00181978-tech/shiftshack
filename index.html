@@ -290,7 +290,10 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   div.style.outline = "2px solid #007bff";
   div.style.background = "rgba(59,130,246,0.12)";
 div.style.boxShadow = "0 0 0 1px rgba(59,130,246,0.15), 0 8px 20px rgba(0,0,0,0.12)";
+    div.dataset.selected = "true";
     }
+    
+    
         div.style.cursor = "pointer";   
     div.style.transition = "all 0.25s ease";
 div.onclick = () => {
@@ -445,11 +448,13 @@ background: ${statusColors[job.status] || "gray"};
 
 
     list.appendChild(div);
- div.scrollIntoView({ behavior: "smooth" }); 
-  });
+ 
         }
      
-    
+    const selectedEl = document.querySelector('[data-selected="true"]');
+if (selectedEl) {
+    selectedEl.scrollIntoView({ behavior: "smooth", block: "center" });
+}
 
   function updateLink(index, value) {
   jobs[index].link = value;
