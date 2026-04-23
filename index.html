@@ -287,13 +287,10 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     
     const div = document.createElement("div");
     if (selectedJobIndex == index) {
-  div.style.outline = "2px solid #3b82f6";
+  div.style.outline = "2px solid #007bff";
   div.style.background = "rgba(59,130,246,0.12)";
 div.style.boxShadow = "0 0 0 1px rgba(59,130,246,0.15), 0 8px 20px rgba(0,0,0,0.12)";
-    
     }
-    
-    
         div.style.cursor = "pointer";   
     div.style.transition = "all 0.25s ease";
 div.onclick = () => {
@@ -302,7 +299,6 @@ div.onclick = () => {
     el.style.background = "#ffffff";
   });
   localStorage.setItem("selectedJobIndex", index);
-  
   if (div.style.outline) {
     div.style.outline = "";
     div.style.background = "#ffffff"; 
@@ -437,9 +433,7 @@ background: ${statusColors[job.status] || "gray"};
   oninput="updateLink(${index}, this.value)"
   style="margin-top:6px;"
 />
-      ${isOverdue ? `
-  <div style="color:red; font-weight:bold; margin-top:6px;">(Overdue)</div>
-` : ""}
+      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
@@ -451,7 +445,8 @@ background: ${statusColors[job.status] || "gray"};
 
 
     list.appendChild(div);
- 
+ div.scrollIntoView({ behavior: "smooth" }); 
+  });
         }
      
     
