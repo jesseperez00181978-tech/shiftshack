@@ -451,10 +451,7 @@ background: ${statusColors[job.status] || "gray"};
  
         }
      
-    const selectedEl = document.querySelector('[data-selected="true"]');
-if (selectedEl) {
-    selectedEl.scrollIntoView({ behavior: "smooth", block: "center" });
-}
+    
 
   function updateLink(index, value) {
   jobs[index].link = value;
