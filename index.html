@@ -287,7 +287,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     
     const div = document.createElement("div");
     if (selectedJobIndex == index) {
-  div.style.outline = "2px solid #007bff";
+  div.style.outline = "2px solid #3b82f6";
   div.style.background = "rgba(59,130,246,0.12)";
 div.style.boxShadow = "0 0 0 1px rgba(59,130,246,0.15), 0 8px 20px rgba(0,0,0,0.12)";
     
@@ -302,7 +302,6 @@ div.onclick = () => {
     el.style.background = "#ffffff";
   });
   localStorage.setItem("selectedJobIndex", index);
-  div.dataset.selected = "true";
   
   if (div.style.outline) {
     div.style.outline = "";
