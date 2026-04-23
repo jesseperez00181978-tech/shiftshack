@@ -124,6 +124,26 @@ label {
   <div id="jobList"></div>
 
   <script>
+    
+
+function getOverdueText(dateStr) {
+  if (!dateStr) return "";
+
+  const today = new Date();
+  const followUp = new Date(dateStr);
+
+  if (followUp >= today) return "";
+
+  const diffTime = today - followUp;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return `⚠️ ${diffDays} day(s) overdue`;
+}
+
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let selectedJobIndex = parseInt(localStorage.getItem("selectedJobIndex"));
+
+setTimeout(() => {
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 let selectedJobIndex = parseInt(localStorage.getItem("selectedJobIndex"));
     setTimeout(() => {
@@ -282,7 +302,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   </div>
 `;
   filteredJobs.forEach((job, index) => {
-    
+    const overdueText = getOverdueText(job.followUpDate);
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
 
@@ -428,14 +448,14 @@ background: ${statusColors[job.status] || "gray"};
     : `<span style="color:gray;font-size:14px;">No link saved</span>`
   }
 </div>
-
+<p style="color:red; font-weight:bold;">${overdueText}</p>
 <input 
   placeholder="Paste job link..."
   value="${job.link || ""}"
   oninput="updateLink(${index}, this.value)"
   style="margin-top:6px;"
 />
-      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+      ${Overdue ? '<div style="color:red">font-weight:bold;">${overdueText}</div>` : ''}
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
