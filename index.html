@@ -290,7 +290,8 @@ else if (quickFilter === "nolink") matchesQuick = noLink;
 
 return matchesSearch && matchesStatus && matchesQuick;
     })
-    .sort((a, b) => {
+    
+  .sort((a, b) => {
       const aOverdue = a.followUp && a.followUp < today;
       const bOverdue = b.followUp && b.followUp < today;
 
@@ -493,7 +494,7 @@ background: ${statusColors[job.status] || "gray"};
   });
         }
      
-    
+    updateQuickFilterButtons();
 
   function updateLink(index, value) {
   jobs[index].link = value;
