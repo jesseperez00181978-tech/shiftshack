@@ -437,7 +437,9 @@ background: ${statusColors[job.status] || "gray"};
   oninput="updateLink(${index}, this.value)"
   style="margin-top:6px;"
 />
-      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+      ${isOverdue ? `
+  <div style="color:red; font-weight:bold; margin-top:6px;">(Overdue)</div>
+` : ""}
 
       <div>Notes:</div>
       <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
