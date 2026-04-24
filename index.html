@@ -122,7 +122,15 @@ label {
   <div id="jobList"></div>
 
   <script>
-    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    let jobs = [];
+
+try {
+  const stored = localStorage.getItem("jobs");
+  jobs = stored ? JSON.parse(stored) : [];
+} catch (e) {
+  console.error("Corrupted storage. Resetting jobs.");
+  jobs = [];
+}
 setTimeout(() => {
   document.querySelectorAll("input, select").forEach(el => {
     el.style.borderRadius = "10px";
@@ -165,7 +173,8 @@ function setQuickFilter(filter) {
 }
    
     function saveJobs() {
-      localStorage.setItem("jobs", JSON.stringify(jobs));
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+  renderJobs();
     }
 
     function addJob() {
