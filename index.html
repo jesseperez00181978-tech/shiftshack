@@ -176,7 +176,18 @@ function setQuickFilter(filter) {
   localStorage.setItem("jobs", JSON.stringify(jobs));
   renderJobs();
     }
+function backupJobs() {
+  const data = JSON.stringify(jobs);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
 
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shiftstack-backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
     function addJob() {
       const name = document.getElementById("jobInput").value.trim();
       const status = document.getElementById("statusInput").value;
