@@ -209,10 +209,11 @@ saveJobs();
  
 setTimeout(() => {
   window.scrollTo({
-    top: document.body.scrollHeight,
+    top: 0,
     behavior: "smooth"
   });
-}, 100); 
+}, 100);
+  
     }
       function renderJobs() {
   const list = document.getElementById("jobList");
