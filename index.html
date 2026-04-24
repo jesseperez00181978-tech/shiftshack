@@ -466,6 +466,11 @@ function editLink(index) {
   const newLink = prompt("Edit job link:", jobs[index].link || "");
 
   if (newLink !== null) {
+    
+  if (newLink !== null) {
+    if (newLink && !newLink.startsWith("http")) {
+      newLink = "https://" + newLink;
+    }
     jobs[index].link = newLink;
     jobs[index].lastUpdated = new Date().toLocaleTimeString();
     saveJobs();
