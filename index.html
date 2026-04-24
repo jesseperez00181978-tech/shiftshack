@@ -66,7 +66,23 @@ label {
       width: auto;
       margin-top: 10px;
     }
- textarea {
+ .controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filters button {
+  flex: 1;
+  min-width: 80px;
+}
+    textarea {
   width: 100%;
   min-height: 60px;
   padding: 8px;
@@ -118,15 +134,23 @@ label {
     <option value="Offer">Offer</option>
     <option value="Rejected">Rejected</option>
   </select>
-<button onclick="addJob()">Add Job</button>
-<button onclick="clearJobs()">Clear All</button>
+<div class="controls">
+
+  <button onclick="addJob()">Add Job</button>
+  <button onclick="clearJobs()">Clear All</button>
+
   <p id="jobCount" style="font-size:14px;"></p>
-  <div id="quickFilters" style="margin-bottom:10px;">
-  <button id="filter-all" onclick="setQuickFilter('all')">All</button>
-  <button id="filter-overdue" onclick="setQuickFilter('overdue')">Overdue</button>
-  <button id="filter-today" onclick="setQuickFilter('today')">Today</button>
-  <button id="filter-nolink" onclick="setQuickFilter('nolink')">No Link</button>
+
+  <div id="quickFilters" class="filters">
+    <button id="filter-all">All</button>
+    <button id="filter-overdue">Overdue</button>
+    <button id="filter-today">Today</button>
+    <button id="filter-nolink">No Link</button>
   </div>
+
+</div>
+
+
   <div id="jobList"></div>
 
   <script>
