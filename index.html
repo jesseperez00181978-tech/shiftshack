@@ -462,7 +462,16 @@ background: ${statusColors[job.status] || "gray"};
   jobs[index].link = value;
   saveJobs();
   }
+function editLink(index) {
+  const newLink = prompt("Edit job link:", jobs[index].link || "");
 
+  if (newLink !== null) {
+    jobs[index].link = newLink;
+    jobs[index].lastUpdated = new Date().toLocaleTimeString();
+    saveJobs();
+    renderJobs();
+  }
+}
     function updateStatus(index, value) {
       jobs[index].status = value;
       jobs[index].lastUpdated = new Date().toLocaleTimeString();
