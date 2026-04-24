@@ -190,7 +190,13 @@ function backupJobs() {
     function addJob() {
       const name = document.getElementById("jobInput").value.trim();
       const status = document.getElementById("statusInput").value;
-      const followUp = document.getElementById("followUpInput").value;
+      let followUp = document.getElementById("followUpInput").value;
+
+if (!followUp) {
+  const followUpDate = new Date();
+  followUpDate.setDate(followUpDate.getDate() + 2);
+  followUp = followUpDate.toISOString().split("T")[0];
+}
 
       if (!name){return;}
 document.getElementById("jobInput").value = "";
@@ -198,15 +204,14 @@ document.getElementById("followUpInput").value = "";
     const link = prompt("Paste job link (optional):") || "";
 const today = new Date().toISOString().split("T")[0];
 
-const followUpDate = new Date();
-followUpDate.setDate(followUpDate.getDate() + 2);
 
-const autoFollowUp = followUpDate.toISOString().split("T")[0];      
+
+
       jobs.unshift({
   name,  
  status: "Applied",
 date: today,
-followUp: autoFollowUp,
+followUp: followUp,
   notes: "",
   link    
 
