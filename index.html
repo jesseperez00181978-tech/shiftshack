@@ -431,7 +431,7 @@ background: ${statusColors[job.status] || "gray"};
       ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
 
       <div>Notes:</div>
-      <input value="${job.notes || ''}" onchange="updateNotes(${index}, this.value)">
+      <textarea oninput="updateNotes(${index}, this.value)">${job.notes || ""}</textarea>
       ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
