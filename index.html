@@ -52,34 +52,23 @@ label {
       margin: 8px 0;
       font-size: 16px;
       box-sizing: border-box;
+    } <button onclick="document.getElementById('importFile').click()">
+  Import Jobs
+</button>
+
+<input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
+{
+      background: white;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
     }
-    button {
-  width: auto;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
 
-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-button:active {
-  transform: scale(0.97);
-}  
-  
-
-
-
-    
-    
-    
+    .job button {
+      width: auto;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -134,9 +123,7 @@ button:active {
 
   <script>
     let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-let selectedJobIndex = parseInt(localStorage.getItem("selectedJobIndex"));
-    setTimeout(() => {
-  
+setTimeout(() => {
   document.querySelectorAll("input, select").forEach(el => {
     el.style.borderRadius = "10px";
     el.style.padding = "10px";
@@ -218,11 +205,10 @@ saveJobs();
  
 setTimeout(() => {
   window.scrollTo({
-    top: 0,
+    top: document.body.scrollHeight,
     behavior: "smooth"
   });
-}, 100);
-  
+}, 100); 
     }
       function renderJobs() {
   const list = document.getElementById("jobList");
@@ -280,8 +266,7 @@ return matchesSearch && matchesStatus && matchesQuick;
   const interviews = filteredJobs.filter(j => j.status === "Interview");
 const offers = filteredJobs.filter(j => j.status === "Offer");
 const rejected = filteredJobs.filter(j => j.status === "Rejected");
-const overdueCount = jobs.filter(j => j.followUp && j.followUp < today).length;
-const todayCount = jobs.filter(j => j.followUp === today).length;
+
   statsDiv.innerHTML = `
   <div style="
     font-size:18px;
@@ -297,38 +282,11 @@ const todayCount = jobs.filter(j => j.followUp === today).length;
       const isOverdue = job.followUp && job.followUp < today;
     const isToday = job.followUp === today;
 
-    
     const div = document.createElement("div");
-    if (selectedJobIndex == index) {
-  div.style.outline = "2px solid #007bff";
-  div.style.background = "rgba(59,130,246,0.12)";
-div.style.boxShadow = "0 0 0 1px rgba(59,130,246,0.15), 0 8px 20px rgba(0,0,0,0.12)";
-    }
-        div.style.cursor = "pointer";   
     div.style.transition = "all 0.25s ease";
-div.onclick = () => {
-  document.querySelectorAll(".job").forEach(el => {
-    el.style.outline = "";
-    el.style.background = "#ffffff";
-  });
-  localStorage.setItem("selectedJobIndex", index);
-  if (div.style.outline) {
-    div.style.outline = "";
-    div.style.background = "#ffffff"; 
-  div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
-  
-  } else {
-    div.style.outline = "2px solid #3b82f6";
-    div.style.background = "rgba(59,130,246,0.12)";   
-  div.style.boxShadow = "0 8px 20px rgba(0,0,0,0.12)";
-}
-
-};
-  
-  
 
 div.onmouseover = () => {
-  div.style.transform = "scale(1.015)";
+  div.style.transform = "scale(1.02)";
   div.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
 };
 
@@ -343,7 +301,7 @@ div.style.marginBottom = "10px";
     
 div.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
 div.style.transition = "all 0.25s ease";
-div.style.background = "";
+div.style.background = "#ffffff";
     div.className = "job";
 if (index === filteredJobs.length - 1) {
   div.style.outline = "2px solid cyan";
@@ -357,8 +315,8 @@ if (index === filteredJobs.length - 1) {
     } else if (isToday) {
       div.style.backgroundColor = "#fff4cc";
       div.style.borderLeft = "6px solid #ffa500";
-    } 
-
+    } else {
+      div.style.backgroundColor = "#ffffff";
       div.style.borderLeft = "6px solid #4CAF50";
     }
 
