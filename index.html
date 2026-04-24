@@ -477,9 +477,10 @@ function updateNotes(index, value) {
   jobs[index].notes = value;
   
 jobs[index].lastUpdated = new Date().toLocaleTimeString();
-  saveJobs();
-  renderJobs();
+  localStorage.setItem("jobs", JSON.stringify(jobs));
 }
+  
+
     function updateFollowUp(index, value) {
   jobs[index].followUp = value;
   jobs[index].lastUpdated = new Date().toLocaleTimeString();
