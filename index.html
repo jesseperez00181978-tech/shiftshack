@@ -270,7 +270,8 @@ return matchesSearch && matchesStatus && matchesQuick;
   const interviews = filteredJobs.filter(j => j.status === "Interview");
 const offers = filteredJobs.filter(j => j.status === "Offer");
 const rejected = filteredJobs.filter(j => j.status === "Rejected");
-
+const overdueCount = jobs.filter(j => j.followUp && j.followUp < today).length;
+const todayCount = jobs.filter(j => j.followUp === today).length;
   statsDiv.innerHTML = `
   <div style="
     font-size:18px;
