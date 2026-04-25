@@ -447,6 +447,7 @@ background: ${statusColors[job.status] || "gray"};
       ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
+   <button onclick="markContacted(${index})">Contacted Today</button>
     `;
 
 
@@ -509,7 +510,12 @@ jobs[index].lastUpdated = new Date().toLocaleTimeString();
 
   window.open(formatted, "_blank");
   }    
-    
+  function markContacted(index) {
+    const today = new Date().toISOString().split("T")[0];
+    jobs[index].lastContacted = today;
+    saveJobs();
+    renderJobs();
+  }  
     
 function exportJobs() {
   const raw = localStorage.getItem("jobs");
