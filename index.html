@@ -421,7 +421,9 @@ background: ${statusColors[job.status] || "gray"};
   ${job.status}
 </div>
       <div>Applied: ${job.date}</div>
+      ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
       <label>Follow up:</label>
+      
       <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
 
     <div>
