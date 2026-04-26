@@ -316,20 +316,37 @@ else if (quickFilter === "nolink") matchesQuick = noLink;
 
 return matchesSearch && matchesStatus && matchesQuick;
     })
-    .sort((a, b) => {
-      const aOverdue = a.followUp && a.followUp < today;
-      const bOverdue = b.followUp && b.followUp < today;
+    
+.sort((a, b) => {
+  const getDaysLate = (job) => {
+    if (!job.followUp) return 0;
 
-      if (aOverdue && !bOverdue) return -1;
-      if (!aOverdue && bOverdue) return 1;
+    const todayDate = new Date(today);
+    const followDate = new Date(job.followUp);
 
-      if (priority[a.status] !== priority[b.status]) {
-        return priority[a.status] - priority[b.status];
-      }
+    if (job.followUp >= today) return 0;
 
-      return new Date(b.date) - new Date(a.date);
-    });
+    return Math.floor((todayDate - followDate) / (1000 * 60 * 60 * 24));
+  };
 
+  const aDaysLate = getDaysLate(a);
+  const bDaysLate = getDaysLate(b);
+
+  // 1. Most overdue first
+  if (aDaysLate !== bDaysLate) {
+    return bDaysLate - aDaysLate;
+  }
+
+  // 2. Then today follow-ups
+  const aToday = a.followUp === today;
+  const bToday = b.followUp === today;
+
+  if (aToday && !bToday) return -1;
+  if (!aToday && bToday) return 1;
+
+  // 3. Then newest jobs
+  return new Date(b.date) - new Date(a.date);
+});
   const countEl = document.getElementById("jobCount");
   if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
 
@@ -420,7 +437,10 @@ if (isOverdue && job.followUp) {
 }
   if (daysLate >= 10) {
   div.style.boxShadow = "0 0 35px darkred";
-  div.style.animation = "pulse 1s infinite";
+ if (navigator.vibrate) {
+  navigator.vibrate(200);
+ }
+    div.style.animation = "pulse 1s infinite";
 } else if (daysLate >= 7) {
   div.style.boxShadow = "0 0 25px red";
   div.style.animation = "pulse 1.5s infinite";
@@ -589,6 +609,17 @@ jobs[index].lastUpdated = new Date().toLocaleTimeString();
   function markContacted(index) {
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
+
+  const nextFollowUp = new Date();
+  nextFollowUp.setDate(today.getDate() + 2);
+  const formattedNext = nextFollowUp.toISOString().split("T")[0];
+
+  jobs[index].lastContacted = formattedToday;
+  jobs[index].followUp = formattedNext;
+
+  saveJobs();
+  renderJobs();
+  }
 
   const nextFollowUp = new Date();
   nextFollowUp.setDate(today.getDate() + 3);
