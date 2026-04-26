@@ -513,11 +513,19 @@ jobs[index].lastUpdated = new Date().toLocaleTimeString();
   window.open(formatted, "_blank");
   }    
   function markContacted(index) {
-    const today = new Date().toISOString().split("T")[0];
-    jobs[index].lastContacted = today;
-    saveJobs();
-    renderJobs();
-  }  
+  const today = new Date();
+  const formattedToday = today.toISOString().split("T")[0];
+
+  const nextFollowUp = new Date();
+  nextFollowUp.setDate(today.getDate() + 3);
+  const formattedNext = nextFollowUp.toISOString().split("T")[0];
+
+  jobs[index].lastContacted = formattedToday;
+  jobs[index].followUp = formattedNext;
+
+  saveJobs();
+  renderJobs();
+  }
     
 function exportJobs() {
   const raw = localStorage.getItem("jobs");
