@@ -427,11 +427,20 @@ if (isOverdue && job.followUp) {
 } else if (daysLate >= 3) {
   div.style.boxShadow = "0 0 15px orange";
   }
+  let urgencyColor = "red";
+
+if (daysLate >= 10) {
+  urgencyColor = "darkred";
+} else if (daysLate >= 7) {
+  urgencyColor = "red";
+} else if (daysLate >= 3) {
+  urgencyColor = "orange";
+} 
     div.innerHTML = `
    
      ${isOverdue ? `
   <div style="
-    background:red;
+    background:${urgencyColor};
     color:white;
     padding:12px;
 border-radius:12px;
