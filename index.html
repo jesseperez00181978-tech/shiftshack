@@ -119,6 +119,20 @@ input, select, textarea {
  .offer {
   box-shadow: 0 0 25px rgba(0,255,0,0.7);
  }
+ @keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px red;
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px red;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px red;
+  }
+ }
   </style>
 </head>
 <body>
@@ -404,6 +418,10 @@ if (isOverdue && job.followUp) {
   const diffTime = todayDate - followDate;
   daysLate = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
+  if (daysLate >= 7) {
+  div.style.boxShadow = "0 0 25px red";
+  div.style.animation = "pulse 1.5s infinite";
+  }
     div.innerHTML = `
    
      ${isOverdue ? `
@@ -419,8 +437,10 @@ font-size:14px;
   text-align:center;
   letter-spacing:1px;
 ">
+
 ⚠️ FOLLOW UP OVERDUE — <span style="font-weight:bold; font-size:16px;">${daysLate} day${daysLate !== 1 ? 's' : ''} late</span>    
   </div>
+
 ` : isToday ? `
   <div style="
     background: linear-gradient(90deg, #ff9800, #ffb74d);
