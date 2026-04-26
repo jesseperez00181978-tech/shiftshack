@@ -397,6 +397,15 @@ div.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
     }
 
     div.innerHTML = `
+ let daysLate = 0;
+
+if (isOverdue) {
+  const followDate = new Date(job.followUp);
+  const todayDate = new Date(today);
+
+  const diffTime = todayDate - followDate;
+  daysLate = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+}    
      ${isOverdue ? `
   <div style="
     background:red;
@@ -410,7 +419,7 @@ font-size:14px;
   text-align:center;
   letter-spacing:1px;
 ">
-    ⚠️ FOLLOW UP OVERDUE
+    ⚠️ FOLLOW UP OVERDUE — ${daysLate} day${daysLate !== 1 ? 's' : ''} late
   </div>
 ` : isToday ? `
   <div style="
