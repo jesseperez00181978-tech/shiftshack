@@ -395,17 +395,17 @@ div.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
     } else if (job.status === "Rejected") {
       div.style.borderLeft = "6px solid red";
     }
+let daysLate = 0;
 
-    div.innerHTML = `
- let daysLate = 0;
-
-if (isOverdue) {
+if (isOverdue && job.followUp) {
   const followDate = new Date(job.followUp);
   const todayDate = new Date(today);
 
   const diffTime = todayDate - followDate;
   daysLate = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-}    
+}
+    div.innerHTML = `
+   
      ${isOverdue ? `
   <div style="
     background:red;
