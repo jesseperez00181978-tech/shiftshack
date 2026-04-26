@@ -524,7 +524,7 @@ background: ${statusColors[job.status] || "gray"};
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button onclick="followUp('${job.company}', '${job.status}')">
+    <button onclick="followUp('${job.name}', '${job.status}')">
   Follow Up
 </button>
 `;
