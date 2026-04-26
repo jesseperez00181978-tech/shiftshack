@@ -339,21 +339,22 @@ return matchesSearch && matchesStatus && matchesQuick;
   const interviews = filteredJobs.filter(j => j.status === "Interview");
 const offers = filteredJobs.filter(j => j.status === "Offer");
 const rejected = filteredJobs.filter(j => j.status === "Rejected");
-
+const overdueCount = filteredJobs.filter(job => job.followUp && job.followUp < today).length;
   statsDiv.innerHTML = `
   <div style="
-    font-size:18px;
-    font-weight:bold;
-    margin:18px 0 12px 0;
-    color: ${offers.length > 0 ? "green" : "#222"};
-  ">
-    Total: ${filteredJobs.length} | Overdue: ${overdueCount} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
+  font-size:18px;
+  font-weight:bold;
+  margin:18px 0 12px 0;
+  color: ${offers.length > 0 ? "green" : "#222"};
+">
+  Total: ${filteredJobs.length} 
+  | Overdue: ${overdueCount}
+  | Interviews: ${interviews.length}
+  | Offers: ${offers.length}
+  | Rejected: ${rejected.length}
+</div>
 `;
-  filteredJobs.forEach((job, index) => {
-    
-      const isOverdue = job.followUp && job.followUp < today;
-    const isToday = job.followUp === today;
-
+filteredJobs.forEach((job, index) => {
     const div = document.createElement("div");
   
     div.classList.add("job");
