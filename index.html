@@ -635,14 +635,18 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(company, position) {
-  const message = `Hi ${company},
-
+function followUp(name) {
+  const message = `Hi ${name},
 
 I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
 
 Thank you,
 Jesse`;
+
+  navigator.clipboard.writeText(message);
+
+  window.location.href = `mailto:?subject=Follow Up&body=${encodeURIComponent(message)}`;
+}
 navigator.clipboard.writeText(message);
 const toast = document.createElement("div");
 toast.innerText = "Copied 👍";
