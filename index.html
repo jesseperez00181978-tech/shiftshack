@@ -53,8 +53,44 @@ label {
       font-size: 16px;
       box-sizing: border-box;
     } 
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
 
-<input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
+button:hover {
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+.job button {
+  width: auto;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-right: 6px;
+}
+  .job button:nth-child(1) {
+  background: #e0e0e0;
+  color: #333;
+  box-shadow: none;
+}
+
+.job button:nth-child(2) {
+  background: #ff5252;
+}
+
+.job button:nth-child(3) {
+  background: linear-gradient(135deg, #00c853, #64dd17);
+}
+    <input type="file" id="importFile" accept=".json,application/json" onchange="importJobs(event)" style="display:none;">
 {
       background: white;
       padding: 12px;
@@ -74,6 +110,14 @@ label {
   border-radius: 8px;
   box-sizing: border-box;
   resize: vertical;
+ }
+  
+input, select, textarea {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+ job.offer {
+  box-shadow: 0 0 15px rgba(0,255,0,0.3);
  }
   </style>
 </head>
@@ -147,26 +191,7 @@ setTimeout(() => {
     el.style.border = "1px solid #ccc";
   });
 }, 100);
-    setTimeout(() => {
-  document.querySelectorAll("button").forEach(btn => {
-    btn.style.borderRadius = "10px";
-    btn.style.padding = "10px";
-    btn.style.fontWeight = "bold";
-    btn.style.background = "linear-gradient(135deg, #4facfe, #00f2fe)";
-    btn.style.color = "#fff";
-    btn.style.border = "none";
-    btn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
-    btn.style.transition = "0.2s";
     
-    btn.onmouseover = () => {
-      btn.style.transform = "scale(1.05)";
-    };
-    
-    btn.onmouseout = () => {
-      btn.style.transform = "scale(1)";
-    };
-  });
-}, 100);
 const statusColors = {
   Offer: "green",
   Interview: "orange",
@@ -316,6 +341,11 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     const isToday = job.followUp === today;
 
     const div = document.createElement("div");
+   div.classList.add("job");
+
+if (job.status === "Offer") {
+  div.classList.add("offer");
+}
     div.style.transition = "all 0.25s ease";
 
 div.onmouseover = () => {
