@@ -332,19 +332,19 @@ return matchesSearch && matchesStatus && matchesQuick;
   const aDaysLate = getDaysLate(a);
   const bDaysLate = getDaysLate(b);
 
-  // 1. Most overdue first
+  
   if (aDaysLate !== bDaysLate) {
     return bDaysLate - aDaysLate;
   }
 
-  // 2. Then today follow-ups
+  
   const aToday = a.followUp === today;
   const bToday = b.followUp === today;
 
   if (aToday && !bToday) return -1;
   if (!aToday && bToday) return 1;
 
-  // 3. Then newest jobs
+
   return new Date(b.date) - new Date(a.date);
 });
   const countEl = document.getElementById("jobCount");
