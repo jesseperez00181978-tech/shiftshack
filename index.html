@@ -418,9 +418,14 @@ if (isOverdue && job.followUp) {
   const diffTime = todayDate - followDate;
   daysLate = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
-  if (daysLate >= 7) {
+  if (daysLate >= 10) {
+  div.style.boxShadow = "0 0 35px darkred";
+  div.style.animation = "pulse 1s infinite";
+} else if (daysLate >= 7) {
   div.style.boxShadow = "0 0 25px red";
   div.style.animation = "pulse 1.5s infinite";
+} else if (daysLate >= 3) {
+  div.style.boxShadow = "0 0 15px orange";
   }
     div.innerHTML = `
    
