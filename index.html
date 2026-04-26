@@ -299,35 +299,54 @@ setTimeout(() => {
   const today = new Date().toISOString().split("T")[0];
 
   const filteredJobs = jobs
-  .filter(job => {
-    const matchesSearch = job.name.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+    .filter(job => {
+      const matchesSearch = job.name.toLowerCase().includes(search);
+      const matchesStatus = filterStatus === "All" || job.status === filterStatus;
+      
 
-    const isOverdue = job.followUp && job.followUp < today;
-    const isToday = job.followUp === today;
-    const noLink = !job.link;
+const isOverdue = job.followUp && job.followUp < today;
+const isToday = job.followUp === today;
+const noLink = !job.link;
 
-    let matchesQuick = true;
+let matchesQuick = true;
 
-    if (quickFilter === "overdue") matchesQuick = isOverdue;
-    else if (quickFilter === "today") matchesQuick = isToday;
-    else if (quickFilter === "nolink") matchesQuick = noLink;
+if (quickFilter === "overdue") matchesQuick = isOverdue;
+else if (quickFilter === "today") matchesQuick = isToday;
+else if (quickFilter === "nolink") matchesQuick = noLink;
 
-    return matchesSearch && matchesStatus && matchesQuick;
-  })
-  .sort((a, b) => {
-    const aOverdue = a.followUp && a.followUp < today;
-    const bOverdue = b.followUp && b.followUp < today;
+return matchesSearch && matchesStatus && matchesQuick;
+    })
+    
+.sort((a, b) => {
+  const getDaysLate = (job) => {
+    if (!job.followUp) return 0;
 
-    if (aOverdue && !bOverdue) return -1;
-    if (!aOverdue && bOverdue) return 1;
+    const todayDate = new Date(today);
+    const followDate = new Date(job.followUp);
 
-    if (priority[a.status] !== priority[b.status]) {
-      return priority[a.status] - priority[b.status];
-    }
+    if (job.followUp >= today) return 0;
 
-    return new Date(b.date) - new Date(a.date);
-  });
+    return Math.floor((todayDate - followDate) / (1000 * 60 * 60 * 24));
+  };
+
+  const aDaysLate = getDaysLate(a);
+  const bDaysLate = getDaysLate(b);
+
+  // 1. Most overdue first
+  if (aDaysLate !== bDaysLate) {
+    return bDaysLate - aDaysLate;
+  }
+
+  // 2. Then today follow-ups
+  const aToday = a.followUp === today;
+  const bToday = b.followUp === today;
+
+  if (aToday && !bToday) return -1;
+  if (!aToday && bToday) return 1;
+
+  // 3. Then newest jobs
+  return new Date(b.date) - new Date(a.date);
+});
   const countEl = document.getElementById("jobCount");
   if (countEl) countEl.textContent = "Total Jobs: " + jobs.length;
 
