@@ -643,10 +643,13 @@ I wanted to follow up regarding my application. I’m very interested and would 
 Thank you,
 Jesse`;
 
-  navigator.clipboard.writeText(message);
-
-  navigator.share({
-    text: message
+  navigator.clipboard.writeText(message).then(() => {
+    navigator.share({
+      title: "Follow Up Message",
+      text: message
+    });
+  }).catch(() => {
+    alert(message);
   });
 }
 
