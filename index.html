@@ -242,7 +242,15 @@ function backupJobs() {
 
 if (!followUp) {
   const followUpDate = new Date();
-  followUpDate.setDate(followUpDate.getDate() + 2);
+
+  if (status === "Applied") {
+    followUpDate.setDate(followUpDate.getDate() + 5);
+  } else if (status === "Interview") {
+    followUpDate.setDate(followUpDate.getDate() + 2);
+  } else {
+    followUpDate.setDate(followUpDate.getDate() + 7);
+  }
+
   followUp = followUpDate.toISOString().split("T")[0];
 }
 
