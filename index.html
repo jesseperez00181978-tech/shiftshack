@@ -235,12 +235,9 @@ function backupJobs() {
 
   URL.revokeObjectURL(url);
 }
-    function addJob() {
-      const name = document.getElementById("jobInput").value.trim();
-      const status = document.getElementById("statusInput").value;
-      let followUp = document.getElementById("followUpInput").value;
+    
 
-if (!followUp) {
+if (!followUp || followUp.trim() === "") {
   const followUpDate = new Date();
 
   if (status === "Applied") {
