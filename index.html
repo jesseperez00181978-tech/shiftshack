@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html>
 <head>
   <title>ShiftStack</title>
@@ -235,19 +235,14 @@ function backupJobs() {
 
   URL.revokeObjectURL(url);
 }
-    
+    function addJob() {
+      const name = document.getElementById("jobInput").value.trim();
+      const status = document.getElementById("statusInput").value;
+      let followUp = document.getElementById("followUpInput").value;
 
-if (!followUp || followUp.trim() === "") {
+if (!followUp) {
   const followUpDate = new Date();
-
-  if (status === "Applied") {
-    followUpDate.setDate(followUpDate.getDate() + 5);
-  } else if (status === "Interview") {
-    followUpDate.setDate(followUpDate.getDate() + 2);
-  } else {
-    followUpDate.setDate(followUpDate.getDate() + 7);
-  }
-
+  followUpDate.setDate(followUpDate.getDate() + 2);
   followUp = followUpDate.toISOString().split("T")[0];
 }
 
