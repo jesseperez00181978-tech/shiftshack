@@ -524,7 +524,7 @@ background: ${statusColors[job.status] || "gray"};
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button onclick="followUp('${job.company}', '${job.position}')">
+    <button onclick="followUp('${job.name}')">
   Follow Up
 </button>
 `;
@@ -635,16 +635,20 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(company, position) {
-  const message = `Hi ${company},
+function followUp(name) {
+  const message = `Hi ${name},
 
-
-I wanted to follow up regarding my application for the ${position} position. I’m very interested and would appreciate any updates.
+I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
 
 Thank you,
 Jesse`;
 
-  alert(message);
+  navigator.clipboard.writeText(message);
+
+  navigator.share({
+    text: message
+  });
+}
 }
     
     
