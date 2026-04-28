@@ -497,7 +497,24 @@ background: ${statusColors[job.status] || "gray"};
       <div>Applied: ${job.date}</div>
       ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
       <label>Follow up:</label>
-      
+     <div>Applied: ${job.date}</div>
+
+${isOverdue ? `
+  <button onclick="alert('Follow up with ${job.name}')"
+    style="
+      width:100%;
+      margin:10px 0;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:#111;
+      color:white;
+      font-weight:bold;
+      font-size:15px;
+    ">
+    📞 Follow Up Now
+  </button>
+` : ""} 
       <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
 
     <div>
