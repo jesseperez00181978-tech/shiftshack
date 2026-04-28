@@ -650,14 +650,15 @@ Jesse`;
     
 
     function deleteJob(index) {
-      if (confirm("Delete this job?")) return;
-      jobs.splice(index, 1);
+      if (!confirm("Delete this job?")) {return;
+      
+   jobs.splice(index, 1);
       saveJobs();
       renderJobs();
     }
 function clearJobs() {
-  if (!confirm("Delete all jobs?")) return;
-
+  if (!confirm("Delete all jobs?")) {return;
+    }
   jobs = [];
   saveJobs();
   renderJobs();
