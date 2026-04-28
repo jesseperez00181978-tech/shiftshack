@@ -650,16 +650,18 @@ Jesse`;
     
 
     function deleteJob(index) {
-      if (!confirm("Delete this job?")) return;
+      if (confirm("Delete this job?")) return;
       jobs.splice(index, 1);
       saveJobs();
       renderJobs();
     }
 function clearJobs() {
-  if (!confirm("Delete ALL jobs?")) return;
+  if (!confirm("Delete all jobs?")) return;
+
   jobs = [];
   saveJobs();
   renderJobs();
+}
 }
     document.getElementById("searchInput").addEventListener("input", renderJobs);
     document.getElementById("filterStatus").addEventListener("change", renderJobs);
