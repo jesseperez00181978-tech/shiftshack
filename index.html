@@ -335,10 +335,10 @@ return matchesSearch && matchesStatus && matchesQuick;
 
   const statsDiv = document.getElementById("stats");
   const total = jobs.length;
-  const interviews = filteredJobs.filter(j => j.status === "Interview");
-const offers = filteredJobs.filter(j => j.status === "Offer");
-const rejected = filteredJobs.filter(j => j.status === "Rejected");
-
+  const interviews = jobs.filter(j => j.status === "Interview");
+const offers = jobs.filter(j => j.status === "Offer");
+const rejected = jobs.filter(j => j.status === "Rejected");
+const today = new Date().toISOString().split("T")[0];
   statsDiv.innerHTML = `
   <div style="
     font-size:18px;
@@ -346,7 +346,7 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
     margin:18px 0 12px 0;
     color: ${offers.length > 0 ? "green" : "#222"};
   ">
-    Total: ${filteredJobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
+    Total: ${jobs.length} | Interviews: ${interviews.length} | Offers: ${offers.length} | Rejected: ${rejected.length}
   </div>
 `;
   filteredJobs.forEach((job, index) => {
