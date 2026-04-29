@@ -541,11 +541,10 @@ ${isOverdue ? `
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button onclick="followUp('${job.name}')">
+    <button onclick="followUp('${index}')">
   Follow Up
 </button>
-  Follow Up
-</button>
+  
 `;
     
 
@@ -654,8 +653,8 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(name) {
-  const message = `Hi ${name},
+function followUp(index) {
+  const message = jobs[index],
 
 I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
 
