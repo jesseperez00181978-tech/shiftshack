@@ -541,7 +541,7 @@ ${isOverdue ? `
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button onclick="followUp('${job.name}')">
+    <button class="follow-btn"onclick=followUp('${job.name}')">
   Follow Up
 </button>
   Follow Up
@@ -709,6 +709,24 @@ function clearJobs() {
   };
 
   reader.readAsText(file);
+
+
+
+document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('follow-btn')) {
+    const btn = e.target;
+
+    btn.textContent = '✓ Copied';
+    btn.style.background = '#2e7d32';
+
+    setTimeout(() => {
+      btn.textContent = '📞 Follow Up Now';
+      btn.style.background = '#111';
+    }, 1200);
+  }
+});
+
+
     }
   </script>
 </body>
