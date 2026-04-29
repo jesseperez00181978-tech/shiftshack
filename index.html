@@ -542,11 +542,10 @@ ${isOverdue ? `
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button onclick="followUp('${job.name}')">
+    <button onclick="followUp(${index})"
   Follow Up
 </button>
-  Follow Up
-</button>
+  
 `;
     
 
