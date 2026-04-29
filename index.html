@@ -512,8 +512,10 @@ ${isOverdue ? `
       font-weight:bold;
       font-size:15px;
     ">
-    📞 Follow Up Now
-  </button>
+   <button class="follow-btn" onclick="followUp('${job.name}')">
+📞 Follow Up Now
+</button> 
+    
 ` : ""} 
       <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
 
@@ -541,9 +543,7 @@ ${isOverdue ? `
       <button onclick="editLink(${index})">Edit Link</button>
       <button onclick="deleteJob(${index})">Delete</button>
    <button onclick="markContacted(${index})">Contacted Today</button>
-    <button class="follow-btn"onclick=followUp('${job.name}')">
-  📞 Follow Up Now
-</button>
+    
 `;
     
 
