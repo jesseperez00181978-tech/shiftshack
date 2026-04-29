@@ -339,7 +339,8 @@ return matchesSearch && matchesStatus && matchesQuick;
 const offers = jobs.filter(j => j.status === "Offer");
 const rejected = jobs.filter(j => j.status === "Rejected");
 const today = new Date().toISOString().split("T")[0];
-  statsDiv.innerHTML = `
+ const overdue = jobs.filter(j => j.followUp && j.followUp < today);
+        statsDiv.innerHTML = `
   <div style="
     font-size:18px;
     font-weight:bold;
@@ -654,18 +655,36 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(name) {
-  const message = `Hi ${name},
+
+    job.followed = true;
+
+  
+    function followUp(index) {
+ const job = jobs[index];
+  
+  const message = `Hi ${job.name},
 
 I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
 
 Thank you,
 Jesse`;
 
-  navigator.clipboard.writeText(message);
+  
 
-  alert(`Copied message for ${name} 👍`);
-}
+  alert(`Copied message for ${job.name} 👍`);
+navigator.clipboard.writeText(message);
+job.followed = true;
+
+const nextDate = new Date();
+nextDate.setDate(nextDate.getDate() + 3);
+
+job.followUp = nextDate.toISOString().split("T")[0];
+    saveJobs();
+renderJobs();
+    
+    }
+    
+    
 
 
 
