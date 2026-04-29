@@ -314,7 +314,7 @@ if (quickFilter === "overdue") matchesQuick = isOverdue;
 else if (quickFilter === "today") matchesQuick = isToday;
 else if (quickFilter === "nolink") matchesQuick = noLink;
 
-return matchesSearch && matchesStatus && matchesQuick;
+return true;
     })
     .sort((a, b) => {
       const aOverdue = a.followUp && a.followUp < today;
