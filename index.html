@@ -654,8 +654,8 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(name) {
-  const message = `Hi ${name},
+function followUp(index) {
+  const message = `Hi ${job.name},
 
 I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
 
@@ -663,8 +663,16 @@ Thank you,
 Jesse`;
 
   navigator.clipboard.writeText(message);
+job.followed = true;
 
-  alert(`Copied message for ${name} 👍`);
+const nextDate = new Date();
+nextDate.setDate(nextDate.getDate() + 3);
+
+job.followUp = nextDate.toISOString().split("T")[0];
+alert(`Followed up with ${job.name} 👍`);
+saveJobs();
+renderJobs();
+  
 }
 
 
