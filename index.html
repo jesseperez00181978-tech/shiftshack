@@ -500,7 +500,7 @@ background: ${statusColors[job.status] || "gray"};
      <div>Applied: ${job.date}</div>
 
 ${isOverdue ? `
-  <button onclick="alert('Follow up with ${job.name}')"
+  <button onclick="followUp(${index}')"
     style="
       width:100%;
       margin:10px 0;
