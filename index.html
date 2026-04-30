@@ -512,7 +512,7 @@ ${isOverdue ? `
       font-weight:bold;
       font-size:15px;
     ">
-   <button class="follow-btn" onclick="followUp('${job.name}')">
+   <button class="follow-btn" onclick="followUp('${job.name}', ${index})"
 📞 Follow Up Now
 </button> 
     
@@ -652,7 +652,7 @@ function searchIndeed() {
   window.open(url, "_blank");
    
 } 
-function followUp(name) {
+function followUp(name,index) {
   const message = `Hi ${name},
 
 I wanted to follow up regarding my application. I’m very interested and would appreciate any updates.
@@ -661,7 +661,9 @@ Thank you,
 Jesse`;
 
   navigator.clipboard.writeText(message);
-
+jobs[index].followed = true;
+saveJobs();
+renderJobs();
   alert(`Copied message for ${name} 👍`);
 }
 
