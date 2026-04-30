@@ -411,7 +411,7 @@ div.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
     }
 let daysLate = 0;
 
-if (isOverdue && job.followUp) {
+if (isOverdue && job.followUp && !job.followed) {
   const followDate = new Date(job.followUp);
   const todayDate = new Date(today);
 
