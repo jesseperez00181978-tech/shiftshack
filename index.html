@@ -499,7 +499,7 @@ background: ${statusColors[job.status] || "gray"};
       <div>Applied: ${job.date}</div>
       ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
       <label>Follow up:</label>
-     <div>Applied: ${job.date}</div>
+     <div>${job.followUp || "Not set"}</div>
 
 ${isOverdue ? `
   <button onclick="alert('Follow up with ${job.name}')"
