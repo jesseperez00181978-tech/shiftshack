@@ -427,7 +427,7 @@ if (isOverdue && job.followUp && !job.followed) {
 } else if (daysLate >= 3) {
   div.style.boxShadow = "0 0 15px orange";
   }
-  let urgencyColor = "red";
+  let urgencyColor = "#ffcc00";
 
 if (daysLate >= 10) {
   urgencyColor = "darkred";
@@ -435,7 +435,9 @@ if (daysLate >= 10) {
   urgencyColor = "red";
 } else if (daysLate >= 3) {
   urgencyColor = "orange";
-} 
+ } else if (daysLate >= 1) {
+  urgencyColor = "#ffcc00";
+    }
     div.innerHTML = `
    
      ${isOverdue ? `
