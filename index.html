@@ -537,7 +537,7 @@ ${isOverdue ? `
     ${job.link ? `<div style="margin-top:6px; color:#007BFF; font-weight:bold; cursor:pointer;" onclick="openLink('${job.link}')">
 🔗 Open Link
 </div>` : ""} 
-      ${isOverdue ? '<div style="color:red">(Overdue)</div>' : isToday ? '<div style="color:orange">(Today)</div>' : ""}
+      
 
       <div>Notes:</div>
       <textarea oninput="updateNotes(${index}, this.value)">${job.notes || ""}</textarea>
