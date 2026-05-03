@@ -545,14 +545,29 @@ ${isOverdue ? `
       <div style="margin-top:8px; font-weight:bold;">Notes:</div>
 
 <textarea 
+ 
   placeholder="Add notes..."
   oninput="updateNote(${index}, this.value)"
   style="width:100%; margin-top:4px; padding:8px; border-radius:8px; border:1px solid #ccc; min-height:70px;"
 >${job.notes || ""}</textarea>
+     ${job.contacted ? `
+  <div style="margin-top:6px; color:#28a745;">
+    ✔ Contacted
+  </div>
+` : ""}
       ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
-      <button onclick="editLink(${index})">Edit Link</button>
-      <button onclick="deleteJob(${index})">Delete</button>
-   <button onclick="markContacted(${index})">Contacted Today</button>
+      <button onclick="editLink(${index})"
+  style="margin-top:6px; padding:6px 10px; border:none; background:#007bff; color:white; border-radius:6px;">
+  Edit Link
+</button>
+      <button onclick="deleteJob(${index})"
+  style="margin-top:6px; padding:6px 10px; border:none; background:#dc3545; color:white; border-radius:6px;">
+  Delete
+</button>
+   <button onclick="markContacted(${index})"
+  style="margin-top:6px; padding:6px 10px; border:none; background:#28a745; color:white; border-radius:6px;">
+  Mark Contacted
+</button>
     
 `;
     
