@@ -564,17 +564,15 @@ ${isOverdue ? `
   style="margin-top:6px; padding:6px 10px; border:none; background:#dc3545; color:white; border-radius:6px;">
   Delete
 </button>
-   ${job.contacted ? `
-  <button
-    style="margin-top:6px; padding:6px 10px; border:none; background:#6c757d; color:white; border-radius:6px;">
-    ✔ Contacted
-  </button>
+  ${job.contacted ? `
+<button style="margin-top:6px; padding:6px 10px; border:none; background:#6c757d; color:white; border-radius:6px;">
+✔ Contacted
+</button>
 ` : `
-  <button onclick="markContacted(${index})"
-    style="margin-top:6px; padding:6px 10px; border:none; background:#28a745; color:white; border-radius:6px;">
-    Mark Contacted
-  </button>
-}
+<button onclick="markContacted(${index})" style="margin-top:6px; padding:6px 10px; border:none; background:#28a745; color:white; border-radius:6px;">
+Mark Contacted
+</button>
+`} 
     
 `;
     
