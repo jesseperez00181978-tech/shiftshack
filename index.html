@@ -638,6 +638,7 @@ jobs[index].lastUpdated = new Date().toLocaleTimeString();
   window.open(formatted, "_blank");
   }    
   function markContacted(index) {
+  jobs[index].contacted = true;
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
 
