@@ -565,15 +565,15 @@ ${isOverdue ? `
   Delete
 </button>
   ${job.contacted ? `
-  <div style="margin-top:6px; color:#28a745; font-weight:bold;">
-    ✔ Contacted
-  </div>
-` : `
-  <button onclick="markContacted(${index})"
+<div style="margin-top:6px; color:#28a745; font-weight:bold;">
+  ✔ Contacted
+</div>
+` : ""}
+${!job.contacted ? `
+<button onclick="markContacted(${index})"
   style="margin-top:6px; padding:6px;">
-    Mark Contacted
-  </button>
-
+  Mark Contacted
+</button>
 ` : ""}
 
     
