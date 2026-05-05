@@ -494,7 +494,11 @@ font-size:14px;
 
 background: ${statusColors[job.status] || "gray"};
 ">
-  ${job.status}
+  ${job.status === "Applied" ? "📩 " : ""}
+${job.status === "Interview" ? "📞 " : ""}
+${job.status === "Offer" ? "🎉 " : ""}
+${job.status === "Rejected" ? "❌ " : ""}
+${job.status}
 </div>
       <div>Applied: ${job.date}</div>
       ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
