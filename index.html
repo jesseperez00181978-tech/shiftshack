@@ -185,6 +185,27 @@ input, select, textarea {
   <button id="filter-today" onclick="setQuickFilter('today')">Today</button>
   <button id="filter-nolink" onclick="setQuickFilter('nolink')">No Link</button>
   </div>
+  <div class="stats-container">
+  <div class="stat-box applied-stat">
+    <span id="appliedCount">0</span>
+    <small>Applied</small>
+  </div>
+
+  <div class="stat-box interview-stat">
+    <span id="interviewCount">0</span>
+    <small>Interviews</small>
+  </div>
+
+  <div class="stat-box offer-stat">
+    <span id="offerCount">0</span>
+    <small>Offers</small>
+  </div>
+
+  <div class="stat-box rejected-stat">
+    <span id="rejectedCount">0</span>
+    <small>Rejected</small>
+  </div>
+  </div>
   <div id="jobList"></div>
 
   <script>
