@@ -460,8 +460,7 @@ if (daysLate >= 10) {
   urgencyColor = "#ffcc00";
     }
     div.innerHTML = `
-   
-     ${isOverdue ? `
+   ${(isOverdue && daysLate > 0) ? `
   <div style="
     background:${urgencyColor};
     color:white;
