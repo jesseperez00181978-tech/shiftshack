@@ -688,10 +688,12 @@ function exportJobs() {
 
   const a = document.createElement("a");
   a.href = dataUri;
-  a.download = "jobs.json";
+  const today = new Date().toISOString().split("T")[0];
+    a.download = `shiftstack-backup-${today}.json`;
 
   document.body.appendChild(a);
   a.click();
+alert("Backup exported successfully ✅");  
   document.body.removeChild(a);
 }
 
