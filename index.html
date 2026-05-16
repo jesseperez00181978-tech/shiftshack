@@ -607,13 +607,33 @@ ${!job.contacted ? `
   });
         }
      
-    
+  updateStats();
+   function updateStats() {
+  const total = jobs.length;
+  const applied = jobs.filter(job => job.status === "Applied").length;
+  const interview = jobs.filter(job => job.status === "Interview").length;
+  const offer = jobs.filter(job => job.status === "Offer").length;
+  const rejected = jobs.filter(job => job.status === "Rejected").length;
+
+  const totalEl = document.getElementById("totalCount");
+  const appliedEl = document.getElementById("appliedCount");
+  const interviewEl = document.getElementById("interviewCount");
+  const offerEl = document.getElementById("offerCount");
+  const rejectedEl = document.getElementById("rejectedCount");
+
+  if (totalEl) totalEl.textContent = total;
+  if (appliedEl) appliedEl.textContent = applied;
+  if (interviewEl) interviewEl.textContent = interview;
+  if (offerEl) offerEl.textContent = offer;
+  if (rejectedEl) rejectedEl.textContent = rejected;
+   } 
 
   function updateLink(index, value) {
   jobs[index].link = value;
   saveJobs();
   }
-function editLink(index) {
+
+    function editLink(index) {
   const newLink = prompt("Edit job link:", jobs[index].link || "");
 
   if (newLink !== null) {
