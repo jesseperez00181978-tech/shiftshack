@@ -371,9 +371,10 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   </div>
 `;
   filteredJobs.forEach((job, index) => {
+    const isActive = job.status !== "Offer" && job.status !== "Rejected";
     
-      const isOverdue = job.followUp && job.followUp < today;
-    const isToday = job.followUp === today;
+      const isOverdue = isActive && job.followUp && job.followUp < today;
+    const isToday = isActive && job.followUp === today;
 
     const div = document.createElement("div");
   
