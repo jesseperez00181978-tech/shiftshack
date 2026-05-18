@@ -517,8 +517,7 @@ if (daysLate >= 10) {
   <div style="margin-top:6px;">Applied: ${job.date}</div>
   ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
 
-  <div style="margin-top:10px; font-weight:bold;">Follow up:</div>
-  <div>${job.followUp ? new Date(job.followUp + "T00:00:00").toLocaleDateString() : "Not set"}</div>
+  
 
   ${isOverdue ? `
     <button class="follow-btn" onclick="followUp('${job.name}', ${index})"
