@@ -515,8 +515,8 @@ if (daysLate >= 10) {
   </div>
 
   <div style="margin-top:6px;">Applied: ${job.date}</div>
-  ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
-
+  
+Last Contacted: ${new Date(job.lastContacted + "T00:00:00").toLocaleDateString()}
   
 
   ${isOverdue ? `
