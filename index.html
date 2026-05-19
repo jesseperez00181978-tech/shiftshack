@@ -633,7 +633,7 @@ ${job.lastContacted ? `<div style="font-size:12px;color:#aaa;">Last Contacted: $
 }
 function markContacted(index) {
   jobs[index].contacted = true;
- playContactSound()
+ playContactSound();
   jobs[index].lastContacted = new Date().toLocaleDateString();
   
   jobs[index].lastUpdated = new Date().toLocaleDateString();
@@ -641,10 +641,20 @@ function markContacted(index) {
   renderJobs();
 }    
 function playContactSound() {
-  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-  audio.play().catch(error => {
-    console.log("Sound blocked:", error);
-  });
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.value = 880;
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.2);
+}
 }   
     function updateStatus(index, value) {
       jobs[index].status = value;
