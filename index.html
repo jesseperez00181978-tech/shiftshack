@@ -568,8 +568,8 @@ Last Contacted: ${new Date(job.lastContacted + "T00:00:00").toLocaleDateString()
     </div>
   ` : ""}
 
-  ${job.lastUpdated ? `<div style="font-size:12px; color:gray; margin-top:6px;">Updated: ${job.lastUpdated}</div>` : ""}
-
+  ${job.lastUpdated ? `<div style="font-size:12px;color:#888;">Updated: ${job.lastUpdated}</div>` : ""}
+${job.lastContacted ? `<div style="font-size:12px;color:#aaa;">Last Contacted: ${job.lastContacted}</div>` : ""}
   <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
     <button onclick="editLink(${index})" style="background:#007bff;">
       Edit Link
@@ -631,6 +631,13 @@ Last Contacted: ${new Date(job.lastContacted + "T00:00:00").toLocaleDateString()
     renderJobs();
   }
 }
+function markContacted(index) {
+  jobs[index].contacted = true;
+  jobs[index].lastContacted = new Date().toLocaleDateString();
+  jobs[index].lastUpdated = new Date().toLocaleDateString();
+  saveJobs();
+  renderJobs();
+}    
     function updateStatus(index, value) {
       jobs[index].status = value;
       jobs[index].lastUpdated = new Date().toLocaleTimeString();
