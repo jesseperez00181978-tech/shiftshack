@@ -640,10 +640,13 @@ function markContacted(index) {
   saveJobs();
   renderJobs();
 }    
-function playContactSound() {
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
+function markContacted(index) {
+  jobs[index].contacted = true;
+  jobs[index].lastContacted = new Date().toLocaleDateString();
+  jobs[index].lastUpdated = new Date().toLocaleDateString();
+  saveJobs();
+  renderJobs();
+}
 
   oscillator.type = "sine";
   oscillator.frequency.value = 880;
