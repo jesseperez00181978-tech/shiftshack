@@ -633,11 +633,19 @@ ${job.lastContacted ? `<div style="font-size:12px;color:#aaa;">Last Contacted: $
 }
 function markContacted(index) {
   jobs[index].contacted = true;
+ playContactSound()
   jobs[index].lastContacted = new Date().toLocaleDateString();
+  
   jobs[index].lastUpdated = new Date().toLocaleDateString();
   saveJobs();
   renderJobs();
 }    
+function playContactSound() {
+  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+  audio.play().catch(error => {
+    console.log("Sound blocked:", error);
+  });
+}   
     function updateStatus(index, value) {
       jobs[index].status = value;
       jobs[index].lastUpdated = new Date().toLocaleTimeString();
