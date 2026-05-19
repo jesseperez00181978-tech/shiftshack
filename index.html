@@ -500,7 +500,23 @@ if (daysLate >= 10) {
     <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
     <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
   </select>
+<div style="margin-top:10px; font-weight:bold;">Priority:</div>
 
+<select onchange="updatePriority(${index}, this.value)"
+style="
+    width:100%;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid #444;
+    background:#1a1a1a;
+    color:white;
+    margin-bottom:10px;
+">
+    <option value="Low" ${job.priority === "Low" ? "selected" : ""}>Low</option>
+    <option value="Medium" ${job.priority === "Medium" ? "selected" : ""}>Medium</option>
+    <option value="High" ${job.priority === "High" ? "selected" : ""}>High</option>
+</select>
+ [PASTE NEW PRIORITY BLOCK] 
   <div style="
     display:inline-block;
     padding:5px 12px;
