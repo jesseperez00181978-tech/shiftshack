@@ -648,18 +648,11 @@ function markContacted(index) {
   renderJobs();
 }
 
-  oscillator.type = "sine";
-  oscillator.frequency.value = 880;
+  
+   
 
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-
-  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + 0.2);
-}
-}   
-    function updateStatus(index, value) {
+function updateStatus(index, value) {
+    
       jobs[index].status = value;
       jobs[index].lastUpdated = new Date().toLocaleTimeString();
       saveJobs();
