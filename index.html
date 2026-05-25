@@ -371,10 +371,9 @@ const rejected = filteredJobs.filter(j => j.status === "Rejected");
   </div>
 `;
   filteredJobs.forEach((job, index) => {
-    const isActive = job.status !== "Offer" && job.status !== "Rejected";
     
-      const isOverdue = isActive && job.followUp && job.followUp < today;
-    const isToday = isActive && job.followUp === today;
+      const isOverdue = job.followUp && job.followUp < today;
+    const isToday = job.followUp === today;
 
     const div = document.createElement("div");
   
@@ -460,148 +459,145 @@ if (daysLate >= 10) {
  } else if (daysLate >= 1) {
   urgencyColor = "#ffcc00";
     }
-  div.innerHTML = `
-  ${(isOverdue && daysLate > 0) ? `
-    <div style="
-      background:${urgencyColor};
-      color:white;
-      padding:10px 12px;
-      border-radius:14px;
-      margin-bottom:14px;
-      font-size:13px;
-      font-weight:bold;
-      text-align:center;
-      letter-spacing:0.5px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.2);
-    ">
-      ⚠️ OVERDUE — ${daysLate} day${daysLate !== 1 ? 's' : ''} late
-    </div>
-  ` : isToday ? `
-    <div style="
-      background:linear-gradient(90deg, #ff9800, #ffb74d);
-      color:white;
-      padding:10px 12px;
-      border-radius:14px;
-      margin-bottom:14px;
-      font-size:13px;
-      font-weight:bold;
-      text-align:center;
-    ">
-      ⏰ FOLLOW UP TODAY
-    </div>
-  ` : ""}
-
-  <input value="${job.name}" onchange="updateName(${index}, this.value)" />
-
-  <div style="margin-top:8px; font-weight:bold;">Status:</div>
-  <select onchange="updateStatus(${index}, this.value)">
-    <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
-    <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
-    <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
-    <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
-  </select>
-<div style="margin-top:10px; font-weight:bold;">Priority:</div>
-
-<select onchange="updatePriority(${index}, this.value)"
-style="
-    width:100%;
-    padding:10px;
-    border-radius:12px;
-    border:1px solid #444;
-    background:#1a1a1a;
+    div.innerHTML = `
+   ${(isOverdue && daysLate > 0) ? `
+  <div style="
+    background:${urgencyColor};
     color:white;
-    margin-bottom:10px;
+    padding:16px;
+border-radius:20px;
+margin-bottom:16px;
+font-size:14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border: 1px solid rgba(0,0,0,0.1);
+  text-align:center;
+  letter-spacing:1px;
 ">
-    <option value="Low" ${job.priority === "Low" ? "selected" : ""}>Low</option>
-    <option value="Medium" ${job.priority === "Medium" ? "selected" : ""}>Medium</option>
-    <option value="High" ${job.priority === "High" ? "selected" : ""}>High</option>
-</select>
- 
+
+⚠️ FOLLOW UP OVERDUE — <span style="font-weight:bold; font-size:16px;">${daysLate} day${daysLate !== 1 ? 's' : ''} late</span>    
+  </div>
+
+` : isToday ? `
   <div style="
-    display:inline-block;
-    padding:5px 12px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:bold;
-    margin:8px 0;
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
     color:white;
-    background:${statusColors[job.status] || "gray"};
-  ">
-    ${job.status}
-  </div>
-
-  <div style="margin-top:6px;">Applied: ${job.date}</div>
-  
-
-  
-
-  ${isOverdue ? `
-    <button class="follow-btn" onclick="followUp('${job.name}', ${index})"
-      style="
-        width:100%;
-        margin:12px 0;
-        padding:12px;
-        border-radius:14px;
-        background:#111;
-        color:white;
-        font-weight:bold;
-      ">
-      📞 Follow Up Now
-    </button>
-  ` : ""}
-
-  <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
-
-  <div style="
-    margin-top:12px;
     padding:12px;
-    border-radius:14px;
-    background:#f8f8f8;
-    border:1px solid #ddd;
+border-radius:12px;
+margin-bottom:16px;
+font-size:14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.1);text-align:center;
+  text-align:center;
+  letter-spacing:1px;
   ">
-    ${job.link && job.link.startsWith("http")
-      ? `<a href="${job.link}" target="_blank" rel="noopener noreferrer">🔗 Open Job</a>`
-      : `<span style="color:#777;">No link saved</span>`
-    }
-
-    <input 
-      placeholder="Paste job link..."
-      value="${job.link || ""}"
-      oninput="updateLink(${index}, this.value)"
-      style="margin-top:10px;"
-    />
-
-    <div style="margin-top:12px; font-weight:bold;">Notes:</div>
-    <textarea 
-      placeholder="Add notes..."
-      oninput="updateNotes(${index}, this.value)"
-    >${job.notes || ""}</textarea>
+    ⏰ FOLLOW UP TODAY
   </div>
+` : ""}
+      <input value="${job.name}" onchange="updateName(${index}, this.value)" />
 
+      <div>Status:</div>
+      <select onchange="updateStatus(${index}, this.value)">
+        <option value="Applied" ${job.status === "Applied" ? "selected" : ""}>Applied</option>
+        <option value="Interview" ${job.status === "Interview" ? "selected" : ""}>Interview</option>
+        <option value="Offer" ${job.status === "Offer" ? "selected" : ""}>Offer</option>
+        <option value="Rejected" ${job.status === "Rejected" ? "selected" : ""}>Rejected</option>
+      </select>
+<div style="
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+  margin:6px 0;
+  color:white;
+  
+
+background: ${statusColors[job.status] || "gray"};
+">
+  ${job.status}
+</div>
+      <div>Applied: ${job.date}</div>
+      ${job.lastContacted ? `<div>Last Contacted: ${job.lastContacted}</div>` : ""}
+      <label>Follow up:</label>
+     <div>${job.followUp || "Not set"}</div>
+
+${isOverdue ? `
+  <button onclick="alert('Follow up with ${job.name}')"
+    style="
+      width:100%;
+      margin:10px 0;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:#111;
+      color:white;
+      font-weight:bold;
+      font-size:15px;
+    ">
+   <button class="follow-btn" onclick="followUp('${job.name}', ${index})"
+📞 Follow Up Now
+</button> 
+    
+` : ""} 
+      <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
+
+    <div>
+  ${job.link && job.link.startsWith("http")
+    ? `<a href="${job.link}" target="_blank">Open Job</a>`
+    : `<span style="color:gray;font-size:14px;">No link saved</span>`
+  }
+</div>
+
+<input 
+  placeholder="Paste job link..."
+  value="${job.link || ""}"
+  oninput="updateLink(${index}, this.value)"
+  style="margin-top:6px;"
+/>
+ ${job.link ? `
+  <a href="${job.link}" target="_blank" rel="noopener noreferrer"
+     style="display:inline-block; margin-top:6px; color:#007bff; text-decoration:underline;">
+     🔗 Open Job
+  </a>
+` : ""}    
+      
+
+      <div style="margin-top:8px; font-weight:bold;">Notes:</div>
+
+<textarea 
+ 
+  placeholder="Add notes..."
+  oninput="updateNote(${index}, this.value)"
+  style="width:100%; margin-top:4px; padding:8px; border-radius:8px; border:1px solid #ccc; min-height:70px;"
+>${job.notes || ""}</textarea>
+     ${job.contacted ? `
+  <div style="margin-top:6px; color:#28a745;">
+    ✔ Contacted
+  </div>
+` : ""}
+      ${job.lastUpdated ? `<div style="font-size:12px; color:gray;">Updated: ${job.lastUpdated}</div>` : ''}
+      <button onclick="editLink(${index})"
+  style="margin-top:6px; padding:6px 10px; border:none; background:#007bff; color:white; border-radius:6px;">
+  Edit Link
+</button>
+      <button onclick="deleteJob(${index})"
+  style="margin-top:6px; padding:6px 10px; border:none; background:#dc3545; color:white; border-radius:6px;">
+  Delete
+</button>
   ${job.contacted ? `
-    <div style="margin-top:10px; color:#28a745; font-weight:bold;">
-      ✔ Contacted
-    </div>
-  ` : ""}
+<div style="margin-top:6px; color:#28a745; font-weight:bold;">
+  ✔ Contacted
+</div>
+` : ""}
+${!job.contacted ? `
+<button onclick="markContacted(${index})"
+  style="margin-top:6px; padding:6px;">
+  Mark Contacted
+</button>
+` : ""}
 
-  ${job.lastUpdated ? `<div style="font-size:12px;color:#888;">Updated: ${job.lastUpdated}</div>` : ""}
-${job.lastContacted ? `<div style="font-size:12px;color:#aaa;">Last Contacted: ${job.lastContacted}</div>` : ""}
-  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
-    <button onclick="editLink(${index})" style="background:#007bff;">
-      Edit Link
-    </button>
-
-    <button onclick="deleteJob(${index})" style="background:#dc3545;">
-      Delete
-    </button>
-
-    ${!job.contacted ? `
-      <button onclick="markContacted(${index})">
-        Mark Contacted
-      </button>
-    ` : ""}
-  </div>
-`;  
+    
+`;
     
 
 
@@ -647,28 +643,7 @@ ${job.lastContacted ? `<div style="font-size:12px;color:#aaa;">Last Contacted: $
     renderJobs();
   }
 }
-function markContacted(index) {
-  jobs[index].contacted = true;
-
-  jobs[index].lastContacted = new Date().toLocaleDateString();
-  
-  jobs[index].lastUpdated = new Date().toLocaleDateString();
-  saveJobs();
-  renderJobs();
-}    
-function markContacted(index) {
-  jobs[index].contacted = true;
-  jobs[index].lastContacted = new Date().toLocaleDateString();
-  jobs[index].lastUpdated = new Date().toLocaleDateString();
-  saveJobs();
-  renderJobs();
-}
-
-  
-   
-
-function updateStatus(index, value) {
-    
+    function updateStatus(index, value) {
       jobs[index].status = value;
       jobs[index].lastUpdated = new Date().toLocaleTimeString();
       saveJobs();
@@ -764,4 +739,37 @@ Jesse`;
   navigator.clipboard.writeText(message);
 jobs[index].followed = true;
 saveJobs();
-r
+renderJobs();
+  alert(`Copied message for ${name} 👍`);
+}
+
+
+
+
+    
+    
+
+    function deleteJob(index) {
+      if (!confirm("Delete this job?")) {return;
+      
+   jobs.splice(index, 1);
+      saveJobs();
+      renderJobs();
+    }
+function clearJobs() {
+  if (!confirm("Delete all jobs?")) {return;
+    }
+  jobs = [];
+  saveJobs();
+  renderJobs();
+}
+}
+    document.getElementById("searchInput").addEventListener("input", renderJobs);
+    document.getElementById("filterStatus").addEventListener("change", renderJobs);
+
+    renderJobs();
+    function importJobs(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const read
