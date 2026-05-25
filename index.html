@@ -3,6 +3,7 @@
 <head>
   <title>ShiftStack</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,34 +14,45 @@
 
     h1 { text-align: center; }
 
-    .section { margin-bottom: 15px; }
-
     input, select, button, textarea {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
       font-size: 16px;
-      box-sizing: border-box;
       border-radius: 10px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     button {
       border: none;
-      font-weight: bold;
       background: linear-gradient(135deg, #4facfe, #00f2fe);
       color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
     }
+
+    button:hover { transform: scale(1.03); }
 
     .job {
       background: white;
       padding: 12px;
-      margin-top: 12px;
-      border-radius: 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.2s;
     }
 
-    .offer {
-      box-shadow: 0 0 25px rgba(0,255,0,0.4);
+    .offer { box-shadow: 0 0 25px rgba(0,255,0,0.5); }
+
+    .overdue { background: #ffe5e5; border-left: 6px solid red; }
+    .today { background: #fff4cc; border-left: 6px solid orange; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px red; }
+      50% { transform: scale(1.02); box-shadow: 0 0 25px red; }
+      100% { transform: scale(1); box-shadow: 0 0 10px red; }
     }
   </style>
 </head>
@@ -50,8 +62,8 @@
 <h1>ShiftStack 💼</h1>
 
 <button onclick="searchIndeed()">Find Jobs</button>
-<button onclick="exportJobs()">Export Jobs</button>
-<button onclick="backupJobs()">Backup Jobs</button>
+<button onclick="exportJobs()">Export</button>
+<button onclick="backupJobs()">Backup</button>
 
 <input id="jobInput" placeholder="Company name">
 <select id="statusInput">
@@ -73,90 +85,93 @@
 <script>
 let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 
-function saveJobs() {
+function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 
 function addJob() {
-  const name = document.getElementById("jobInput").value.trim();
-  const status = document.getElementById("statusInput").value;
-  let followUp = document.getElementById("followUpInput").value;
-
+  const name = jobInput.value.trim();
   if (!name) return;
 
-  if (!followUp) {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    followUp = d.toISOString().split("T")[0];
-  }
+  const today = new Date().toISOString().split("T")[0];
 
   jobs.unshift({
     name,
-    status,
-    date: new Date().toISOString().split("T")[0],
-    followUp,
+    status: statusInput.value,
+    date: today,
+    followUp: followUpInput.value || today,
     notes: "",
     link: "",
     contacted: false
   });
 
-  saveJobs();
+  jobInput.value = "";
+  followUpInput.value = "";
+
+  save();
   renderJobs();
 }
 
 function renderJobs() {
   const list = document.getElementById("jobList");
+  const search = searchInput.value.toLowerCase();
+
   list.innerHTML = "";
 
-  const search = document.getElementById("searchInput").value.toLowerCase();
+  const today = new Date().toISOString().split("T")[0];
 
   jobs
     .filter(j => j.name.toLowerCase().includes(search))
-    .forEach((job, index) => {
+    .forEach((job, i) => {
 
       const div = document.createElement("div");
       div.className = "job";
 
+      const overdue = job.followUp && job.followUp < today;
+      const isToday = job.followUp === today;
+
       if (job.status === "Offer") div.classList.add("offer");
+      if (overdue) div.classList.add("overdue");
+      if (isToday) div.classList.add("today");
 
       div.innerHTML = `
-        <input value="${job.name}" onchange="updateName(${index}, this.value)">
-
-        <select onchange="updateStatus(${index}, this.value)">
+        <input value="${job.name}" onchange="updateName(${i}, this.value)">
+        
+        <select onchange="updateStatus(${i}, this.value)">
           <option ${job.status==="Applied"?"selected":""}>Applied</option>
           <option ${job.status==="Interview"?"selected":""}>Interview</option>
           <option ${job.status==="Offer"?"selected":""}>Offer</option>
           <option ${job.status==="Rejected"?"selected":""}>Rejected</option>
         </select>
 
-        <input type="date" value="${job.followUp || ""}" onchange="updateFollowUp(${index}, this.value)">
+        <input type="date" value="${job.followUp || ""}" onchange="updateFollow(${i}, this.value)">
 
-        <textarea oninput="updateNotes(${index}, this.value)">${job.notes || ""}</textarea>
+        <textarea onchange="updateNotes(${i}, this.value)">${job.notes || ""}</textarea>
 
-        <button onclick="deleteJob(${index})">Delete</button>
+        <button onclick="deleteJob(${i})">Delete</button>
       `;
 
       list.appendChild(div);
     });
 }
 
-function updateName(i,v){ jobs[i].name=v; saveJobs(); }
-function updateStatus(i,v){ jobs[i].status=v; saveJobs(); }
-function updateFollowUp(i,v){ jobs[i].followUp=v; saveJobs(); }
-function updateNotes(i,v){ jobs[i].notes=v; saveJobs(); }
+function updateName(i,v){ jobs[i].name=v; save(); renderJobs(); }
+function updateStatus(i,v){ jobs[i].status=v; save(); renderJobs(); }
+function updateFollow(i,v){ jobs[i].followUp=v; save(); renderJobs(); }
+function updateNotes(i,v){ jobs[i].notes=v; save(); }
 
 function deleteJob(i){
-  if(!confirm("Delete this job?")) return;
   jobs.splice(i,1);
-  saveJobs();
+  save();
   renderJobs();
 }
 
 function clearJobs(){
-  if(!confirm("Clear all jobs?")) return;
-  jobs=[];
-  saveJobs();
-  renderJobs();
+  if(confirm("Clear everything?")){
+    jobs = [];
+    save();
+    renderJobs();
+  }
 }
 
 function exportJobs(){
@@ -170,8 +185,7 @@ function exportJobs(){
 function backupJobs(){ exportJobs(); }
 
 function searchIndeed(){
-  const q = document.getElementById("jobInput").value || "jobs";
-  window.open(`https://www.indeed.com/jobs?q=${encodeURIComponent(q)}`);
+  window.open("https://www.indeed.com/jobs?q=" + encodeURIComponent(jobInput.value || "jobs"));
 }
 
 renderJobs();
