@@ -148,23 +148,38 @@ function render() {
     if (daysLate >= 3) div.classList.add("pulse");
 
     div.innerHTML = `
-      <b>${job.name}</b><br>
-      Status: ${job.status}<br>
-      Follow-up: ${job.followUp || "none"}<br>
-      Link: ${job.link || "none"}<br>
+      <
+      <div class="job-card">
 
-      <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+  <div class="job-info">
+    <h3>${job.company}</h3>
+    <p>${job.position}</p>
+  </div>
 
-        <button onclick="followUp(${i})" style="background:black;">Follow Up</button>
+  <div class="follow-up">
+    ${job.followUp || "No follow-up yet"}
+  </div>
 
-        <button onclick="editJob(${i})" style="background:#00c853;">Edit</button>
+  <div class="job-actions">
+    <button class="edit-btn" onclick="editJob(${job.id})">
+      Edit
+    </button>
 
-        <button onclick="saveLink(${i})" style="background:#ff1744;">Save Link</button>
+    <button class="save-btn" onclick="saveJob(${job.id})">
+      Save
+    </button>
 
-        <button onclick="deleteJob(${i})" style="background:#555;">Delete</button>
+    <button class="delete-btn" onclick="deleteJob(${job.id})">
+      Delete
+    </button>
+  </div>
+
+</div>
+
+           
 
       </div>
-    `;
+    `
 
     list.appendChild(div);
   });
