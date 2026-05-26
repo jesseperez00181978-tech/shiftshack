@@ -145,7 +145,7 @@ function render() {
     else if (job.status === "Rejected") div.classList.add("red");
     else div.classList.add("blue");
 
-    if (daysLate >= 3) div.classList.add("pulse");
+  console.log("RENDER ACTIVE");  if (daysLate >= 3) div.classList.add("pulse");
 
     div.innerHTML = `
       <
