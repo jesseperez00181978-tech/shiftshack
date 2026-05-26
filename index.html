@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>ShiftStack</title>
@@ -44,6 +44,29 @@
     .orange { border-left: 6px solid orange; }
     .green { border-left: 6px solid #00c853; }
     .red { border-left: 6px solid red; }
+
+    .follow-up {
+      background: black;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .job-actions button {
+      flex: 1;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    .edit-btn { background: #2ecc71; }
+    .save-btn { background: #1e90ff; }
+    .delete-btn { background: #8b0000; }
 
     @keyframes pulse {
       0% { transform: scale(1); box-shadow: 0 0 10px red; }
@@ -145,54 +168,31 @@ function render() {
     else if (job.status === "Rejected") div.classList.add("red");
     else div.classList.add("blue");
 
-  
+    if (daysLate >= 3) div.classList.add("pulse");
 
     div.innerHTML = `
-      <
-      <div class="job-card">
-
-  <div class="job-info">
-    <h3>${job.company}</h3>
-    <p>${job.position}</p>
-  </div>
-
-  <div class="follow-up">
-    ${job.followUp || "No follow-up yet"}
-  </div>
-
-  <div class="job-actions">
-    <button class="edit-btn" onclick="editJob(${job.id})">
-      Edit
-    </button>
-
-    <button class="save-btn" onclick="saveJob(${job.id})">
-      Save
-    </button>
-
-    <button class="delete-btn" onclick="deleteJob(${job.id})">
-      Delete
-    </button>
-  </div>
-
-</div>
-
-           
-
+      <div class="job-info">
+        <h3>${job.name}</h3>
+        <p>${job.status}</p>
       </div>
-    `
+
+      <div class="follow-up">
+        ${job.followUp || "No follow-up yet"}
+      </div>
+
+      <div class="job-actions">
+        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
+        <button class="save-btn" onclick="saveLink(${i})">Save</button>
+        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
+      </div>
+    `;
 
     list.appendChild(div);
   });
 }
 
-function followUp(i) {
-  const j = jobs[i];
-  navigator.clipboard.writeText(`Hi ${j.name}, following up on my application.`);
-  alert("Copied follow-up message");
-}
-
 function editJob(i) {
-  const v = prompt("Edit company name", jobs[i].name);
+  const v = prompt("Edit name", jobs[i].name);
   if (v !== null) jobs[i].name = v;
   save();
   render();
