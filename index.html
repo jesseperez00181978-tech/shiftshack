@@ -1,1 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ShiftStack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      margin: 0;
+      padding: 18px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00f2fe;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      font-weight: bold;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+    }
+
+    .job {
+      background: #1c1c1c;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+
+    .blue { border-left: 6px solid #4facfe; }
+    .orange { border-left: 6px solid orange; }
+    .green { border-left: 6px solid #00c853; }
+    .red { border-left: 6px solid red; }
+
+    .follow-up {
+      background: black;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .job-actions button {
+      flex: 1;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    .edit-btn { background: #2ecc71; }
+    .save-btn { background: #1e90ff; }
+    .delete-btn { background: #8b0000; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px red; }
+      50% { transform: scale(1.02); box-shadow: 0 0 25px red; }
+      100% { transform: scale(1); box-shadow: 0 0 10px red; }
+    }
+
+    .pulse { animation: pulse 1.2s infinite; }
+
+    label.import {
+      display:block;
+      background:#333;
+      padding:10px;
+      border-radius:10px;
+      text-align:center;
+      margin:8px 0;
+    }
+
+    #importFile { display:none; }
+  </style>
+</head>
+
+<body>
+
+<h1>ShiftStack 💼</h1>
+
+<input id="jobInput" placeholder="Company name">
+
+<select id="statusInput">
+  <option>Applied</option>
+  <option>Interview</option>
+  <option>Offer</option>
+  <option>Rejected</option>
+</select>
+
+<input id="followUpInput" type="date">
+
+<button onclick="addJob()">Add Job</button>
+<button onclick="exportJobs()">Export</button>
+
+<label class="import" for="importFile">Import Jobs</label>
+<input type="file" id="importFile" onchange="importJobs(event)">
+
+<div id="list"></div>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+
+function save() {
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+}
+
+function addJob() {
+  const name = jobInput.value.trim();
+  const status = statusInput.value;
+  let followUp = followUpInput.value;
+
+  if (!name) return;
+
+  if (!followUp) {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    followUp = d.toISOString().split("T")[0];
+  }
+
+  jobs.unshift({
+    name,
+    status,
+    date: new Date().toISOString().split("T")[0],
+    followUp,
+    link: "",
+    notes: "",
+    contacted: false
+  });
+
+  jobInput.value = "";
+  followUpInput.value = "";
+
+  save();
+  render();
+}
+
+function render() {
+  list.innerHTML = "";
+  const today = new Date().toISOString().split("T")[0];
+
+  jobs.forEach((job, i) => {
+
+    let daysLate = 0;
+    if (job.followUp && job.followUp < today) {
+      daysLate = Math.floor((new Date(today) - new Date(job.followUp)) / 86400000);
+    }
+
+    const div = document.createElement("div");
+    div.className = "job";
+
+    if (job.status === "Offer") div.classList.add("green");
+    else if (job.status === "Interview") div.classList.add("orange");
+    else if (job.status === "Rejected") div.classList.add("red");
+    else div.classList.add("blue");
+
+    if (daysLate >= 3) div.classList.add("pulse");
+
+    div.innerHTML = `
+      <div class="job-info">
+        <h3>${job.name}</h3>
+        <p>${job.status}</p>
+      </div>
+
+      <div class="follow-up">
+        ${job.followUp || "No follow-up yet"}
+      </div>
+
+      <div class="job-actions">
+        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
+        <button class="save-btn" onclick="saveLink(${i})">Save</button>
+        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
+      </div>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+function editJob(i) {
+  const v = prompt("Edit name", jobs[i].name);
+  if (v !== null) jobs[i].name = v;
+  save();
+  render();
+}
+
+function saveLink(i) {
+  const v = prompt("Save link", jobs[i].link || "");
+  if (v !== null) jobs[i].link = v;
+  save();
+  render();
+}
+
+function deleteJob(i) {
+  if (!confirm("Delete job?")) return;
+  jobs.splice(i, 1);
+  save();
+  render();
+}
+
+function exportJobs() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
+  a.download = "shiftstack.json";
+  a.click();
+}
+
+function importJobs(e) {
+  const r = new FileReader();
+  r.onload = ev => {
+    jobs = JSON.parse(ev.target.result);
+    save();
+    render();
+  };
+  r.readAsText(e.target.files[0]);
+}
+
+render();
+</script>
+
+</body>
+</html>
