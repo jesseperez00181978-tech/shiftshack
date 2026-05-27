@@ -1,146 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShiftStack</title>
+  <title>ShiftStack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #0f0f0f;
-    color: #fff;
-    margin: 0;
-    padding: 20px;
-  }
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      margin: 0;
+      padding: 18px;
+    }
 
-  h1 {
-    text-align: center;
-    color: #00f2fe;
-  }
+    h1 {
+      text-align: center;
+      color: #00f2fe;
+    }
 
-  .container {
-    max-width: 800px;
-    margin: auto;
-  }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
 
-  input, select, button, textarea {
-    width: 100%;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-  }
+    button {
+      font-weight: bold;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+    }
 
-  button {
-    background: #00f2fe;
-    color: #000;
-    cursor: pointer;
-    font-weight: bold;
-  }
+    .job {
+      background: #1c1c1c;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
 
-  button:hover {
-    opacity: 0.85;
-  }
+    .blue { border-left: 6px solid #4facfe; }
+    .orange { border-left: 6px solid orange; }
+    .green { border-left: 6px solid #00c853; }
+    .red { border-left: 6px solid red; }
 
-  .job {
-    background: #1a1a1a;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 8px;
-  }
+    .follow-up {
+      background: black;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
 
-  .job small {
-    color: #aaa;
-  }
+    .job-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
 
-  .row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+    .job-actions button {
+      flex: 1;
+      padding: 6px;
+      font-size: 14px;
+    }
 
-  .delete {
-    background: crimson;
-    color: white;
-    margin-top: 5px;
-  }
-</style>
+    .edit-btn { background: #2ecc71; }
+    .save-btn { background: #1e90ff; }
+    .delete-btn { background: #8b0000; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px red; }
+      50% { transform: scale(1.02); box-shadow: 0 0 25px red; }
+      100% { transform: scale(1); box-shadow: 0 0 10px red; }
+    }
+
+    .pulse { animation: pulse 1.2s infinite; }
+
+    label.import {
+      display:block;
+      background:#333;
+      padding:10px;
+      border-radius:10px;
+      text-align:center;
+      margin:8px 0;
+    }
+
+    #importFile { display:none; }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>ShiftStack</h1>
+<h1>ShiftStack 💼</h1>
 
-  <input id="company" placeholder="Company name">
-  <div class="row">
-    <input id="status" placeholder="Status (Applied / Interview / Offer)">
-    <input id="date" type="date">
-  </div>
-  <textarea id="notes" placeholder="Notes"></textarea>
+<input id="jobInput" placeholder="Company name">
 
-  <button onclick="addJob()">Add Job</button>
+<select id="statusInput">
+  <option>Applied</option>
+  <option>Interview</option>
+  <option>Offer</option>
+  <option>Rejected</option>
+</select>
 
-  <div id="jobList"></div>
-</div>
+<input id="followUpInput" type="date">
+
+<button onclick="addJob()">Add Job</button>
+<button onclick="exportJobs()">Export</button>
+
+<label class="import" for="importFile">Import Jobs</label>
+<input type="file" id="importFile" onchange="importJobs(event)">
+
+<div id="list"></div>
 
 <script>
-let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 
 function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 
 function addJob() {
-  const company = document.getElementById("company").value;
-  const status = document.getElementById("status").value;
-  const date = document.getElementById("date").value;
-  const notes = document.getElementById("notes").value;
+  const name = jobInput.value.trim();
+  const status = statusInput.value;
+  let followUp = followUpInput.value;
 
-  if (!company) return;
+  if (!name) return;
 
-  jobs.push({
-    id: Date.now(),
-    company,
+  if (!followUp) {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    followUp = d.toISOString().split("T")[0];
+  }
+
+  jobs.unshift({
+    name,
     status,
-    date,
-    notes
+    date: new Date().toISOString().split("T")[0],
+    followUp,
+    link: "",
+    notes: "",
+    contacted: false
   });
 
-  save();
-  render();
+  jobInput.value = "";
+  followUpInput.value = "";
 
-  document.getElementById("company").value = "";
-  document.getElementById("status").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("notes").value = "";
-}
-
-function deleteJob(id) {
-  jobs = jobs.filter(job => job.id !== id);
   save();
   render();
 }
 
 function render() {
-  const list = document.getElementById("jobList");
   list.innerHTML = "";
+  const today = new Date().toISOString().split("T")[0];
 
-  jobs.forEach(job => {
+  jobs.forEach((job, i) => {
+
+    let daysLate = 0;
+    if (job.followUp && job.followUp < today) {
+      daysLate = Math.floor((new Date(today) - new Date(job.followUp)) / 86400000);
+    }
+
     const div = document.createElement("div");
     div.className = "job";
 
+    if (job.status === "Offer") div.classList.add("green");
+    else if (job.status === "Interview") div.classList.add("orange");
+    else if (job.status === "Rejected") div.classList.add("red");
+    else div.classList.add("blue");
+
+    if (daysLate >= 3) div.classList.add("pulse");
+
     div.innerHTML = `
-      <strong>${job.company}</strong><br>
-      <small>Status: ${job.status || "N/A"}</small><br>
-      <small>Date: ${job.date || "N/A"}</small><br>
-      <p>${job.notes || ""}</p>
-      <button class="delete" onclick="deleteJob(${job.id})">Delete</button>
+      <div class="job-info">
+        <h3>${job.name}</h3>
+        <p>${job.status}</p>
+      </div>
+
+      <div class="follow-up">
+        ${job.followUp || "No follow-up yet"}
+      </div>
+
+      <div class="job-actions">
+        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
+        <button class="save-btn" onclick="saveLink(${i})">Save</button>
+        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
+      </div>
     `;
 
     list.appendChild(div);
   });
+}
+
+function editJob(i) {
+  const v = prompt("Edit name", jobs[i].name);
+  if (v !== null) jobs[i].name = v;
+  save();
+  render();
+}
+
+function saveLink(i) {
+  const v = prompt("Save link", jobs[i].link || "");
+  if (v !== null) jobs[i].link = v;
+  save();
+  render();
+}
+
+function deleteJob(i) {
+  if (!confirm("Delete job?")) return;
+  jobs.splice(i, 1);
+  save();
+  render();
+}
+
+function exportJobs() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
+  a.download = "shiftstack.json";
+  a.click();
+}
+
+function importJobs(e) {
+  const r = new FileReader();
+  r.onload = ev => {
+    jobs = JSON.parse(ev.target.result);
+    save();
+    render();
+  };
+  r.readAsText(e.target.files[0]);
 }
 
 render();
