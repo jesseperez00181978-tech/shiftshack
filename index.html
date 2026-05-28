@@ -12,7 +12,7 @@
       margin: 0;
       padding: 18px;
     }
-
+<input id="jobNotes" placeholder="Notes (optional)">
     h1 {
       text-align: center;
       color: #00f2fe;
@@ -138,7 +138,13 @@ function addJob() {
     d.setDate(d.getDate() + 2);
     followUp = d.toISOString().split("T")[0];
   }
-
+jobList.innerHTML += `
+  <div class="job-card">
+    <h3>${job.name}</h3>
+    <p>Status: ${job.status}</p>
+    <p>Notes: ${job.notes || "None"}</p>
+  </div>
+`;
   jobs.unshift({
     name,
     status,
@@ -239,7 +245,20 @@ function exportJobs() {
   a.download = "shiftstack.json";
   a.click();
 }
+function addJob() {
+  const name = document.getElementById("jobName").value;
+  const notes = document.getElementById("jobNotes").value;
 
+  const job = {
+    name: name,
+    notes: notes,
+    status: "Applied"
+  };
+
+  jobs.push(job);
+  saveJobs();
+  renderJobs();
+}
 function importJobs(e) {
   const r = new FileReader();
   r.onload = ev => {
