@@ -73,7 +73,7 @@
       50% { transform: scale(1.02); box-shadow: 0 0 25px red; }
       100% { transform: scale(1); box-shadow: 0 0 10px red; }
     }
-
+<button onclick="openJobSearch()">🔎 Job Search (ABQ)</button>
     .pulse { animation: pulse 1.2s infinite; }
 
     label.import {
@@ -197,7 +197,10 @@ function editJob(i) {
   save();
   render();
 }
-
+function openJobSearch() {
+  window.open("https://www.indeed.com/l-Albuquerque,-NM-jobs.html", "_blank");
+  window.open("https://albuquerque.craigslist.org/search/jjj", "_blank");
+}
 function saveLink(i) {
   const v = prompt("Save link", jobs[i].link || "");
   if (v !== null) jobs[i].link = v;
