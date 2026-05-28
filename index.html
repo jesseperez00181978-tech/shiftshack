@@ -12,7 +12,7 @@
       margin: 0;
       padding: 18px;
     }
-<button onclick="editNotes(${i})">Notes</button>
+
     h1 {
       text-align: center;
       color: #00f2fe;
@@ -28,9 +28,9 @@
     }
 
     button {
-      font-weight: bold;
       background: linear-gradient(135deg, #4facfe, #00f2fe);
       color: white;
+      font-weight: bold;
       cursor: pointer;
     }
 
@@ -46,13 +46,6 @@
     .green { border-left: 6px solid #00c853; }
     .red { border-left: 6px solid red; }
 
-    .follow-up {
-      background: black;
-      padding: 8px;
-      border-radius: 8px;
-      margin-top: 8px;
-    }
-
     .job-actions {
       display: flex;
       gap: 6px;
@@ -61,23 +54,12 @@
 
     .job-actions button {
       flex: 1;
-      padding: 6px;
       font-size: 14px;
     }
 
     .edit-btn { background: #2ecc71; }
-    .save-btn { background: #1e90ff; }
     .delete-btn { background: #8b0000; }
-
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 10px red; }
-      50% { transform: scale(1.02); box-shadow: 0 0 25px red; }
-      100% { transform: scale(1); box-shadow: 0 0 10px red; }
-    }
-
-    .pulse {
-      animation: pulse 1.2s infinite;
-    }
+    .notes-btn { background: #1e90ff; }
 
     label.import {
       display:block;
@@ -99,6 +81,154 @@
 <input id="jobInput" placeholder="Company name">
 <input id="jobNotes" placeholder="Notes (optional)">
 
+<select id="statusInput">
+  <option>Applied</option>
+  <option>Interview</option>
+  <option>Offer</option>
+  <option>Rejected</option>
+</select>
+
+<input id="followUpInput" type="date">
+
+<input id="jobSearchInput" placeholder="Search jobs...">
+
+<button onclick="addJob()">Add Job</button>
+<button onclick="openIndeed()">Search Indeed</button>
+<button onclick="openCraigslist()">Search Craigslist</button>
+<button onclick="exportJobs()">Export</button>
+
+<label class="import" for="importFile">Import Jobs</label>
+<input type="file" id="importFile" onchange="importJobs(event)">
+
+<div id="list"></div>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+
+function save() {
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+}
+
+function render() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  const today = new Date().toISOString().split("T")[0];
+
+  jobs.forEach((job, i) => {
+
+    let div = document.createElement("div");
+    div.className = "job";
+
+    if (job.status === "Offer") div.classList.add("green");
+    else if (job.status === "Interview") div.classList.add("orange");
+    else if (job.status === "Rejected") div.classList.add("red");
+    else div.classList.add("blue");
+
+    div.innerHTML = `
+      <h3>${job.name}</h3>
+      <p>Status: ${job.status}</p>
+      <p>Notes: ${job.notes || "None"}</p>
+      <p>Follow-up: ${job.followUp || "None"}</p>
+
+      <div class="job-actions">
+        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
+        <button class="notes-btn" onclick="editNotes(${i})">Notes</button>
+        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
+      </div>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+function addJob() {
+  const name = document.getElementById("jobInput").value.trim();
+  const status = document.getElementById("statusInput").value;
+  let followUp = document.getElementById("followUpInput").value;
+  const notes = document.getElementById("jobNotes").value;
+
+  if (!name) return;
+
+  if (!followUp) {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    followUp = d.toISOString().split("T")[0];
+  }
+
+  jobs.unshift({
+    name,
+    status,
+    notes,
+    followUp,
+    link: ""
+  });
+
+  document.getElementById("jobInput").value = "";
+  document.getElementById("jobNotes").value = "";
+  document.getElementById("followUpInput").value = "";
+
+  save();
+  render();
+}
+
+function editNotes(i) {
+  const v = prompt("Edit notes", jobs[i].notes || "");
+  if (v !== null) {
+    jobs[i].notes = v;
+    save();
+    render();
+  }
+}
+
+function editJob(i) {
+  const v = prompt("Edit company name", jobs[i].name);
+  if (v !== null) {
+    jobs[i].name = v;
+    save();
+    render();
+  }
+}
+
+function deleteJob(i) {
+  if (!confirm("Delete job?")) return;
+  jobs.splice(i, 1);
+  save();
+  render();
+}
+
+function openIndeed() {
+  const q = document.getElementById("jobSearchInput").value || "";
+  window.open(`https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&l=`, "_blank");
+}
+
+function openCraigslist() {
+  const q = document.getElementById("jobSearchInput").value || "";
+  window.open(`https://albuquerque.craigslist.org/search/jjj?query=${encodeURIComponent(q)}`, "_blank");
+}
+
+function exportJobs() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
+  a.download = "shiftstack.json";
+  a.click();
+}
+
+function importJobs(e) {
+  const r = new FileReader();
+  r.onload = ev => {
+    jobs = JSON.parse(ev.target.result);
+    save();
+    render();
+  };
+  r.readAsText(e.target.files[0]);
+}
+
+render();
+</script>
+
+</body>
+</html>
 <select id="statusInput">
   <option>Applied</option>
   <option>Interview</option>
