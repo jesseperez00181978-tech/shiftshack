@@ -220,7 +220,7 @@ function filterActiveJobs() {
 function openCraigslist() {
   window.open("https://albuquerque.craigslist.org/search/jjj", "_blank");
 }
-}
+
 function saveLink(i) {
   const v = prompt("Save link", jobs[i].link || "");
   if (v !== null) jobs[i].link = v;
