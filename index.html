@@ -208,7 +208,9 @@ function openJobSearch() {
   function openIndeed() {
   window.open("https://www.indeed.com/l-Albuquerque,-NM-jobs.html", "_blank");
 }
-
+function filterActiveJobs() {
+  return jobs.filter(job => job.status !== "Rejected");
+}
 function openCraigslist() {
   window.open("https://albuquerque.craigslist.org/search/jjj", "_blank");
 }
