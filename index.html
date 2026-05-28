@@ -58,8 +58,8 @@
     }
 
     .edit-btn { background: #2ecc71; }
-    .delete-btn { background: #8b0000; }
     .notes-btn { background: #1e90ff; }
+    .delete-btn { background: #8b0000; }
 
     label.import {
       display:block;
@@ -117,7 +117,7 @@ function render() {
 
   jobs.forEach((job, i) => {
 
-    let div = document.createElement("div");
+    const div = document.createElement("div");
     div.className = "job";
 
     if (job.status === "Offer") div.classList.add("green");
@@ -172,19 +172,19 @@ function addJob() {
   render();
 }
 
-function editNotes(i) {
-  const v = prompt("Edit notes", jobs[i].notes || "");
+function editJob(i) {
+  const v = prompt("Edit company name", jobs[i].name);
   if (v !== null) {
-    jobs[i].notes = v;
+    jobs[i].name = v;
     save();
     render();
   }
 }
 
-function editJob(i) {
-  const v = prompt("Edit company name", jobs[i].name);
+function editNotes(i) {
+  const v = prompt("Edit notes", jobs[i].notes || "");
   if (v !== null) {
-    jobs[i].name = v;
+    jobs[i].notes = v;
     save();
     render();
   }
@@ -214,339 +214,6 @@ function exportJobs() {
   a.click();
 }
 
-function importJobs(e) {
-  const r = new FileReader();
-  r.onload = ev => {
-    jobs = JSON.parse(ev.target.result);
-    save();
-    render();
-  };
-  r.readAsText(e.target.files[0]);
-}
-
-render();
-</script>
-
-</body>
-</html>
-<select id="statusInput">
-  <option>Applied</option>
-  <option>Interview</option>
-  <option>Offer</option>
-  <option>Rejected</option>
-</select>
-
-<input id="followUpInput" type="date">
-
-<input id="jobSearchInput" type="text" placeholder="Search jobs...">
-
-<button onclick="addJob()">Add Job</button>
-<button onclick="openIndeed()">Search Indeed</button>
-<button onclick="openCraigslist()">Search Craigslist</button>
-<button onclick="exportJobs()">Export</button>
-
-<label class="import" for="importFile">Import Jobs</label>
-<input type="file" id="importFile" onchange="importJobs(event)">
-
-<div id="list"></div>
-
-<script>
-let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-
-function save() {
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-}
-
-function render() {
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-
-  const today = new Date().toISOString().split("T")[0];
-
-  jobs.forEach((job, i) => {
-
-    let daysLate = 0;
-    if (job.followUp && job.followUp < today) {
-      daysLate = Math.floor((new Date(today) - new Date(job.followUp)) / 86400000);
-    }
-function editNotes(i) {
-  const v = prompt("Edit notes", jobs[i].notes || "");
-  if (v !== null) {
-    jobs[i].notes = v;
-    save();
-    render();
-  }
-
-    const div = document.createElement("div");
-    div.className = "job";
-
-    if (job.status === "Offer") div.classList.add("green");
-    else if (job.status === "Interview") div.classList.add("orange");
-    else if (job.status === "Rejected") div.classList.add("red");
-    else div.classList.add("blue");
-
-    if (daysLate >= 3) div.classList.add("pulse");
-
-    div.innerHTML = `
-      <h3>${job.name}</h3>
-      <p>Status: ${job.status}</p>
-      <p>Notes: ${job.notes || "None"}</p>
-      <p>Follow-up: ${job.followUp || "None"}</p>
-
-      <div class="job-actions">
-        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
-        <button class="save-btn" onclick="saveLink(${i})">Save</button>
-        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
-      </div>
-    `;
-
-    list.appendChild(div);
-  });
-}
-
-function addJob() {
-  const name = document.getElementById("jobInput").value.trim();
-  const status = document.getElementById("statusInput").value;
-  let followUp = document.getElementById("followUpInput").value;
-  const notes = document.getElementById("jobNotes").value;
-
-  if (!name) return;
-
-  if (!followUp) {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    followUp = d.toISOString().split("T")[0];
-  }
-
-  jobs.unshift({
-    name,
-    status,
-    notes,
-    followUp,
-    link: ""
-  });
-
-  document.getElementById("jobInput").value = "";
-  document.getElementById("jobNotes").value = "";
-  document.getElementById("followUpInput").value = "";
-
-  save();
-  render();
-}
-
-function openIndeed() {
-  const query = document.getElementById("jobSearchInput").value || "";
-  const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}&l=`;
-  window.open(url, "_blank");
-}
-
-function openCraigslist() {
-  const query = document.getElementById("jobSearchInput").value || "";
-  const url = `https://albuquerque.craigslist.org/search/jjj?query=${encodeURIComponent(query)}`;
-  window.open(url, "_blank");
-}
-
-function editJob(i) {
-  const v = prompt("Edit name", jobs[i].name);
-  if (v !== null) jobs[i].name = v;
-  save();
-  render();
-}
-
-function saveLink(i) {
-  const v = prompt("Save link", jobs[i].link || "");
-  if (v !== null) jobs[i].link = v;
-  save();
-  render();
-}
-
-function deleteJob(i) {
-  if (!confirm("Delete job?")) return;
-  jobs.splice(i, 1);
-  save();
-  render();
-}
-
-function exportJobs() {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
-  a.download = "shiftstack.json";
-  a.click();
-}
-
-function importJobs(e) {
-  const r = new FileReader();
-  r.onload = ev => {
-    jobs = JSON.parse(ev.target.result);
-    save();
-    render();
-  };
-  r.readAsText(e.target.files[0]);
-}
-
-render();
-</script>
-
-</body>
-</html>
-<select id="statusInput">
-  <option>Applied</option>
-  <option>Interview</option>
-  <option>Offer</option>
-  <option>Rejected</option>
-</select>
-
-<input id="followUpInput" type="date">
-
-<button onclick="addJob()">Add Job</button>
-<button onclick="exportJobs()">Export</button>
-
-<label class="import" for="importFile">Import Jobs</label>
-<input type="file" id="importFile" onchange="importJobs(event)">
-
-<div id="list"></div>
-
-<script>
-let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-
-function save() {
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-}
-function openIndeed() {
-  const query = document.getElementById("jobSearchInput").value || "";
-  const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}&l=`;
-  window.open(url, "_blank");
-}
-
-function openCraigslist() {
-  const query = document.getElementById("jobSearchInput").value || "";
-  const url = `https://albuquerque.craigslist.org/search/jjj?query=${encodeURIComponent(query)}`;
-  window.open(url, "_blank");
-}
-function addJob() {
-  const name = jobInput.value.trim();
-  const status = statusInput.value;
-  let followUp = followUpInput.value;
-
-  if (!name) return;
-
-  if (!followUp) {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    followUp = d.toISOString().split("T")[0];
-  }
-jobList.innerHTML += `
-  <div class="job-card">
-    <h3>${job.name}</h3>
-    <p>Status: ${job.status}</p>
-    <p>Notes: ${job.notes || "None"}</p>
-  </div>
-`;
-  jobs.unshift({
-    name,
-    status,
-    date: new Date().toISOString().split("T")[0],
-    followUp,
-    link: "",
-    notes: "",
-    contacted: false
-  });
-
-  jobInput.value = "";
-  followUpInput.value = "";
-
-  save();
-  render();
-}
-
-function render() {
-  list.innerHTML = "";
-  const today = new Date().toISOString().split("T")[0];
-
-  jobs.forEach((job, i) => {
-
-    let daysLate = 0;
-    if (job.followUp && job.followUp < today) {
-      daysLate = Math.floor((new Date(today) - new Date(job.followUp)) / 86400000);
-    }
-
-    const div = document.createElement("div");
-    div.className = "job";
-
-    if (job.status === "Offer") div.classList.add("green");
-    else if (job.status === "Interview") div.classList.add("orange");
-    else if (job.status === "Rejected") div.classList.add("red");
-    else div.classList.add("blue");
-
-    if (daysLate >= 3) div.classList.add("pulse");
-
-    div.innerHTML = `
-      <div class="job-info">
-        <h3>${job.name}</h3>
-        <p>${job.status}</p>
-      </div>
-
-      <div class="follow-up">
-        ${job.followUp || "No follow-up yet"}
-      </div>
-
-      <div class="job-actions">
-        <button class="edit-btn" onclick="editJob(${i})">Edit</button>
-        <button class="save-btn" onclick="saveLink(${i})">Save</button>
-        <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
-      </div>
-    `;
-
-    list.appendChild(div);
-  });
-}
-
-function editJob(i) {
-  const v = prompt("Edit name", jobs[i].name);
-  if (v !== null) jobs[i].name = v;
-  save();
-  render();
-}
-
-
-function saveLink(i) {
-  const v = prompt("Save link", jobs[i].link || "");
-  if (v !== null) jobs[i].link = v;
-  save();
-  render();
-}
-
-function deleteJob(i) {
-  if (!confirm("Delete job?")) return;
-  jobs.splice(i, 1);
-  save();
-  render();
-}
-function updateStatus(jobId, status) {
-  jobs[jobId].status = status;
-  saveJobs();
-  renderJobs();
-}
-function exportJobs() {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
-  a.download = "shiftstack.json";
-  a.click();
-}
-function addJob() {
-  const name = document.getElementById("jobName").value;
-  const notes = document.getElementById("jobNotes").value;
-
-  const job = {
-    name: name,
-    notes: notes,
-    status: "Applied"
-  };
-
-  jobs.push(job);
-  saveJobs();
-  renderJobs();
-}
 function importJobs(e) {
   const r = new FileReader();
   r.onload = ev => {
