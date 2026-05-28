@@ -17,7 +17,7 @@
       text-align: center;
       color: #00f2fe;
     }
-
+<input id="jobSearchInput" type="text" />
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -32,7 +32,8 @@
       background: linear-gradient(135deg, #4facfe, #00f2fe);
       color: white;
     }
-
+<button onclick="openIndeed()">Search Indeed</button>
+<button onclick="openCraigslist()">Search Craigslist</button>
     .job {
       background: #1c1c1c;
       padding: 12px;
@@ -119,7 +120,17 @@ let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
+function openIndeed() {
+  const query = document.getElementById("jobSearchInput").value || "";
+  const url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}&l=`;
+  window.open(url, "_blank");
+}
 
+function openCraigslist() {
+  const query = document.getElementById("jobSearchInput").value || "";
+  const url = `https://albuquerque.craigslist.org/search/jjj?query=${encodeURIComponent(query)}`;
+  window.open(url, "_blank");
+}
 function addJob() {
   const name = jobInput.value.trim();
   const status = statusInput.value;
