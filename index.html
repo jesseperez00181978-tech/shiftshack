@@ -12,7 +12,7 @@
       margin: 0;
       padding: 18px;
     }
-
+<button onclick="editNotes(${i})">Notes</button>
     h1 {
       text-align: center;
       color: #00f2fe;
@@ -139,6 +139,13 @@ function render() {
     if (job.followUp && job.followUp < today) {
       daysLate = Math.floor((new Date(today) - new Date(job.followUp)) / 86400000);
     }
+function editNotes(i) {
+  const v = prompt("Edit notes", jobs[i].notes || "");
+  if (v !== null) {
+    jobs[i].notes = v;
+    save();
+    render();
+  }
 
     const div = document.createElement("div");
     div.className = "job";
