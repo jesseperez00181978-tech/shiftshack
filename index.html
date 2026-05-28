@@ -226,7 +226,11 @@ function deleteJob(i) {
   save();
   render();
 }
-
+function updateStatus(jobId, status) {
+  jobs[jobId].status = status;
+  saveJobs();
+  renderJobs();
+}
 function exportJobs() {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
