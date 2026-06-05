@@ -76,8 +76,19 @@
 }
 
 .pulse {
+
   animation: pulse 1.2s infinite;
 }
+.light-mode {
+  background: #f5f5f5;
+  color: #000;
+}
+margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+    }
+#themeToggle {  
     #importFile { display:none; }
   </style>
 </head>
@@ -85,7 +96,9 @@
 <body>
 
 <h1>ShiftStack 💼</h1>
-
+<button id="themeToggle" onclick="toggleTheme()">
+  🌙 Dark Mode
+</button>
 <input id="jobInput" placeholder="Company name">
 <input id="jobNotes" placeholder="Notes (optional)">
 
@@ -218,7 +231,9 @@ function exportJobs() {
   a.download = "shiftstack.json";
   a.click();
 }
-
+function toggleTheme() {
+  document.body.classList.toggle("light-mode");
+}
 function importJobs(e) {
   const r = new FileReader();
   r.onload = ev => {
