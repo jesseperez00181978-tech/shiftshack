@@ -25,6 +25,7 @@
       border-radius: 10px;
       border: none;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     button {
@@ -62,77 +63,70 @@
     .delete-btn { background: #8b0000; }
 
     label.import {
-      display:block;
-      background:#333;
-      padding:10px;
-      border-radius:10px;
-      text-align:center;
-      margin:8px 0;
+      display: block;
+      background: #333;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 8px 0;
     }
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.6); }
-  50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 0, 0, 0.9); }
-  100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.6); }
-}
 
-.pulse {
+    #importFile {
+      display: none;
+    }
 
-  animation: pulse 1.2s infinite;
-}
-.light-mode .job-card {
-  background: #ffffff;
-  color: #000;
-}
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.6); }
+      50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 0, 0, 0.9); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.6); }
+    }
 
-.light-mode .job-card h3,
-.light-mode .job-card p {
-  color: #000;
-}
-.light-mode .green,
-.light-mode .orange,
-.light-mode .red,
-.light-mode .blue {
-  background: #ffffff;
-  color: #000;
-}
+    .pulse {
+      animation: pulse 1.2s infinite;
+    }
 
-.light-mode .green h3,
-.light-mode .green p,
-.light-mode .orange h3,
-.light-mode .orange p,
-.light-mode .red h3,
-.light-mode .red p,
-.light-mode .blue h3,
-.light-mode .blue p {
-  color: #000;
-}
-.light-mode .import {
-  background: #ddd;
-  color: #000;
-}
     .light-mode {
-  background: #f5f5f5;
-  color: #000;
-}
+      background: #f5f5f5;
+      color: #000;
+    }
 
-#themeToggle {
-  padding: 10px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-   
-    #importFile { display:none; }
+    .light-mode .green,
+    .light-mode .orange,
+    .light-mode .red,
+    .light-mode .blue,
+    .light-mode .job {
+      background: #ffffff;
+      color: #000;
+    }
+
+    .light-mode .job h3,
+    .light-mode .job p {
+      color: #000;
+    }
+
+    .light-mode .import {
+      background: #ddd;
+      color: #000;
+    }
+
+    #themeToggle {
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
 
 <h1>ShiftStack 💼</h1>
-<button id="themeToggle" onclick="toggleTheme()">
-  🌙 Dark Mode
-</button>
+
+<button id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+
 <input id="jobInput" placeholder="Company name">
+<input id="locationInput" placeholder="Location (example: Albuquerque, NM)">
 <input id="jobNotes" placeholder="Notes (optional)">
 
 <select id="statusInput">
@@ -143,7 +137,6 @@
 </select>
 
 <input id="followUpInput" type="date">
-
 <input id="jobSearchInput" placeholder="Search jobs...">
 
 <button onclick="addJob()">Add Job</button>
@@ -178,6 +171,7 @@ function render() {
 
     div.innerHTML = `
       <h3>${job.name}</h3>
+      <p>Location: ${job.location || "None"}</p>
       <p>Status: ${job.status}</p>
       <p>Notes: ${job.notes || "None"}</p>
       <p>Follow-up: ${job.followUp || "None"}</p>
@@ -195,6 +189,7 @@ function render() {
 
 function addJob() {
   const name = document.getElementById("jobInput").value.trim();
+  const location = document.getElementById("locationInput").value.trim();
   const status = document.getElementById("statusInput").value;
   let followUp = document.getElementById("followUpInput").value;
   const notes = document.getElementById("jobNotes").value;
@@ -209,6 +204,7 @@ function addJob() {
 
   jobs.unshift({
     name,
+    location,
     status,
     notes,
     followUp,
@@ -216,6 +212,7 @@ function addJob() {
   });
 
   document.getElementById("jobInput").value = "";
+  document.getElementById("locationInput").value = "";
   document.getElementById("jobNotes").value = "";
   document.getElementById("followUpInput").value = "";
 
@@ -224,12 +221,17 @@ function addJob() {
 }
 
 function editJob(i) {
-  const v = prompt("Edit company name", jobs[i].name);
-  if (v !== null) {
-    jobs[i].name = v;
-    save();
-    render();
-  }
+  const newName = prompt("Edit company name", jobs[i].name);
+  if (newName === null) return;
+
+  const newLocation = prompt("Edit location", jobs[i].location || "");
+  if (newLocation === null) return;
+
+  jobs[i].name = newName;
+  jobs[i].location = newLocation;
+
+  save();
+  render();
 }
 
 function editNotes(i) {
@@ -250,7 +252,8 @@ function deleteJob(i) {
 
 function openIndeed() {
   const q = document.getElementById("jobSearchInput").value || "";
-  window.open(`https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&l=`, "_blank");
+  const location = document.getElementById("locationInput").value || "";
+  window.open(`https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&l=${encodeURIComponent(location)}`, "_blank");
 }
 
 function openCraigslist() {
@@ -264,24 +267,16 @@ function exportJobs() {
   a.download = "shiftstack.json";
   a.click();
 }
+
 function toggleTheme() {
   document.body.classList.toggle("light-mode");
 }
+
 function importJobs(e) {
   const r = new FileReader();
   r.onload = ev => {
     jobs = JSON.parse(ev.target.result);
     save();
-    render();
-  };
-  r.readAsText(e.target.files[0]);
-}
-
-render();
-</script>
-
-</body>
-</html>
     render();
   };
   r.readAsText(e.target.files[0]);
