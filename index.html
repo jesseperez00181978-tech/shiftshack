@@ -154,7 +154,13 @@
 .filter-buttons button.active-filter {
   background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
-    
+  #jobCount {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 15px 0;
+  color: white;
+  }  
     #themeToggle {
       padding: 10px;
       margin: 10px 0;
@@ -196,7 +202,8 @@
 
 <label class="import" for="importFile">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)">
-<div class="filter-buttons">
+<div id="jobCount"></div>
+  <div class="filter-buttons">
   <button onclick="setFilter('all')">All</button>
   <button onclick="setFilter('overdue')">Overdue</button>
   <button onclick="setFilter('today')">Today</button>
