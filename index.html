@@ -151,7 +151,10 @@
   background: #333;
   color: white;
 }
-#themeToggle {
+.filter-buttons button.active-filter {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+    
     #themeToggle {
       padding: 10px;
       margin: 10px 0;
@@ -209,8 +212,15 @@ function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 function setFilter(filter) {
-  currentFilter = filter;
-  render();
+    currentFilter = filter;
+
+    document.querySelectorAll(".filter-buttons button").forEach(btn => {
+        btn.classList.remove("active-filter");
+    });
+
+    event.target.classList.add("active-filter");
+
+    render();
 }
 function render() {
   const list = document.getElementById("list");
