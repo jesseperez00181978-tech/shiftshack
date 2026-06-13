@@ -239,8 +239,17 @@ const applied = jobs.filter(job => job.status === "Applied").length;
 const interview = jobs.filter(job => job.status === "Interview").length;
 const offer = jobs.filter(job => job.status === "Offer").length;
 const rejected = jobs.filter(job => job.status === "Rejected").length;
-document.getElementById("jobCount").innerText =
-  "Total Jobs: " + jobs.length;
+const overdue = jobs.filter(job =>
+  job.followUp && job.followUp < todayDate
+).length;
+
+const today = jobs.filter(job =>
+  job.followUp === todayDate
+).length;
+  document.getElementById("jobCount").innerHTML =
+"Total Jobs: " + jobs.length +
+"<br>🔴 Overdue: " + overdue +
+"<br>🟡 Today: " + today;
 stats.innerHTML = `
   <div class="stats-grid">
     <div class="stat-card">
