@@ -246,7 +246,17 @@ stats.innerHTML = `
     </div>
   </div>
 `;
-  jobs.forEach((job, i) => {
+  const todayDate = new Date().toISOString().split("T")[0];
+
+let filteredJobs = jobs.filter(job => {
+  if (currentFilter === "all") return true;
+  if (currentFilter === "overdue") return job.followUp && job.followUp < todayDate;
+  if (currentFilter === "today") return job.followUp === todayDate;
+  if (currentFilter === "nolink") return !job.link;
+  return true;
+});
+
+filteredJobs.forEach((job, i) => {
     const div = document.createElement("div");
     div.className = "job";
 
