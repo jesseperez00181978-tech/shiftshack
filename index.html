@@ -298,8 +298,7 @@ filteredJobs.forEach((job, i) => {
       <p>Status: ${job.status}</p>
     
     <p>Priority: ${job.priority || "Medium"}</p><p>Notes: ${job.notes || "None"}</p>
-   ${job.followUp && job.followUp < todayDate ? '<p style="color:#ff4444;font-weight:bold;">🔴 OVERDUE</p>' : ''}
-${job.followUp === todayDate ? '<p style="color:#ffcc00;font-weight:bold;">🟡 DUE TODAY</p>' : ''}
+   
 <p>Follow-up: ${job.followUp || "None"}</p>   
 
       <div class="job-actions">
