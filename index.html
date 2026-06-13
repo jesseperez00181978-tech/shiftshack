@@ -303,7 +303,16 @@ job.priority === "High"
 ${job.priority || "Medium"}
 </span>
 </p>
-   
+${job.followUp && job.followUp < todayDate ? `
+<p style="color:#ff4444;font-weight:bold;">
+⚠️ OVERDUE - ${
+Math.floor(
+(new Date(todayDate) - new Date(job.followUp)) /
+(1000 * 60 * 60 * 24)
+)
+} days late
+</p>
+` : ''}   
 <p>Follow-up: ${job.followUp || "None"}</p>   
 
       <div class="job-actions">
