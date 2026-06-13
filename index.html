@@ -241,10 +241,9 @@ const offer = jobs.filter(job => job.status === "Offer").length;
 const rejected = jobs.filter(job => job.status === "Rejected").length;
 
   
-  document.getElementById("jobCount").innerHTML =
-"Total Jobs: " + jobs.length +
-"<br>🔴 Overdue: " + overdue +
-"<br>🟡 Today: " + today;
+  document.getElementById("jobCount").innerText =
+  "Total Jobs: " + jobs.length;
+
 stats.innerHTML = `
   <div class="stats-grid">
     <div class="stat-card">
