@@ -319,7 +319,11 @@ Math.floor(
  </p>
  ` : ''}
 <p>Follow-up: ${job.followUp || "None"}</p>   
-
+<button
+style="background:black;color:white;width:100%;margin:10px 0;"
+onclick="markContacted(${i})">
+📞 Follow Up Now
+</button>
       <div class="job-actions">
         <button class="edit-btn" onclick="editJob(${i})">Edit</button>
         <button class="notes-btn" onclick="editNotes(${i})">Notes</button>
