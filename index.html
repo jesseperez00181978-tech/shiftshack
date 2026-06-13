@@ -288,7 +288,7 @@ filteredJobs.forEach((job, i) => {
 
     div.innerHTML = `
       <h3>${job.name}</h3>
-      <p>Location: ${job.location || "None"}</p>
+      ${job.location ? `<p>Location: ${job.location}</p>` : ""}
       <p>Status: ${job.status}</p>
     
     <p>
