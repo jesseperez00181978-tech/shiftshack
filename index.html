@@ -151,6 +151,7 @@
 <label class="import" for="importFile">Import Jobs</label>
 <input type="file" id="importFile" onchange="importJobs(event)">
 
+<div id="stats" class="job"></div>
 <div id="list"></div>
 
 <script>
@@ -163,7 +164,22 @@ function save() {
 function render() {
   const list = document.getElementById("list");
   list.innerHTML = "";
+const stats = document.getElementById("stats");
 
+const total = jobs.length;
+const applied = jobs.filter(job => job.status === "Applied").length;
+const interview = jobs.filter(job => job.status === "Interview").length;
+const offer = jobs.filter(job => job.status === "Offer").length;
+const rejected = jobs.filter(job => job.status === "Rejected").length;
+
+stats.innerHTML = `
+  <h3>📊 Job Stats</h3>
+  <p>Total: ${total}</p>
+  <p>Applied: ${applied}</p>
+  <p>Interview: ${interview}</p>
+  <p>Offer: ${offer}</p>
+  <p>Rejected: ${rejected}</p>
+`;
   jobs.forEach((job, i) => {
     const div = document.createElement("div");
     div.className = "job";
