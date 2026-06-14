@@ -408,8 +408,18 @@ function deleteJob(i) {
 function openIndeed() {
   const q = document.getElementById("searchInput").value.trim() || "jobs";
 
+  function openIndeedWithLocation(location) {
+    window.open(
+      "https://www.indeed.com/jobs?q=" +
+        encodeURIComponent(q) +
+        "&l=" +
+        encodeURIComponent(location),
+      "_blank"
+    );
+  }
+
   if (!navigator.geolocation) {
-    alert("Location is not supported on this device.");
+    openIndeedWithLocation("Albuquerque, NM");
     return;
   }
 
@@ -417,19 +427,15 @@ function openIndeed() {
     function(position) {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-
-      window.open(
-        `https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&l=${encodeURIComponent(lat + "," + lon)}`,
-        "_blank"
-      );
+      openIndeedWithLocation(lat + "," + lon);
     },
     function() {
-      alert("Location permission denied.");
-
-      window.open(
-        `https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&l=Albuquerque%2C%20NM`,
-        "_blank"
-      );
+      openIndeedWithLocation("Albuquerque, NM");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 60000
     }
   );
 }
