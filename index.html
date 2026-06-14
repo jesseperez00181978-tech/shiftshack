@@ -203,7 +203,7 @@
 
 <label class="import" for="importFile">📂 Restore Backup</label>
 <input type="file" id="importFile" onchange="importJobs(event)">
-<div id="jobCount"></div>
+<div id="jobCount" onclick="showJobSummary()"></div>
   <div class="filter-buttons">
   <button onclick="setFilter('all')">All</button>
   <button onclick="setFilter('overdue')">Overdue</button>
@@ -405,7 +405,21 @@ function deleteJob(i) {
   save();
   render();
 }
+function showJobSummary() {
+  const applied = jobs.filter(job => job.status === "Applied").length;
+  const interviews = jobs.filter(job => job.status === "Interview").length;
+  const offers = jobs.filter(job => job.status === "Offer").length;
+  const rejected = jobs.filter(job => job.status === "Rejected").length;
 
+  alert(
+    "📊 Job Summary\n\n" +
+    "Applied: " + applied + "\n" +
+    "Interviews: " + interviews + "\n" +
+    "Offers: " + offers + "\n" +
+    "Rejected: " + rejected + "\n\n" +
+    "Total Jobs: " + jobs.length
+  );
+}
 function openIndeed() {
   const input =
     document.getElementById("searchInput") ||
