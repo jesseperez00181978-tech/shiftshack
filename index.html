@@ -247,24 +247,16 @@ const rejected = jobs.filter(job => job.status === "Rejected").length;
 
 stats.innerHTML = `
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-number applied-stat">${applied}</div>
-      <div class="stat-label">Applied</div>
+    <div class="stat-card" onclick="setFilter('applied')">
     </div>
-
-    <div class="stat-card">
-      <div class="stat-number interview-stat">${interview}</div>
-      <div class="stat-label">Interviews</div>
+<div class="stat-card" onclick="setFilter('interview')">
+    
     </div>
-
-    <div class="stat-card">
-      <div class="stat-number offer-stat">${offer}</div>
-      <div class="stat-label">Offers</div>
+<div class="stat-card" onclick="setFilter('offer')">
+    
     </div>
-
-    <div class="stat-card">
-      <div class="stat-number rejected-stat">${rejected}</div>
-      <div class="stat-label">Rejected</div>
+<div class="stat-card" onclick="setFilter('rejected')">
+    
     </div>
   </div>
 `;
