@@ -404,17 +404,11 @@ function deleteJob(i) {
   save();
   render();
 }
-
 function openIndeed() {
-  const q = document.getElementById("searchInput").value.trim() || "jobs";
-
-  window.open(
-    "https://www.indeed.com/jobs?q=" +
-      encodeURIComponent(q) +
-      "&l=Albuquerque%2C%20NM",
-    "_blank"
-  );
+  alert("Indeed clicked");
+  window.open("https://www.indeed.com", "_blank");
 }
+
 
 function openCraigslist() {
   const q = document.getElementById("jobSearchInput").value || "";
