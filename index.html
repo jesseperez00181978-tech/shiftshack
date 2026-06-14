@@ -277,7 +277,18 @@ let filteredJobs = jobs.filter(job => {
   if (currentFilter === "overdue") return job.followUp && job.followUp < todayDate;
   if (currentFilter === "today") return job.followUp === todayDate;
   if (currentFilter === "nolink") return !job.link;
-  return true;
+if (currentFilter === "applied")
+  return job.status === "Applied";
+
+if (currentFilter === "interview")
+  return job.status === "Interview";
+
+if (currentFilter === "offer")
+  return job.status === "Offer";
+
+if (currentFilter === "rejected")
+  return job.status === "Rejected"; 
+ return true;
 });
 
 filteredJobs.forEach((job, i) => {
