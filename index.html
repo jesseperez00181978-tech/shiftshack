@@ -353,7 +353,20 @@ onclick="markContacted(${i})">
     list.appendChild(div);
   });
 }
+function markContacted(i) {
+  const today = new Date().toISOString().split("T")[0];
 
+  jobs[i].lastContacted = today;
+
+  const next = new Date();
+  next.setDate(next.getDate() + 2);
+  jobs[i].followUp = next.toISOString().split("T")[0];
+
+  save();
+  render();
+
+  alert("✅ Marked contacted.\nNext follow-up: " + jobs[i].followUp);
+}
 function addJob() {
   const name = document.getElementById("jobInput").value.trim();
   const location = document.getElementById("locationInput").value.trim();
