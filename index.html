@@ -475,7 +475,8 @@ function toggleTheme() {
 }
 
 function importJobs(e) {
-  const r = new FileReader();
+if (!confirm("Restore this backup and replace current jobs?")) return;  
+ const r = new FileReader();
   r.onload = ev => {
     jobs = JSON.parse(ev.target.result);
     save();
