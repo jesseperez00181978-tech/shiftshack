@@ -404,41 +404,17 @@ function deleteJob(i) {
   save();
   render();
 }
-
 function openIndeed() {
   const q = document.getElementById("searchInput").value.trim() || "jobs";
+  const location = document.getElementById("locationInput").value.trim() || "Albuquerque, NM";
 
-  function openIndeedWithLocation(location) {
-    window.open(
-      "https://www.indeed.com/jobs?q=" +
-        encodeURIComponent(q) +
-        "&l=" +
-        encodeURIComponent(location),
-      "_blank"
-    );
-  }
-
-  if (!navigator.geolocation) {
-    openIndeedWithLocation("Albuquerque, NM");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      openIndeedWithLocation(lat + "," + lon);
-    },
-    function() {
-      openIndeedWithLocation("Albuquerque, NM");
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 60000
-    }
-  );
+  window.location.href =
+    "https://www.indeed.com/jobs?q=" +
+    encodeURIComponent(q) +
+    "&l=" +
+    encodeURIComponent(location);
 }
+
 
 function openCraigslist() {
   const q = document.getElementById("jobSearchInput").value || "";
