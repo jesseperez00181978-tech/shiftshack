@@ -449,10 +449,25 @@ function openCraigslist() {
 }
 
 function exportJobs() {
+  const dataStr = JSON.stringify(jobs, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(jobs)], {type:"application/json"}));
-  a.download = "shiftstack.json";
+
+  const now = new Date();
+  const date =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+
+  const time =
+    String(now.getHours()).padStart(2, "0") +
+    String(now.getMinutes()).padStart(2, "0");
+
+  a.href = URL.createObjectURL(blob);
+  a.download = "ShiftStack_Backup_" + date + "_" + time + ".json";
   a.click();
+
+  alert("✅ Backup saved!\n" + jobs.length + " jobs exported.");
 }
 
 function toggleTheme() {
