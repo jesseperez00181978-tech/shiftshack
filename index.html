@@ -420,7 +420,29 @@ function openIndeed() {
     "_blank"
   );
 }
+function testLocation() {
+  if (!navigator.geolocation) {
+    alert("GPS is not supported on this device.");
+    return;
+  }
 
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      alert("GPS works:\n" + lat + ", " + lon);
+    },
+    function(error) {
+      alert("GPS failed: " + error.message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
 function openCraigslist() {
   const q = document.getElementById("jobSearchInput").value || "";
   window.open(`https://albuquerque.craigslist.org/search/jjj?query=${encodeURIComponent(q)}`, "_blank");
