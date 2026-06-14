@@ -408,10 +408,12 @@ function deleteJob(i) {
 function openIndeed() {
   const q = document.getElementById("searchInput").value.trim() || "jobs";
 
-  window.location.href =
+  window.open(
     "https://www.indeed.com/jobs?q=" +
-    encodeURIComponent(q) +
-    "&l=Albuquerque%2C%20NM";
+      encodeURIComponent(q) +
+      "&l=Albuquerque%2C%20NM",
+    "_blank"
+  );
 }
 
 function openCraigslist() {
