@@ -320,7 +320,7 @@ ${job.priority || "Medium"}
 </p>
 ${job.followUp && job.followUp < todayDate ? `
 <p style="color:#ff4444;font-weight:bold;">
-⚠️ OVERDUE - ${
+⚠️ OVERDUE  ${
 Math.floor(
 (new Date(todayDate) - new Date(job.followUp)) /
 (1000 * 60 * 60 * 24)
