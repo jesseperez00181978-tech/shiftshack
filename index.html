@@ -185,6 +185,7 @@
   <option>Applied</option>
   <option>Interview</option>
   <option>Offer</option>
+  <option>Hired</option>
   <option>Rejected</option>
 </select>
 <select id="priorityInput">
@@ -403,17 +404,48 @@ function addJob() {
 }
 
 function editJob(i) {
-  const newName = prompt("Edit company name", jobs[i].name);
+  const newName = prompt("Edit company name", jobs[i].name || "");
   if (newName === null) return;
 
   const newLocation = prompt("Edit location", jobs[i].location || "");
   if (newLocation === null) return;
 
-  jobs[i].name = newName;
-  jobs[i].location = newLocation;
+  const newStatus = prompt(
+    "Edit status: Applied, Interview, Offer, Hired, Rejected",
+    jobs[i].status || "Applied"
+  );
+  if (newStatus === null) return;
+
+  const newPriority = prompt(
+    "Edit priority: Low, Medium, High",
+    jobs[i].priority || "Medium"
+  );
+  if (newPriority === null) return;
+
+  const newFollowUp = prompt(
+    "Edit follow-up date YYYY-MM-DD",
+    jobs[i].followUp || ""
+  );
+  if (newFollowUp === null) return;
+
+  const newLink = prompt("Edit job link", jobs[i].link || "");
+  if (newLink === null) return;
+
+  const newNotes = prompt("Edit notes", jobs[i].notes || "");
+  if (newNotes === null) return;
+
+  jobs[i].name = newName.trim();
+  jobs[i].location = newLocation.trim();
+  jobs[i].status = newStatus.trim();
+  jobs[i].priority = newPriority.trim();
+  jobs[i].followUp = newFollowUp.trim();
+  jobs[i].link = newLink.trim();
+  jobs[i].notes = newNotes.trim();
 
   save();
   render();
+
+  alert("✅ Job updated.");
 }
 
 function editNotes(i) {
