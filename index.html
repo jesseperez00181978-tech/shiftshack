@@ -201,7 +201,8 @@
 <button onclick="openCraigslist()">Search Craigslist</button>
 <button onclick="testLocation()">📍 My Location</button>
  <button onclick="exportJobs()">💾 Backup Jobs</button>
-
+<button onclick="showAbout()">ℹ️ About ShiftStack</button>
+<button onclick="showPrivacy()">🔒 Privacy</button>
 <label class="import" for="importFile">📂 Restore Backup</label>
 <input type="file" id="importFile" onchange="importJobs(event)">
 <div id="jobCount" onclick="showJobSummary()"></div>
@@ -556,7 +557,25 @@ if (!confirm("Restore this backup and replace current jobs?")) return;
   };
   r.readAsText(e.target.files[0]);
 }
+function showAbout() {
+  alert(
+    "ShiftStack 💼\n\n" +
+    "A simple job tracking app for applications, interviews, follow-ups, notes, and offers.\n\n" +
+    "Version: 1.0\n" +
+    "Built by Jesse Perez"
+  );
+}
 
+function showPrivacy() {
+  alert(
+    "Privacy Notice 🔒\n\n" +
+    "ShiftStack stores your job information only on this device using local storage.\n\n" +
+    "No account required.\n" +
+    "No data sold.\n" +
+    "No tracking.\n" +
+    "No server upload."
+  );
+}
 render();
 </script>
 
