@@ -168,6 +168,14 @@
       border-radius: 8px;
       cursor: pointer;
     }
+.job-notes {
+  margin-top: 8px;
+  padding: 8px;
+  background: #111;
+  border-radius: 6px;
+  color: #ddd;
+  white-space: pre-wrap;
+} 
   </style>
 </head>
 
@@ -345,6 +353,9 @@ onclick="markContacted(${i})">
   onclick="markContacted(${i})">
   🟢 Mark Contacted
 </button>     
+ <div class="job-notes">
+  <strong>Notes:</strong> ${job.notes || "No notes"}
+</div>    
       <div class="job-actions">
         <button class="edit-btn" onclick="editJob(${i})">Edit</button>
         <button class="notes-btn" onclick="editNotes(${i})">Notes</button>
