@@ -327,6 +327,7 @@ job.priority === "High"
 ${job.priority || "Medium"}
 </span>
 </p>
+${job.status !== "Hired" && job.status !== "Rejected" ? `
 ${job.followUp && job.followUp < todayDate ? `
 <p style="color:#ff4444;font-weight:bold;">
 ⚠️ OVERDUE  ${
@@ -353,6 +354,7 @@ onclick="markContacted(${i})">
   onclick="markContacted(${i})">
   🟢 Mark Contacted
 </button>     
+ ` : ''}
  <div class="job-notes">
   <strong>Notes:</strong> ${job.notes || "No notes"}
 </div>    
