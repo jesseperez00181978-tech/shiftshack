@@ -360,7 +360,7 @@ onclick="markContacted(${i})">
 </div>    
       <div class="job-actions">
         <button class="edit-btn" onclick="editJob(${i})">Edit</button>
-      <button class="priority-btn" onclick="editPriority(${i})">Priority</button>
+   <button class="priority-btn" onclick="cyclePriority(${i})">Priority</button>   
         <button class="notes-btn" onclick="editNotes(${i})">Notes</button>
         <button class="delete-btn" onclick="deleteJob(${i})">Delete</button>
       </div>
@@ -383,7 +383,17 @@ function markContacted(i) {
 
   alert("✅ Marked contacted.\nNext follow-up: " + jobs[i].followUp);
 }
-function addJob() {
+function cyclePriority(i) {
+  const levels = ["Low", "Medium", "High"];
+  const current = jobs[i].priority || "Medium";
+  const nextIndex = (levels.indexOf(current) + 1) % levels.length;
+
+  jobs[i].priority = levels[nextIndex];
+
+  save();
+  render();
+}
+ function addJob() {
   const name = document.getElementById("jobInput").value.trim();
   const location = document.getElementById("locationInput").value.trim();
   const status = document.getElementById("statusInput").value;
