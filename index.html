@@ -133,7 +133,7 @@
 .interview-stat { color: orange; }
 .offer-stat { color: green; }
 .rejected-stat { color: red; }
-
+.hired-stat { color: #00cc44; }
 .stat-label {
   font-size: 14px;
   color: #555;
@@ -279,7 +279,7 @@ stats.innerHTML = `
     <div class="stat-label">Rejected</div>
   </div>
 <div class="stat-card" onclick="setFilter('hired')">
-  <div class="stat-number hired-count">${hired}</div>
+  <div class="stat-number hired-stat">${hired}</div>
   <div class="stat-label">Hired</div>
 </div>
 </div>
