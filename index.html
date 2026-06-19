@@ -347,7 +347,15 @@ Math.floor(
  🟡 DUE TODAY
  </p>
  ` : ''}
-<p>Follow-up: ${job.followUp || "None"}</p>   
+<p>Follow-up: ${
+  job.followUp
+    ? new Date(job.followUp + "T00:00:00").toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      })
+    : "None"
+}</p>   
 <button
 style="background:black;color:white;width:100%;margin:10px 0;"
 onclick="markContacted(${i})">
