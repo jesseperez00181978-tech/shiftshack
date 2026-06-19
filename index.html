@@ -251,7 +251,7 @@ const applied = jobs.filter(job => job.status === "Applied").length;
 const interview = jobs.filter(job => job.status === "Interview").length;
 const offer = jobs.filter(job => job.status === "Offer").length;
 const rejected = jobs.filter(job => job.status === "Rejected").length;
-
+const hired = jobs.filter(job => job.status === "Hired").length;
   
   document.getElementById("jobCount").innerText =
   "Total Jobs: " + jobs.length;
@@ -278,7 +278,10 @@ stats.innerHTML = `
     <div class="stat-number rejected-stat">${rejected}</div>
     <div class="stat-label">Rejected</div>
   </div>
-
+<div class="stat-card" onclick="setFilter('hired')">
+  <div class="stat-number hired-count">${hired}</div>
+  <div class="stat-label">Hired</div>
+</div>
 </div>
 `;
   const todayDate = new Date().toISOString().split("T")[0];
