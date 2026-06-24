@@ -10,7 +10,7 @@
   "theme_color": "#00f2fe",
   "icons": [
     {
-      "src": "ShiftStack_Header_4096x2304.png"
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
