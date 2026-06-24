@@ -1,9 +1,11 @@
 {
   "name": "ShiftStack",
   "short_name": "ShiftStack",
+ "id": "shiftstack",
   "description": "Track job applications, interviews, follow-ups, notes, and hiring progress.",
   "start_url": "/",
   "display": "standalone",
+ "orientation": "portrait",
   "background_color": "#0f0f0f",
   "theme_color": "#00f2fe",
   "icons": [
