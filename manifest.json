@@ -8,7 +8,7 @@
   "theme_color": "#00f2fe",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "ShiftStack_Header_4096x2304.png"
       "sizes": "512x512",
       "type": "image/png"
     }
