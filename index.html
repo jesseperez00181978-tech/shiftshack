@@ -1679,131 +1679,6 @@ function importJobs(e) {
   r.readAsText(e.target.files[0]);
 }
 
-const SHIFTSTACK_PREMIUM_PRODUCT_ID = "shiftstack_premium";
-const GOOGLE_PLAY_BILLING_METHOD = "https://play.google.com/billing";
-let shiftStackBillingService = null;
-let shiftStackPremiumActive = false;
-
-function setPremiumUi(active) {
-  shiftStackPremiumActive = !!active;
-
-  const button = document.querySelector(".premium-btn");
-  if (button) {
-    button.textContent = active
-      ? "\u2B50 ShiftStack Premium - Active"
-      : "\u2B50 ShiftStack Premium";
-  }
-
-  const panel = document.querySelector(".premium-workflow-panel");
-  if (panel) {
-    panel.dataset.premiumActive = active ? "true" : "false";
-    panel.style.display = active ? "block" : "none";
-  }
-}
-
-async function getShiftStackBillingService() {
-  if (shiftStackBillingService) return shiftStackBillingService;
-
-  if (!("getDigitalGoodsService" in window)) {
-    throw new Error("Google Play Billing is only available inside the Play Store version of ShiftStack.");
-  }
-
-  shiftStackBillingService = await window.getDigitalGoodsService(GOOGLE_PLAY_BILLING_METHOD);
-  return shiftStackBillingService;
-}
-
-async function refreshPremiumEntitlement() {
-  try {
-    const service = await getShiftStackBillingService();
-    const purchases = await service.listPurchases();
-    const active = purchases.some(p => p.itemId === SHIFTSTACK_PREMIUM_PRODUCT_ID);
-    setPremiumUi(active);
-    return active;
-  } catch (error) {
-    console.warn("ShiftStack billing entitlement check unavailable:", error);
-    setPremiumUi(false);
-    return false;
-  }
-}
-
-async function purchaseShiftStackPremium() {
-  const service = await getShiftStackBillingService();
-
-  const details = await service.getDetails([SHIFTSTACK_PREMIUM_PRODUCT_ID]);
-  if (!details || !details.length) {
-    throw new Error("ShiftStack Premium is not available from Google Play yet. Check that the subscription and monthly base plan are active for this test track.");
-  }
-
-  const paymentMethods = [{
-    supportedMethods: GOOGLE_PLAY_BILLING_METHOD,
-    data: {
-      sku: SHIFTSTACK_PREMIUM_PRODUCT_ID
-    }
-  }];
-
-  // Google Play uses the price configured in Play Console. PaymentRequest still
-  // requires a total, but this value is ignored by the Play Billing provider.
-  const paymentDetails = {
-    total: {
-      label: "ShiftStack Premium",
-      amount: { currency: "USD", value: "0" }
-    }
-  };
-
-  const request = new PaymentRequest(paymentMethods, paymentDetails);
-  const response = await request.show();
-
-  try {
-    await response.complete("success");
-  } catch (completeError) {
-    console.warn("Payment completed but UI completion failed:", completeError);
-  }
-
-  // Re-query Play instead of trusting local state. This also restores an
-  // existing active subscription after reinstall/sign-in on another device.
-  const active = await refreshPremiumEntitlement();
-  if (!active) {
-    throw new Error("Google Play returned a purchase, but the Premium entitlement is not visible yet. Reopen ShiftStack in a moment and try Restore.");
-  }
-
-  alert("\u2705 ShiftStack Premium is active.\n\nThanks for supporting ShiftStack.");
-}
-
-async function showPremium() {
-  try {
-    if (await refreshPremiumEntitlement()) {
-      alert(
-        "\u2B50 ShiftStack Premium is active.\n\n" +
-        "Your monthly subscription is managed by Google Play."
-      );
-      return;
-    }
-
-    const confirmed = confirm(
-      "\u2B50 ShiftStack Premium\n\n" +
-      "$4.99/month through Google Play\n\n" +
-      "\u2713 Advanced job analytics\n" +
-      "\u2713 ShiftScore job ranking\n" +
-      "\u2713 Smart follow-up tools\n" +
-      "\u2713 Salary & offer comparison\n" +
-      "\u2713 Resume & interview tools\n" +
-      "\u2713 AI Job Assistant\n\n" +
-      "Continue to Google Play checkout?"
-    );
-
-    if (!confirmed) return;
-    await purchaseShiftStackPremium();
-  } catch (error) {
-    if (error && error.name === "AbortError") return;
-    console.error("ShiftStack Premium purchase failed:", error);
-    alert("Could not start ShiftStack Premium purchase.\n\n" + (error?.message || "Google Play Billing is unavailable."));
-  }
-}
-
-window.addEventListener("load", () => {
-  refreshPremiumEntitlement();
-});
-
 function showAbout() {
   alert(
     "ShiftStack &#128188;\n\n" +
@@ -2920,7 +2795,7 @@ function renderOffers() {
 
 
 
-<section class="premium-workflow-panel">
+<section class="premium-workflow-panel" hidden style="display:none">
   <h2>&#11088; Premium Career Tools</h2>
   <p>Prepare for interviews and compare offers using the jobs already tracked in ShiftStack.</p>
 
@@ -2989,5 +2864,6 @@ function renderOffers() {
   <div id="migrationStatus" class="migration-status"></div>
 </section>
 
+<script src="shiftstack-billing.js" defer></script>
 </body>
   </html>
