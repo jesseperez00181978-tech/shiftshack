@@ -39,7 +39,10 @@ from these files.
 - Manage subscription opens Google Play. Cancellation takes effect according to
   the subscription's remaining paid period.
 
-Local backend checks: `node --test tests/billing.test.mjs`.
+Local backend and simulated client checks: `node --test tests/*.test.mjs`.
+Vercel builds use their own same-origin billing endpoint; the GitHub Pages copy
+uses the production Vercel endpoint. The backend permits its exact Vercel-provided
+deployment origin for preview testing, not arbitrary Vercel domains.
 The client has a five-minute verification window, refreshed while visible.
 These local career tools use a client-side UI gate; they are not server-hosted
 protected content. New paid server features must enforce entitlement server-side.
