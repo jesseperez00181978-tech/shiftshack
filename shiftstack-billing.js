@@ -3,7 +3,9 @@
   const PRODUCT = 'shiftstack_premium';
   const PACKAGE = 'com.jesseperez.shiftstack';
   const METHOD = 'https://play.google.com/billing';
-  const ENDPOINT = 'https://shiftshack.vercel.app/api/shiftstack-billing';
+  const ENDPOINT = window.location.origin === 'https://jesseperez00181978-tech.github.io'
+    ? 'https://shiftshack.vercel.app/api/shiftstack-billing'
+    : '/api/shiftstack-billing';
   let service, item, ready = false, busy = false, restoring, expires = 0, verifiedUntil = 0, timer;
   const active = () => Date.now() < Math.min(expires, verifiedUntil);
   const el = id => document.getElementById(id);
@@ -82,7 +84,8 @@
       status(enabled ? 'Premium is active. Your career tools are ready.' : 'The purchase is pending or inactive. Use Restore purchases to check again.');
     } catch (error) {
       if (response) await response.complete('unknown').catch(() => {});
-      status(error.name === 'AbortError' ? 'Checkout canceled.' : error.message);
+      status(error.name === 'AbortError' && !response ? 'Checkout canceled.' : error.name === 'TimeoutError' || error.name === 'AbortError'
+        ? 'Purchase confirmation could not finish. Use Restore purchases before trying again.' : error.message);
     } finally { busy = false; sync(); }
   }
   async function refresh() {
