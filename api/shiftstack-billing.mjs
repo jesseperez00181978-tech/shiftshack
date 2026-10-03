@@ -77,7 +77,9 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Vary', 'Origin');
   const origin = req.headers.origin;
-  if (origin && !origins.has(origin)) return res.status(403).json({ error: 'Origin not allowed.' });
+  // Trust only this deployment's Vercel-provided URL, never arbitrary preview domains.
+  const deploymentOrigin = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : null;
+  if (origin && !origins.has(origin) && origin !== deploymentOrigin) return res.status(403).json({ error: 'Origin not allowed.' });
   if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -103,4 +105,3 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: 'Google Play verification could not finish. Please use Restore purchases to try again.' });
   }
 }
-
