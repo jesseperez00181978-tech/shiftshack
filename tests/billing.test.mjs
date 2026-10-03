@@ -19,6 +19,14 @@ test('missing server credentials disable checkout and verification',async()=>{
  } finally {if(previous!==undefined)process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON=previous;}
 });
 test('untrusted origins are rejected',async()=>{const r=res();await handler({method:'GET',headers:{origin:'https://untrusted.example'}},r);assert.equal(r.code,403)});
+test('only the current deployment preview origin is allowed',async()=>{
+ const previous=process.env.VERCEL_URL;
+ process.env.VERCEL_URL='shiftshack-preview.vercel.app';
+ try {
+  let r=res();await handler({method:'GET',headers:{origin:'https://shiftshack-preview.vercel.app'}},r);assert.equal(r.code,200);
+  r=res();await handler({method:'GET',headers:{origin:'https://unrelated.vercel.app'}},r);assert.equal(r.code,403);
+ } finally {if(previous===undefined)delete process.env.VERCEL_URL;else process.env.VERCEL_URL=previous;}
+});
 test('valid purchases are acknowledged server-side before success; pending purchases are not',async()=>{
  const {generateKeyPairSync}=await import('node:crypto');
  const {privateKey}=generateKeyPairSync('rsa',{modulusLength:2048});
