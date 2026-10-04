@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.jesseperez.shiftstack",
+      "sha256_cert_fingerprints": [
+        "43:54:F4:08:56:9A:17:50:19:32:D6:2C:38:47:28:59:06:C6:46:EC:8F:12:79:9A:92:1C:88:E3:87:A1:73:EC"
+      ]
+    }
+  }
+]
