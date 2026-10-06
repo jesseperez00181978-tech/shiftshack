@@ -974,6 +974,185 @@
       .prep-actions { grid-template-columns: 1fr 1fr; }
     }
 
+
+    /* ShiftStack Work marketplace MVP */
+    .work-launch {
+      background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+      box-shadow: 0 4px 18px rgba(20,184,166,.28);
+    }
+    .work-marketplace {
+      display: none;
+      margin: 16px 0 20px;
+      padding: 15px;
+      background: #141414;
+      border: 1px solid #2d2d2d;
+      border-radius: 16px;
+    }
+    .work-marketplace.open { display: block; }
+    .work-header h2 {
+      margin: 3px 0 5px;
+      color: #00f2fe;
+      font-size: 24px;
+    }
+    .work-header p {
+      margin: 0 0 12px;
+      color: #aaa;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .work-kicker {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #67e8f9;
+      border: 1px solid #155e75;
+      background: #082f49;
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+    .work-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin: 12px 0;
+    }
+    .work-tabs button {
+      margin: 0;
+      padding: 9px 6px;
+      background: #242424;
+      color: #ddd;
+      font-size: 13px;
+    }
+    .work-tabs button.active {
+      background: linear-gradient(135deg, #0284c7, #0d9488);
+      color: white;
+    }
+    .work-view { display: none; }
+    .work-view.active { display: block; }
+    .work-toolbar,
+    .work-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .work-form-grid .full { grid-column: 1 / -1; }
+    .work-toolbar select,
+    .work-form-grid input,
+    .work-form-grid select,
+    .work-form-grid textarea {
+      margin: 4px 0;
+    }
+    .work-form-grid textarea {
+      min-height: 90px;
+      resize: vertical;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      box-sizing: border-box;
+      font: inherit;
+    }
+    .work-feed {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .work-card {
+      background: #0f0f0f;
+      border: 1px solid #2b2b2b;
+      border-left: 5px solid #14b8a6;
+      border-radius: 13px;
+      padding: 13px;
+    }
+    .work-card h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+      color: #fff;
+    }
+    .work-card p {
+      margin: 8px 0;
+      color: #d2d2d2;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+    .work-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 7px 0;
+    }
+    .work-badge {
+      border: 1px solid #3a3a3a;
+      background: #1b1b1b;
+      color: #bbb;
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .work-badge.pay {
+      color: #86efac;
+      border-color: #166534;
+      background: #052e16;
+    }
+    .work-badge.demo {
+      color: #fde68a;
+      border-color: #854d0e;
+      background: #422006;
+    }
+    .work-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .work-actions button {
+      margin: 0;
+      padding: 9px;
+      font-size: 13px;
+    }
+    .work-secondary {
+      background: #303030;
+    }
+    .work-empty {
+      padding: 16px;
+      margin-top: 10px;
+      text-align: center;
+      color: #999;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .work-notice {
+      margin: 9px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: #102a2a;
+      border: 1px solid #164e63;
+      color: #a5f3fc;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .light-mode .work-marketplace,
+    .light-mode .work-card {
+      background: #f7f7f7;
+      color: #111;
+      border-color: #ddd;
+    }
+    .light-mode .work-card h3 { color: #111; }
+    .light-mode .work-card p { color: #333; }
+    .light-mode .work-tabs button { background: #e8e8e8; color: #222; }
+    .light-mode .work-tabs button.active { color: white; }
+    @media (max-width: 560px) {
+      .work-toolbar,
+      .work-form-grid,
+      .work-actions { grid-template-columns: 1fr; }
+      .work-tabs { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
     @media (max-width: 760px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -989,6 +1168,109 @@
 <button id="themeToggle" onclick="toggleTheme()">&#127769; Dark Mode</button>
 <button class="premium-btn" onclick="showPremium()">&#11088; ShiftStack Premium</button>
 <button class="resume-launch" onclick="toggleResumePanel()">&#128196; Resumes</button>
+
+<button class="work-launch" onclick="toggleWorkMarketplace()">&#128736;&#65039; ShiftStack Work</button>
+
+<section id="workMarketplace" class="work-marketplace">
+  <div class="work-header">
+    <span class="work-kicker">New · Albuquerque MVP</span>
+    <h2>ShiftStack Work</h2>
+    <p>One place for local jobs, contract work, day work, service requests, and businesses that need extra hands.</p>
+  </div>
+
+  <div class="work-tabs">
+    <button id="workBrowseTab" class="active" onclick="showWorkView('browse')">Browse Work</button>
+    <button id="workPostTab" onclick="showWorkView('post')">Post Work</button>
+    <button id="workMyTab" onclick="showWorkView('my')">My Work</button>
+  </div>
+
+  <div id="workBrowseView" class="work-view active">
+    <div class="work-toolbar">
+      <select id="workCategoryFilter" onchange="renderMarketplace()">
+        <option value="">All categories</option>
+        <option>Landscaping & Irrigation</option>
+        <option>Construction</option>
+        <option>Handyman</option>
+        <option>Moving & Hauling</option>
+        <option>Cleaning</option>
+        <option>Warehouse & Day Labor</option>
+        <option>Property Maintenance</option>
+        <option>Tree & Shrub Work</option>
+        <option>Other</option>
+      </select>
+      <select id="workTypeFilter" onchange="renderMarketplace()">
+        <option value="">All work types</option>
+        <option>One-time job</option>
+        <option>Day work</option>
+        <option>Contract</option>
+        <option>Part-time</option>
+        <option>Full-time</option>
+      </select>
+    </div>
+    <div class="work-notice">Marketplace preview: posts and responses are stored only on this device while we build the live backend.</div>
+    <div id="workFeed" class="work-feed"></div>
+  </div>
+
+  <div id="workPostView" class="work-view">
+    <div class="work-form-grid">
+      <select id="workPosterType">
+        <option>Homeowner</option>
+        <option>Business</option>
+        <option>Contractor</option>
+        <option>Property manager</option>
+      </select>
+      <select id="workType">
+        <option>One-time job</option>
+        <option>Day work</option>
+        <option>Contract</option>
+        <option>Part-time</option>
+        <option>Full-time</option>
+      </select>
+
+      <input id="workTitle" class="full" placeholder="Job title, example: Weekend yard cleanup">
+
+      <select id="workCategory">
+        <option>Landscaping & Irrigation</option>
+        <option>Construction</option>
+        <option>Handyman</option>
+        <option>Moving & Hauling</option>
+        <option>Cleaning</option>
+        <option>Warehouse & Day Labor</option>
+        <option>Property Maintenance</option>
+        <option>Tree & Shrub Work</option>
+        <option>Other</option>
+      </select>
+      <input id="workLocation" placeholder="Location, example: Albuquerque, NM">
+
+      <input id="workBudget" type="number" min="0" step="0.01" placeholder="Pay / budget">
+      <select id="workPayType">
+        <option value="hour">per hour</option>
+        <option value="job">total job</option>
+        <option value="day">per day</option>
+        <option value="open">open to estimates</option>
+      </select>
+
+      <input id="workDate" type="date">
+      <input id="workTools" placeholder="Tools needed / provided">
+
+      <select id="workMaterials">
+        <option>Materials provided</option>
+        <option>Worker provides materials</option>
+        <option>Discuss materials</option>
+        <option>Not applicable</option>
+      </select>
+      <input id="workContact" placeholder="Contact name (preview only)">
+
+      <textarea id="workDescription" class="full" placeholder="Describe the scope, hours, access, photos needed, crew size, or anything the worker should know before responding."></textarea>
+    </div>
+    <button onclick="postMarketplaceWork()">Post Work</button>
+  </div>
+
+  <div id="workMyView" class="work-view">
+    <div id="workMyContent"></div>
+  </div>
+</section>
+
 
 <input id="jobInput" placeholder="Company name">
 <input id="locationInput" placeholder="Location (example: Albuquerque, NM)">
@@ -1056,7 +1338,7 @@
 <div id="list"></div>
 
 <div style="text-align:center; color:#777; font-size:12px; margin:30px 0 15px;">
-  ShiftStack v2.0<br>
+  ShiftStack v2.1 Work Marketplace Preview<br>
   Built by Jesse Perez<br>
   With assistance from ChatGPT
 </div>
@@ -1064,6 +1346,291 @@
 <script>
 let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 let currentFilter = "all";
+
+const MARKETPLACE_POSTS_KEY = "shiftstack_marketplace_posts_v1";
+const MARKETPLACE_RESPONSES_KEY = "shiftstack_marketplace_responses_v1";
+let marketplacePosts = JSON.parse(localStorage.getItem(MARKETPLACE_POSTS_KEY) || "[]");
+let marketplaceResponses = JSON.parse(localStorage.getItem(MARKETPLACE_RESPONSES_KEY) || "[]");
+
+function marketplaceDemoPosts() {
+  return [
+    {
+      id: "demo-landscape-cleanup",
+      demo: true,
+      posterType: "Homeowner",
+      workType: "One-time job",
+      title: "Weekend yard cleanup",
+      category: "Landscaping & Irrigation",
+      location: "Albuquerque, NM",
+      budget: 180,
+      payType: "job",
+      date: "",
+      tools: "Basic yard tools",
+      materials: "Not applicable",
+      description: "Demo listing: trim, rake, bag debris, edge, and blow down a medium residential yard."
+    },
+    {
+      id: "demo-day-labor",
+      demo: true,
+      posterType: "Contractor",
+      workType: "Day work",
+      title: "Extra hand for landscape install",
+      category: "Landscaping & Irrigation",
+      location: "Albuquerque, NM",
+      budget: 20,
+      payType: "hour",
+      date: "",
+      tools: "Hand tools provided",
+      materials: "Materials provided",
+      description: "Demo listing: one-day crew help moving rock, setting plants, cleanup, and basic install support."
+    },
+    {
+      id: "demo-property-maintenance",
+      demo: true,
+      posterType: "Property manager",
+      workType: "Contract",
+      title: "Property turnover maintenance",
+      category: "Property Maintenance",
+      location: "Albuquerque, NM",
+      budget: 24,
+      payType: "hour",
+      date: "",
+      tools: "Basic hand tools",
+      materials: "Discuss materials",
+      description: "Demo listing: punch-list repairs, exterior cleanup, and light maintenance between tenants."
+    }
+  ];
+}
+
+function saveMarketplace() {
+  localStorage.setItem(MARKETPLACE_POSTS_KEY, JSON.stringify(marketplacePosts));
+  localStorage.setItem(MARKETPLACE_RESPONSES_KEY, JSON.stringify(marketplaceResponses));
+}
+
+function escapeMarketplace(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function toggleWorkMarketplace() {
+  const panel = document.getElementById("workMarketplace");
+  panel.classList.toggle("open");
+  if (panel.classList.contains("open")) {
+    renderMarketplace();
+    renderMyWork();
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function showWorkView(view) {
+  ["browse", "post", "my"].forEach(name => {
+    document.getElementById("work" + name[0].toUpperCase() + name.slice(1) + "View")?.classList.toggle("active", name === view);
+    document.getElementById("work" + name[0].toUpperCase() + name.slice(1) + "Tab")?.classList.toggle("active", name === view);
+  });
+  if (view === "browse") renderMarketplace();
+  if (view === "my") renderMyWork();
+}
+
+function marketplacePayText(post) {
+  const amount = Number(post.budget);
+  if (post.payType === "open" || !Number.isFinite(amount) || amount <= 0) return "Open to estimates";
+  const money = "$" + amount.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  if (post.payType === "hour") return money + "/hr";
+  if (post.payType === "day") return money + "/day";
+  return money + " total";
+}
+
+function renderMarketplace() {
+  const feed = document.getElementById("workFeed");
+  if (!feed) return;
+
+  const category = document.getElementById("workCategoryFilter")?.value || "";
+  const type = document.getElementById("workTypeFilter")?.value || "";
+  const all = [...marketplacePosts, ...marketplaceDemoPosts()]
+    .filter(post => !category || post.category === category)
+    .filter(post => !type || post.workType === type);
+
+  if (!all.length) {
+    feed.innerHTML = '<div class="work-empty">No matching work yet. This is where live local listings will appear once the backend is connected.</div>';
+    return;
+  }
+
+  feed.innerHTML = all.map(post => {
+    const already = marketplaceResponses.some(item => item.postId === post.id);
+    const responseLabel = post.payType === "open" ? "Send Estimate" : "Apply / Respond";
+    return `
+      <article class="work-card">
+        <h3>${escapeMarketplace(post.title)}</h3>
+        <div class="work-meta">
+          ${post.demo ? '<span class="work-badge demo">DEMO</span>' : ''}
+          <span class="work-badge">${escapeMarketplace(post.category)}</span>
+          <span class="work-badge">${escapeMarketplace(post.workType)}</span>
+          <span class="work-badge">${escapeMarketplace(post.posterType)}</span>
+          <span class="work-badge pay">${escapeMarketplace(marketplacePayText(post))}</span>
+        </div>
+        <p><strong>&#128205; ${escapeMarketplace(post.location || "Location not set")}</strong>${post.date ? " · " + escapeMarketplace(post.date) : ""}</p>
+        <p>${escapeMarketplace(post.description || "No description provided.")}</p>
+        <div class="work-meta">
+          ${post.tools ? '<span class="work-badge">Tools: ' + escapeMarketplace(post.tools) + '</span>' : ''}
+          ${post.materials ? '<span class="work-badge">' + escapeMarketplace(post.materials) + '</span>' : ''}
+        </div>
+        <div class="work-actions">
+          <button onclick="respondToMarketplaceWork('${escapeMarketplace(post.id)}')">${already ? "Response Sent" : responseLabel}</button>
+          <button class="work-secondary" onclick="saveMarketplaceJobToTracker('${escapeMarketplace(post.id)}')">Save to Job Tracker</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function postMarketplaceWork() {
+  const title = document.getElementById("workTitle").value.trim();
+  const location = document.getElementById("workLocation").value.trim();
+  const description = document.getElementById("workDescription").value.trim();
+
+  if (!title || !location || !description) {
+    alert("Add a job title, location, and description before posting.");
+    return;
+  }
+
+  const post = {
+    id: "work-" + Date.now(),
+    demo: false,
+    posterType: document.getElementById("workPosterType").value,
+    workType: document.getElementById("workType").value,
+    title,
+    category: document.getElementById("workCategory").value,
+    location,
+    budget: Number(document.getElementById("workBudget").value) || 0,
+    payType: document.getElementById("workPayType").value,
+    date: document.getElementById("workDate").value,
+    tools: document.getElementById("workTools").value.trim(),
+    materials: document.getElementById("workMaterials").value,
+    contact: document.getElementById("workContact").value.trim(),
+    description,
+    createdAt: new Date().toISOString()
+  };
+
+  marketplacePosts.unshift(post);
+  saveMarketplace();
+
+  ["workTitle","workLocation","workBudget","workDate","workTools","workContact","workDescription"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+
+  showWorkView("browse");
+  alert("Work post added to the ShiftStack marketplace preview.");
+}
+
+function findMarketplacePost(id) {
+  return [...marketplacePosts, ...marketplaceDemoPosts()].find(post => post.id === id);
+}
+
+function respondToMarketplaceWork(id) {
+  const post = findMarketplacePost(id);
+  if (!post) return;
+
+  const existing = marketplaceResponses.find(item => item.postId === id);
+  if (existing) {
+    alert("You already saved a response for this work post.");
+    return;
+  }
+
+  const label = post.payType === "open"
+    ? "Enter your estimate or short message:"
+    : "Enter a short application / availability message:";
+  const note = prompt(label, "");
+  if (note === null) return;
+  if (!note.trim()) {
+    alert("Add a short message before sending.");
+    return;
+  }
+
+  marketplaceResponses.unshift({
+    id: "response-" + Date.now(),
+    postId: id,
+    note: note.trim(),
+    status: "Sent",
+    createdAt: new Date().toISOString()
+  });
+  saveMarketplace();
+  renderMarketplace();
+  renderMyWork();
+  alert("Response saved in My Work.");
+}
+
+function saveMarketplaceJobToTracker(id) {
+  const post = findMarketplacePost(id);
+  if (!post) return;
+
+  const exists = jobs.some(job => job.marketplacePostId === id);
+  if (exists) {
+    alert("This work post is already in your job tracker.");
+    return;
+  }
+
+  jobs.unshift({
+    name: post.title,
+    location: post.location,
+    notes: "ShiftStack Work · " + post.category + " · " + marketplacePayText(post),
+    pay: post.payType === "hour" ? Number(post.budget) || "" : "",
+    status: "Applied",
+    priority: "High",
+    followUp: post.date || "",
+    link: "",
+    marketplacePostId: id
+  });
+  save();
+  render();
+  alert("Saved to your ShiftStack job tracker.");
+}
+
+function renderMyWork() {
+  const target = document.getElementById("workMyContent");
+  if (!target) return;
+
+  const ownPosts = marketplacePosts.length
+    ? marketplacePosts.map(post => `
+        <div class="work-card">
+          <h3>${escapeMarketplace(post.title)}</h3>
+          <div class="work-meta">
+            <span class="work-badge">Posted</span>
+            <span class="work-badge pay">${escapeMarketplace(marketplacePayText(post))}</span>
+          </div>
+          <p>${escapeMarketplace(post.location)} · ${escapeMarketplace(post.category)}</p>
+        </div>
+      `).join("")
+    : '<div class="work-empty">You have not posted any work on this device yet.</div>';
+
+  const responses = marketplaceResponses.length
+    ? marketplaceResponses.map(item => {
+        const post = findMarketplacePost(item.postId);
+        return `
+          <div class="work-card">
+            <h3>${escapeMarketplace(post?.title || "Work post")}</h3>
+            <div class="work-meta">
+              <span class="work-badge">Response: ${escapeMarketplace(item.status)}</span>
+              ${post ? '<span class="work-badge pay">' + escapeMarketplace(marketplacePayText(post)) + '</span>' : ''}
+            </div>
+            <p>${escapeMarketplace(item.note)}</p>
+          </div>
+        `;
+      }).join("")
+    : '<div class="work-empty">Applications and estimates you send will show here.</div>';
+
+  target.innerHTML = `
+    <h3 style="color:#00f2fe;margin:4px 0 8px;">My Responses</h3>
+    ${responses}
+    <h3 style="color:#00f2fe;margin:18px 0 8px;">My Posted Work</h3>
+    ${ownPosts}
+  `;
+}
+
 
 function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
