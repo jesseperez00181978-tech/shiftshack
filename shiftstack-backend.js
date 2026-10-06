@@ -201,7 +201,7 @@
   async function listApplicationsForPost(postId) {
     return rest(
       "work_applications?post_id=eq." + encodeURIComponent(postId) +
-      "&select=*,profiles!work_applications_worker_id_fkey(id,display_name,role,rating,review_count,base_location)&order=created_at.desc"
+      "&select=*,profiles!work_applications_worker_profile_fkey(id,display_name,role,rating,review_count,base_location)&order=created_at.desc"
     );
   }
 
