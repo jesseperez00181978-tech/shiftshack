@@ -975,6 +975,50 @@
     }
 
 
+
+    .account-launch { background: linear-gradient(135deg,#334155,#475569); }
+    .account-panel {
+      display:none;
+      margin:16px 0;
+      padding:15px;
+      background:#141414;
+      border:1px solid #2d2d2d;
+      border-radius:16px;
+    }
+    .account-panel.open { display:block; }
+    .account-panel h2 { margin:0 0 6px; color:#00f2fe; }
+    .account-panel p { color:#aaa; font-size:13px; line-height:1.45; }
+    .account-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .account-grid .full { grid-column:1 / -1; }
+    .account-actions {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .account-actions button { margin:4px 0; }
+    .account-status {
+      margin-top:10px;
+      padding:10px;
+      border-radius:10px;
+      background:#101010;
+      border:1px solid #2d2d2d;
+      color:#bbb;
+      font-size:13px;
+      line-height:1.4;
+    }
+    .account-status.ok { color:#86efac; border-color:#166534; }
+    .account-status.warn { color:#fde68a; border-color:#854d0e; }
+    .light-mode .account-panel,
+    .light-mode .account-status { background:#f4f4f4; color:#111; border-color:#ddd; }
+    @media (max-width:560px) {
+      .account-grid,.account-actions { grid-template-columns:1fr; }
+      .account-grid .full { grid-column:auto; }
+    }
+
     /* ShiftStack Work marketplace MVP */
 
     .work-profile-card {
@@ -1068,7 +1112,7 @@
     }
     .work-tabs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 7px;
       margin: 12px 0;
     }
@@ -1225,6 +1269,31 @@
 
 <button class="work-launch" onclick="toggleWorkMarketplace()">&#128736;&#65039; ShiftStack Work</button>
 
+<button class="account-launch" onclick="toggleShiftStackAccount()">&#128100; ShiftStack Account</button>
+
+<section id="shiftStackAccountPanel" class="account-panel">
+  <h2>ShiftStack Account</h2>
+  <p>A live account lets your work posts, applications, and profile exist across devices and be visible to other ShiftStack users.</p>
+  <div class="account-grid">
+    <input id="accountDisplayName" placeholder="Display name">
+    <select id="accountRole">
+      <option value="worker">Worker / Contractor</option>
+      <option value="business">Business / Employer</option>
+      <option value="homeowner">Homeowner / Customer</option>
+      <option value="property_manager">Property Manager</option>
+    </select>
+    <input id="accountEmail" class="full" type="email" autocomplete="email" placeholder="Email">
+    <input id="accountPassword" class="full" type="password" autocomplete="current-password" minlength="8" placeholder="Password (8+ characters)">
+  </div>
+  <div class="account-actions">
+    <button onclick="createShiftStackAccount()">Create Account</button>
+    <button onclick="signInShiftStack()">Sign In</button>
+  </div>
+  <button class="work-secondary" onclick="signOutShiftStack()">Sign Out</button>
+  <div id="shiftStackAccountStatus" class="account-status">Checking marketplace backend…</div>
+</section>
+
+
 <section id="workMarketplace" class="work-marketplace">
   <div class="work-header">
     <span class="work-kicker">New · Albuquerque MVP</span>
@@ -1262,7 +1331,7 @@
         <option>Full-time</option>
       </select>
     </div>
-    <div class="work-notice">Marketplace preview: posts and responses are stored only on this device while we build the live backend.</div>
+    <div id="workBackendNotice" class="work-notice">Marketplace preview: checking live backend…</div>
     <div id="workFeed" class="work-feed"></div>
   </div>
 
@@ -1445,6 +1514,7 @@
   With assistance from ChatGPT
 </div>
 
+<script src="/shiftstack-backend.js"></script>
 <script>
 let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 let currentFilter = "all";
@@ -1454,6 +1524,106 @@ const MARKETPLACE_RESPONSES_KEY = "shiftstack_marketplace_responses_v1";
 const WORK_PROFILE_KEY = "shiftstack_work_profile_v1";
 let marketplacePosts = JSON.parse(localStorage.getItem(MARKETPLACE_POSTS_KEY) || "[]");
 let marketplaceResponses = JSON.parse(localStorage.getItem(MARKETPLACE_RESPONSES_KEY) || "[]");
+let liveMarketplacePosts = [];
+let liveBackendConfigured = false;
+
+function toggleShiftStackAccount() {
+  const panel = document.getElementById("shiftStackAccountPanel");
+  panel.classList.toggle("open");
+  updateShiftStackAccountUi();
+}
+
+function setAccountStatus(message, kind = "") {
+  const el = document.getElementById("shiftStackAccountStatus");
+  if (!el) return;
+  el.textContent = message;
+  el.className = "account-status" + (kind ? " " + kind : "");
+}
+
+async function updateShiftStackAccountUi() {
+  if (!window.ShiftStackBackend) {
+    setAccountStatus("Backend client is still loading.", "warn");
+    return;
+  }
+  await ShiftStackBackend.init();
+  liveBackendConfigured = ShiftStackBackend.isConfigured();
+  const user = ShiftStackBackend.currentUser();
+  if (!liveBackendConfigured) {
+    setAccountStatus("The marketplace backend code is installed, but the live database has not been connected yet.", "warn");
+  } else if (user) {
+    setAccountStatus("Signed in as " + (user.email || "ShiftStack user") + ". Live marketplace sync is on.", "ok");
+  } else {
+    setAccountStatus("Backend is live. Sign in or create an account to post and respond to real work.");
+  }
+  updateWorkBackendNotice();
+}
+
+function updateWorkBackendNotice() {
+  const notice = document.getElementById("workBackendNotice");
+  if (!notice) return;
+  const user = window.ShiftStackBackend?.currentUser?.();
+  if (liveBackendConfigured && user) {
+    notice.textContent = "LIVE marketplace: posts, applications, and profiles sync through your ShiftStack account.";
+  } else if (liveBackendConfigured) {
+    notice.textContent = "Live marketplace is available. Sign in with ShiftStack Account to use real shared listings.";
+  } else {
+    notice.textContent = "Marketplace preview: local demo mode until the live database is connected.";
+  }
+}
+
+async function createShiftStackAccount() {
+  const email = document.getElementById("accountEmail").value.trim();
+  const password = document.getElementById("accountPassword").value;
+  const displayName = document.getElementById("accountDisplayName").value.trim();
+  const role = document.getElementById("accountRole").value;
+  if (!email || !password || password.length < 8) {
+    alert("Enter an email and a password with at least 8 characters.");
+    return;
+  }
+  try {
+    await ShiftStackBackend.signup({ email, password, displayName, role });
+    await updateShiftStackAccountUi();
+    const user = ShiftStackBackend.currentUser();
+    if (user) {
+      alert("ShiftStack account created and signed in.");
+      await loadWorkProfile();
+      await renderMarketplace();
+    } else {
+      alert("Account created. Check your email if confirmation is required, then sign in.");
+    }
+  } catch (error) {
+    alert(error.message || "Could not create ShiftStack account.");
+  }
+}
+
+async function signInShiftStack() {
+  const email = document.getElementById("accountEmail").value.trim();
+  const password = document.getElementById("accountPassword").value;
+  if (!email || !password) {
+    alert("Enter your email and password.");
+    return;
+  }
+  try {
+    await ShiftStackBackend.signin({ email, password });
+    await updateShiftStackAccountUi();
+    await loadWorkProfile();
+    await renderMarketplace();
+    await renderMyWork();
+    alert("Signed in to ShiftStack.");
+  } catch (error) {
+    alert(error.message || "Could not sign in.");
+  }
+}
+
+async function signOutShiftStack() {
+  if (!window.ShiftStackBackend) return;
+  await ShiftStackBackend.signout();
+  liveMarketplacePosts = [];
+  await updateShiftStackAccountUi();
+  await renderMarketplace();
+  renderMyWork();
+}
+
 
 
 function getWorkProfile() {
@@ -1468,7 +1638,7 @@ function selectedValues(containerId) {
   return [...document.querySelectorAll("#" + containerId + " input[type='checkbox']:checked")].map(el => el.value);
 }
 
-function saveWorkProfile() {
+async function saveWorkProfile() {
   const profile = {
     role: document.getElementById("profileRole").value,
     location: document.getElementById("profileLocation").value.trim(),
@@ -1480,13 +1650,61 @@ function saveWorkProfile() {
   };
   localStorage.setItem(WORK_PROFILE_KEY, JSON.stringify(profile));
   const status = document.getElementById("workProfileStatus");
-  status.textContent = "Saved. ShiftStack will now rank matching work higher on this device.";
   status.style.display = "block";
-  renderMarketplace();
+
+  if (liveBackendConfigured && ShiftStackBackend.currentUser()) {
+    try {
+      const roleMap = {
+        "Worker / Contractor": "worker",
+        "Business / Employer": "business",
+        "Homeowner / Customer": "homeowner",
+        "Property Manager": "property_manager"
+      };
+      await ShiftStackBackend.upsertProfile({
+        role: roleMap[profile.role] || "worker",
+        base_location: profile.location,
+        travel_radius_miles: profile.radius,
+        availability: profile.availability,
+        work_types: profile.workTypes,
+        categories: profile.categories
+      });
+      status.textContent = "Saved to your live ShiftStack work profile.";
+    } catch (error) {
+      status.textContent = "Saved on this device, but live sync failed: " + (error.message || "unknown error");
+    }
+  } else {
+    status.textContent = "Saved on this device. Sign in when the live backend is connected to sync it.";
+  }
+  await renderMarketplace();
 }
 
-function loadWorkProfile() {
-  const profile = getWorkProfile();
+async function loadWorkProfile() {
+  let profile = getWorkProfile();
+
+  if (liveBackendConfigured && ShiftStackBackend.currentUser()) {
+    try {
+      const live = await ShiftStackBackend.getMyProfile();
+      if (live) {
+        const roleMap = {
+          worker: "Worker / Contractor",
+          business: "Business / Employer",
+          homeowner: "Homeowner / Customer",
+          property_manager: "Property Manager"
+        };
+        profile = {
+          role: roleMap[live.role] || "Worker / Contractor",
+          location: live.base_location || "",
+          radius: live.travel_radius_miles || 25,
+          availability: live.availability || "Weekends",
+          workTypes: live.work_types || [],
+          categories: live.categories || [],
+          updatedAt: live.updated_at || ""
+        };
+        localStorage.setItem(WORK_PROFILE_KEY, JSON.stringify(profile));
+      }
+    } catch {}
+  }
+
   if (!profile) return;
   document.getElementById("profileRole").value = profile.role || "Worker / Contractor";
   document.getElementById("profileLocation").value = profile.location || "";
@@ -1618,33 +1836,72 @@ function marketplacePayText(post) {
   return money + " total";
 }
 
-function renderMarketplace() {
+function backendPostToMarketplace(row) {
+  return {
+    id: row.id,
+    ownerId: row.owner_id,
+    live: true,
+    demo: false,
+    posterType: row.poster_type,
+    workType: row.work_type,
+    title: row.title,
+    category: row.category,
+    location: row.location,
+    budget: Number(row.budget) || 0,
+    payType: row.pay_type,
+    date: row.work_date || "",
+    tools: row.tools || "",
+    materials: row.materials || "",
+    description: row.description || "",
+    status: row.status,
+    createdAt: row.created_at
+  };
+}
+
+async function renderMarketplace() {
   const feed = document.getElementById("workFeed");
   if (!feed) return;
 
+  updateWorkBackendNotice();
+  let sourcePosts = [...marketplacePosts, ...marketplaceDemoPosts()];
+
+  if (liveBackendConfigured && ShiftStackBackend.currentUser()) {
+    try {
+      const rows = await ShiftStackBackend.listPosts();
+      liveMarketplacePosts = (rows || []).map(backendPostToMarketplace);
+      sourcePosts = liveMarketplacePosts;
+    } catch (error) {
+      const notice = document.getElementById("workBackendNotice");
+      if (notice) notice.textContent = "Live marketplace could not load. Showing local preview instead.";
+    }
+  }
+
   const category = document.getElementById("workCategoryFilter")?.value || "";
   const type = document.getElementById("workTypeFilter")?.value || "";
-  const all = [...marketplacePosts, ...marketplaceDemoPosts()]
+  const all = sourcePosts
     .filter(post => !category || post.category === category)
     .filter(post => !type || post.workType === type)
     .map(post => ({ post, match: marketplaceMatch(post) }))
     .sort((a, b) => b.match.score - a.match.score);
 
   if (!all.length) {
-    feed.innerHTML = '<div class="work-empty">No matching work yet. This is where live local listings will appear once the backend is connected.</div>';
+    feed.innerHTML = '<div class="work-empty">No matching work yet.</div>';
     return;
   }
 
+  const currentUserId = ShiftStackBackend?.currentUser?.()?.id || "";
   feed.innerHTML = all.map(item => {
     const post = item.post;
     const match = item.match;
     const already = marketplaceResponses.some(row => row.postId === post.id);
     const responseLabel = post.payType === "open" ? "Send Estimate" : "Apply / Respond";
+    const ownLivePost = post.live && post.ownerId === currentUserId;
     return `
       <article class="work-card">
         <h3>${escapeMarketplace(post.title)}</h3>
         <div class="work-meta">
           ${post.demo ? '<span class="work-badge demo">DEMO</span>' : ''}
+          ${post.live ? '<span class="work-badge work-match">LIVE</span>' : ''}
           ${match.label ? '<span class="work-badge ' + (match.score >= 70 ? 'work-match' : 'work-match-muted') + '">' + escapeMarketplace(match.label) + '</span>' : ''}
           <span class="work-badge">${escapeMarketplace(post.category)}</span>
           <span class="work-badge">${escapeMarketplace(post.workType)}</span>
@@ -1658,7 +1915,7 @@ function renderMarketplace() {
           ${post.materials ? '<span class="work-badge">' + escapeMarketplace(post.materials) + '</span>' : ''}
         </div>
         <div class="work-actions">
-          <button onclick="respondToMarketplaceWork('${escapeMarketplace(post.id)}')">${already ? "Response Sent" : responseLabel}</button>
+          ${ownLivePost ? '<button class="work-secondary" disabled>Your Post</button>' : '<button onclick="respondToMarketplaceWork(\'' + escapeMarketplace(post.id) + '\')">' + (already ? 'Response Sent' : responseLabel) + '</button>'}
           <button class="work-secondary" onclick="saveMarketplaceJobToTracker('${escapeMarketplace(post.id)}')">Save to Job Tracker</button>
         </div>
       </article>
@@ -1666,7 +1923,7 @@ function renderMarketplace() {
   }).join("");
 }
 
-function postMarketplaceWork() {
+async function postMarketplaceWork() {
   const title = document.getElementById("workTitle").value.trim();
   const location = document.getElementById("workLocation").value.trim();
   const description = document.getElementById("workDescription").value.trim();
@@ -1694,8 +1951,34 @@ function postMarketplaceWork() {
     createdAt: new Date().toISOString()
   };
 
-  marketplacePosts.unshift(post);
-  saveMarketplace();
+  if (liveBackendConfigured) {
+    if (!ShiftStackBackend.currentUser()) {
+      alert("Sign in to your ShiftStack Account before posting live work.");
+      document.getElementById("shiftStackAccountPanel").classList.add("open");
+      return;
+    }
+    try {
+      await ShiftStackBackend.createPost({
+        poster_type: post.posterType,
+        work_type: post.workType,
+        title: post.title,
+        category: post.category,
+        location: post.location,
+        budget: post.budget,
+        pay_type: post.payType,
+        work_date: post.date || null,
+        tools: post.tools,
+        materials: post.materials,
+        description: post.description
+      });
+    } catch (error) {
+      alert("Could not post live work: " + (error.message || "unknown error"));
+      return;
+    }
+  } else {
+    marketplacePosts.unshift(post);
+    saveMarketplace();
+  }
 
   ["workTitle","workLocation","workBudget","workDate","workTools","workContact","workDescription"].forEach(id => {
     const el = document.getElementById(id);
@@ -1703,31 +1986,66 @@ function postMarketplaceWork() {
   });
 
   showWorkView("browse");
-  alert("Work post added to the ShiftStack marketplace preview.");
+  await renderMarketplace();
+  alert(liveBackendConfigured ? "Work posted to the live ShiftStack marketplace." : "Work post added to the local marketplace preview.");
 }
 
 function findMarketplacePost(id) {
-  return [...marketplacePosts, ...marketplaceDemoPosts()].find(post => post.id === id);
+  return [...liveMarketplacePosts, ...marketplacePosts, ...marketplaceDemoPosts()].find(post => post.id === id);
 }
 
-function respondToMarketplaceWork(id) {
+async function respondToMarketplaceWork(id) {
   const post = findMarketplacePost(id);
   if (!post) return;
 
   const existing = marketplaceResponses.find(item => item.postId === id);
-  if (existing) {
+  if (existing && !post.live) {
     alert("You already saved a response for this work post.");
     return;
   }
 
+  if (post.live && !ShiftStackBackend.currentUser()) {
+    alert("Sign in to respond to live work.");
+    document.getElementById("shiftStackAccountPanel").classList.add("open");
+    return;
+  }
+
+  let estimateAmount = null;
+  if (post.payType === "open") {
+    const amountText = prompt("Your estimate amount (numbers only):", "");
+    if (amountText === null) return;
+    estimateAmount = Number(amountText);
+    if (!Number.isFinite(estimateAmount) || estimateAmount < 0) {
+      alert("Enter a valid estimate amount.");
+      return;
+    }
+  }
+
   const label = post.payType === "open"
-    ? "Enter your estimate or short message:"
+    ? "Add a short note with your estimate:"
     : "Enter a short application / availability message:";
   const note = prompt(label, "");
   if (note === null) return;
   if (!note.trim()) {
     alert("Add a short message before sending.");
     return;
+  }
+
+  if (post.live) {
+    try {
+      await ShiftStackBackend.applyToPost({
+        postId: post.id,
+        message: note.trim(),
+        estimateAmount,
+        kind: post.payType === "open" ? "estimate" : "application"
+      });
+      alert("Response sent through ShiftStack.");
+      await renderMyWork();
+      return;
+    } catch (error) {
+      alert("Could not send response: " + (error.message || "unknown error"));
+      return;
+    }
   }
 
   marketplaceResponses.unshift({
@@ -1738,7 +2056,7 @@ function respondToMarketplaceWork(id) {
     createdAt: new Date().toISOString()
   });
   saveMarketplace();
-  renderMarketplace();
+  await renderMarketplace();
   renderMyWork();
   alert("Response saved in My Work.");
 }
@@ -1769,9 +2087,62 @@ function saveMarketplaceJobToTracker(id) {
   alert("Saved to your ShiftStack job tracker.");
 }
 
-function renderMyWork() {
+async function renderMyWork() {
   const target = document.getElementById("workMyContent");
   if (!target) return;
+
+  if (liveBackendConfigured && ShiftStackBackend.currentUser()) {
+    try {
+      const [apps, posts] = await Promise.all([
+        ShiftStackBackend.listMyApplications(),
+        ShiftStackBackend.listMyPosts()
+      ]);
+
+      const responseHtml = (apps || []).length
+        ? apps.map(item => {
+            const post = item.work_posts || {};
+            return `
+              <div class="work-card">
+                <h3>${escapeMarketplace(post.title || "Work post")}</h3>
+                <div class="work-meta">
+                  <span class="work-badge">Response: ${escapeMarketplace(item.status || "sent")}</span>
+                  ${item.estimate_amount != null ? '<span class="work-badge pay">Estimate $' + escapeMarketplace(item.estimate_amount) + '</span>' : ''}
+                </div>
+                <p>${escapeMarketplace(item.message || "")}</p>
+              </div>
+            `;
+          }).join("")
+        : '<div class="work-empty">No live applications or estimates sent yet.</div>';
+
+      const postHtml = (posts || []).length
+        ? posts.map(row => {
+            const post = backendPostToMarketplace(row);
+            return `
+              <div class="work-card">
+                <h3>${escapeMarketplace(post.title)}</h3>
+                <div class="work-meta">
+                  <span class="work-badge">Posted</span>
+                  <span class="work-badge">${escapeMarketplace(post.status || "open")}</span>
+                  <span class="work-badge pay">${escapeMarketplace(marketplacePayText(post))}</span>
+                </div>
+                <p>${escapeMarketplace(post.location)} · ${escapeMarketplace(post.category)}</p>
+              </div>
+            `;
+          }).join("")
+        : '<div class="work-empty">You have not posted live work yet.</div>';
+
+      target.innerHTML = `
+        <h3 style="color:#00f2fe;margin:4px 0 8px;">My Responses</h3>
+        ${responseHtml}
+        <h3 style="color:#00f2fe;margin:18px 0 8px;">My Posted Work</h3>
+        ${postHtml}
+      `;
+      return;
+    } catch (error) {
+      target.innerHTML = '<div class="work-empty">Could not load live My Work: ' + escapeMarketplace(error.message || "unknown error") + '</div>';
+      return;
+    }
+  }
 
   const ownPosts = marketplacePosts.length
     ? marketplacePosts.map(post => `
@@ -1784,7 +2155,7 @@ function renderMyWork() {
           <p>${escapeMarketplace(post.location)} · ${escapeMarketplace(post.category)}</p>
         </div>
       `).join("")
-    : '<div class="work-empty">You have not posted any work on this device yet.</div>';
+    : '<div class="work-empty">You have not posted any preview work on this device yet.</div>';
 
   const responses = marketplaceResponses.length
     ? marketplaceResponses.map(item => {
@@ -1800,7 +2171,7 @@ function renderMyWork() {
           </div>
         `;
       }).join("")
-    : '<div class="work-empty">Applications and estimates you send will show here.</div>';
+    : '<div class="work-empty">Applications and estimates you send in preview mode will show here.</div>';
 
   target.innerHTML = `
     <h3 style="color:#00f2fe;margin:4px 0 8px;">My Responses</h3>
@@ -1810,6 +2181,16 @@ function renderMyWork() {
   `;
 }
 
+window.addEventListener("shiftstack-backend-ready", async event => {
+  liveBackendConfigured = !!event.detail?.configured;
+  await updateShiftStackAccountUi();
+  if (liveBackendConfigured && ShiftStackBackend.currentUser()) {
+    await loadWorkProfile();
+  }
+  await renderMarketplace();
+});
+
+setTimeout(() => updateShiftStackAccountUi(), 400);
 
 function save() {
   localStorage.setItem("jobs", JSON.stringify(jobs));
