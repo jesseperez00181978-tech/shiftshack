@@ -274,3 +274,38 @@ grant select, insert, update, delete on public.work_posts to authenticated;
 grant select, insert, update on public.work_applications to authenticated;
 grant select, insert on public.work_conversations to authenticated;
 grant select, insert on public.work_messages to authenticated;
+
+
+-- Relationships used by the marketplace API for safe profile embedding.
+alter table public.work_posts
+  add constraint work_posts_owner_profile_fkey
+  foreign key (owner_id) references public.profiles(id) on delete cascade;
+
+alter table public.work_posts
+  add constraint work_posts_assigned_worker_profile_fkey
+  foreign key (assigned_worker_id) references public.profiles(id) on delete set null;
+
+alter table public.work_applications
+  add constraint work_applications_worker_profile_fkey
+  foreign key (worker_id) references public.profiles(id) on delete cascade;
+
+alter table public.work_conversations
+  add constraint work_conversations_customer_profile_fkey
+  foreign key (customer_id) references public.profiles(id) on delete cascade;
+
+alter table public.work_conversations
+  add constraint work_conversations_worker_profile_fkey
+  foreign key (worker_id) references public.profiles(id) on delete cascade;
+
+alter table public.work_messages
+  add constraint work_messages_sender_profile_fkey
+  foreign key (sender_id) references public.profiles(id) on delete cascade;
+
+-- The MVP does not yet expose application-status editing. Keep immutable
+-- applications server-side until the acceptance workflow is added safely.
+revoke update on public.work_applications from authenticated;
+
+-- This trigger helper is not an RPC endpoint. It should only run as an auth trigger.
+revoke execute on function public.handle_new_user() from public;
+revoke execute on function public.handle_new_user() from anon;
+revoke execute on function public.handle_new_user() from authenticated;
