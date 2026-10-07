@@ -979,87 +979,684 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+  
+    /* ShiftStack mobile-first UI refresh */
+    :root {
+      --ss-bg: #090d14;
+      --ss-surface: #111826;
+      --ss-surface-2: #161f2f;
+      --ss-border: rgba(255,255,255,.09);
+      --ss-text: #f7f9fc;
+      --ss-muted: #94a3b8;
+      --ss-cyan: #22d3ee;
+      --ss-blue: #3b82f6;
+      --ss-purple: #a855f7;
+      --ss-green: #22c55e;
+      --ss-danger: #ef4444;
+      --ss-radius: 18px;
+      --ss-shadow: 0 16px 44px rgba(0,0,0,.28);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% -10%, rgba(34,211,238,.12), transparent 28rem),
+        radial-gradient(circle at 85% 0%, rgba(168,85,247,.10), transparent 26rem),
+        var(--ss-bg);
+      color: var(--ss-text);
+      margin: 0;
+      padding: 0 14px 96px;
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea, label.import { font: inherit; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 13px 14px;
+      margin: 0;
+      border-radius: 12px;
+      border: 1px solid var(--ss-border);
+      background: rgba(255,255,255,.055);
+      color: var(--ss-text);
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    input::placeholder, textarea::placeholder { color: #718096; }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(34,211,238,.75);
+      box-shadow: 0 0 0 3px rgba(34,211,238,.12);
+      background: rgba(255,255,255,.075);
+    }
+    select option { background: #111827; color: white; }
+
+    button {
+      width: 100%;
+      margin: 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 0;
+      font-weight: 750;
+      cursor: pointer;
+      box-sizing: border-box;
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+    }
+    button:active { transform: scale(.985); }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(to bottom, rgba(9,13,20,.97) 70%, rgba(9,13,20,0));
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 13px;
+      font-size: 21px;
+      background: linear-gradient(135deg, rgba(59,130,246,.95), rgba(34,211,238,.95));
+      box-shadow: 0 8px 24px rgba(34,211,238,.18);
+    }
+    .brand h1 {
+      margin: 0;
+      text-align: left;
+      color: var(--ss-text);
+      font-size: 21px;
+      line-height: 1.05;
+      letter-spacing: -.4px;
+    }
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--ss-muted);
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: .55px;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .header-actions button { width: auto; }
+    #themeToggle {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      margin: 0;
+      border-radius: 12px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--ss-border);
+      color: white;
+      font-size: 18px;
+    }
+    .premium-btn {
+      width: auto;
+      margin: 0;
+      padding: 11px 13px;
+      min-height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #7c3aed, #d946ef);
+      box-shadow: 0 8px 24px rgba(217,70,239,.23);
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .app-shell,
+    .resume-panel,
+    .premium-workflow-panel {
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-card {
+      margin: 10px 0 14px;
+      padding: 20px;
+      border: 1px solid var(--ss-border);
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(59,130,246,.16), rgba(34,211,238,.06) 55%, rgba(168,85,247,.08)),
+        rgba(17,24,39,.92);
+      box-shadow: var(--ss-shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .eyebrow {
+      display: inline-block;
+      color: var(--ss-cyan);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1.25px;
+      margin-bottom: 7px;
+    }
+    .hero-card h2 {
+      margin: 0;
+      font-size: clamp(22px, 5vw, 32px);
+      line-height: 1.08;
+      letter-spacing: -.6px;
+    }
+    .hero-card p {
+      margin: 8px 0 0;
+      color: var(--ss-muted);
+      line-height: 1.45;
+      font-size: 14px;
+      max-width: 620px;
+    }
+    .resume-launch {
+      width: auto;
+      min-width: 126px;
+      margin: 0;
+      background: rgba(255,255,255,.08);
+      color: white;
+      border: 1px solid var(--ss-border);
+    }
+
+    .section-card,
+    .search-panel,
+    .utility-panel,
+    #stats.job {
+      background: rgba(17,24,39,.9);
+      border: 1px solid var(--ss-border);
+      border-radius: var(--ss-radius);
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
+    }
+    .section-card {
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .search-panel {
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 14px;
+      margin-bottom: 13px;
+    }
+    .section-kicker {
+      color: var(--ss-cyan);
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      font-size: 10px;
+      font-weight: 850;
+    }
+    .section-head h2 {
+      margin: 3px 0 0;
+      font-size: 19px;
+      letter-spacing: -.25px;
+    }
+    .section-head p {
+      color: var(--ss-muted);
+      font-size: 12px;
+      margin: 0;
+      text-align: right;
+      max-width: 330px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 10px;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .field-label {
+      display: block;
+      margin: 2px 0 7px;
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-top: 10px;
+    }
+    .primary-action {
+      background: linear-gradient(135deg, var(--ss-blue), var(--ss-cyan));
+      color: white;
+      min-height: 48px;
+      box-shadow: 0 9px 24px rgba(34,211,238,.15);
+    }
+
+    #jobCount {
+      margin: 14px 0 10px;
+      color: #dbeafe;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+    #stats.job {
+      padding: 12px;
+      margin: 0 0 12px;
+    }
+    .stats-grid {
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 8px;
+      margin: 0;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.045);
+      color: white;
+      border: 1px solid var(--ss-border);
+      border-radius: 14px;
+      box-shadow: none;
+      padding: 12px 6px;
+    }
+    .stat-card:hover { background: rgba(255,255,255,.07); }
+    .stat-number { font-size: 24px; }
+    .stat-label { color: #94a3b8; font-size: 11px; margin-top: 3px; }
+
+    .filter-buttons {
+      display: flex;
+      gap: 7px;
+      margin: 0 0 14px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .filter-buttons::-webkit-scrollbar { display: none; }
+    .filter-buttons button {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.065);
+      border: 1px solid var(--ss-border);
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+    .filter-buttons button.active-filter {
+      color: #061018;
+      background: linear-gradient(135deg, #67e8f9, #38bdf8);
+      border-color: transparent;
+    }
+
+    .search-grid,
+    .utility-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .search-grid .full { grid-column: 1 / -1; }
+    .secondary-action {
+      background: rgba(255,255,255,.07);
+      color: white;
+      border: 1px solid var(--ss-border);
+    }
+
+    .utility-panel {
+      margin: 14px 0 18px;
+      overflow: hidden;
+    }
+    .utility-panel details { padding: 0; }
+    .utility-panel summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 15px 16px;
+      font-weight: 800;
+      color: #dbeafe;
+    }
+    .utility-panel summary::-webkit-details-marker { display: none; }
+    .utility-panel summary::after {
+      content: "＋";
+      float: right;
+      color: var(--ss-muted);
+    }
+    .utility-panel details[open] summary::after { content: "−"; }
+    .utility-grid { padding: 0 16px 16px; }
+    .utility-grid button,
+    .utility-grid label.import {
+      margin: 0;
+      min-height: 44px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid var(--ss-border);
+      color: #e2e8f0;
+      display: grid;
+      place-items: center;
+    }
+
+    #list {
+      display: grid;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .job {
+      margin: 0;
+      padding: 16px;
+      background: rgba(17,24,39,.94);
+      border: 1px solid var(--ss-border);
+      border-left-width: 4px;
+      border-radius: 17px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.16);
+    }
+    .job h3 {
+      margin: 0 0 9px;
+      color: #f8fafc;
+      font-size: 19px;
+      letter-spacing: -.25px;
+    }
+    .job p {
+      color: #cbd5e1;
+      margin: 6px 0;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .job-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 7px;
+      margin-top: 12px;
+    }
+    .job-actions button {
+      min-width: 0;
+      padding: 10px 7px;
+      font-size: 12px;
+    }
+    .job-notes {
+      border: 1px solid var(--ss-border);
+      background: rgba(0,0,0,.18);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 1200;
+      left: 50%;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(calc(100% - 22px), 560px);
+      padding: 7px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 5px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 17px;
+      background: rgba(14,20,30,.93);
+      box-shadow: 0 18px 50px rgba(0,0,0,.4);
+      backdrop-filter: blur(18px);
+    }
+    .bottom-nav button {
+      width: 100%;
+      padding: 9px 5px 8px;
+      background: transparent;
+      color: #cbd5e1;
+      border-radius: 11px;
+      font-size: 10px;
+      line-height: 1.15;
+      font-weight: 750;
+    }
+    .bottom-nav .nav-icon {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 3px;
+    }
+
+    .app-footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 11px;
+      margin: 28px 0 14px;
+      line-height: 1.6;
+    }
+
+    .resume-panel,
+    .premium-workflow-panel {
+      border-radius: var(--ss-radius);
+      border-color: var(--ss-border);
+      background: rgba(17,24,39,.94);
+      box-shadow: var(--ss-shadow);
+    }
+
+    .light-mode {
+      background: #eef3f8;
+      color: #0f172a;
+    }
+    .light-mode .app-header {
+      background: linear-gradient(to bottom, rgba(238,243,248,.97) 70%, rgba(238,243,248,0));
+    }
+    .light-mode .brand h1 { color: #0f172a; }
+    .light-mode #themeToggle {
+      color: #0f172a;
+      background: rgba(15,23,42,.06);
+      border-color: rgba(15,23,42,.1);
+    }
+    .light-mode .hero-card,
+    .light-mode .section-card,
+    .light-mode .search-panel,
+    .light-mode .utility-panel,
+    .light-mode #stats.job,
+    .light-mode .job,
+    .light-mode .resume-panel,
+    .light-mode .premium-workflow-panel {
+      background: rgba(255,255,255,.94);
+      border-color: rgba(15,23,42,.10);
+      color: #0f172a;
+    }
+    .light-mode input,
+    .light-mode select,
+    .light-mode textarea {
+      background: #f8fafc;
+      color: #0f172a;
+      border-color: #dbe3ec;
+    }
+    .light-mode select option { background: white; color: #0f172a; }
+    .light-mode .stat-card,
+    .light-mode .secondary-action,
+    .light-mode .utility-grid button,
+    .light-mode .utility-grid label.import {
+      background: #f8fafc;
+      color: #0f172a;
+      border-color: #e2e8f0;
+    }
+    .light-mode .job h3,
+    .light-mode .job p { color: #0f172a; }
+    .light-mode .bottom-nav {
+      background: rgba(255,255,255,.94);
+      border-color: rgba(15,23,42,.11);
+    }
+    .light-mode .bottom-nav button { color: #334155; }
+
+    @media (max-width: 720px) {
+      .app-header { padding-top: 9px; }
+      .brand p { display: none; }
+      .premium-btn { max-width: 128px; overflow: hidden; text-overflow: ellipsis; }
+      .hero-card { align-items: flex-start; }
+      .stats-grid { grid-template-columns: repeat(5, minmax(64px,1fr)); overflow-x: auto; }
+      .stat-card { min-width: 64px; }
+      .form-grid,
+      .search-grid,
+      .utility-grid { grid-template-columns: 1fr; }
+      .form-grid .full,
+      .search-grid .full { grid-column: auto; }
+      .section-head { align-items: flex-start; }
+      .section-head p { display: none; }
+      .job-actions { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 460px) {
+      body { padding-left: 10px; padding-right: 10px; }
+      .brand-mark { width: 38px; height: 38px; border-radius: 11px; }
+      .brand h1 { font-size: 19px; }
+      #themeToggle { width: 38px; height: 38px; }
+      .premium-btn { min-height: 38px; padding: 9px 10px; font-size: 11px; }
+      .hero-card {
+        padding: 16px;
+        display: block;
+      }
+      .hero-card .resume-launch {
+        width: 100%;
+        margin-top: 14px;
+      }
+      .section-card, .search-panel { padding: 14px; }
+    }
+
   </style>
 </head>
 
 <body>
 
-<h1>ShiftStack &#128188;</h1>
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark">💼</div>
+    <div>
+      <h1>ShiftStack</h1>
+      <p>Job search command center</p>
+    </div>
+  </div>
 
-<button id="themeToggle" onclick="toggleTheme()">&#127769; Dark Mode</button>
-<button class="premium-btn" onclick="showPremium()">&#11088; ShiftStack Premium</button>
-<button class="resume-launch" onclick="toggleResumePanel()">&#128196; Resumes</button>
+  <div class="header-actions">
+    <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    <button class="premium-btn" onclick="showPremium()">⭐ Premium</button>
+  </div>
+</header>
 
-<input id="jobInput" placeholder="Company name">
-<input id="locationInput" placeholder="Location (example: Albuquerque, NM)">
-<input id="jobNotes" placeholder="Notes (optional)">
-<input id="payInput" type="number" min="0" step="0.01" placeholder="Pay per hour (optional)">
+<main class="app-shell">
+  <section class="hero-card" id="jobsSection">
+    <div>
+      <span class="eyebrow">YOUR PIPELINE</span>
+      <h2>Keep every opportunity moving.</h2>
+      <p>Track applications, follow-ups, interviews, offers, pay, notes, and your next move without digging through a wall of buttons.</p>
+    </div>
+    <button class="resume-launch" onclick="toggleResumePanel()">📄 Resumes</button>
+  </section>
 
-<select id="statusInput">
-  <option>Applied</option>
-  <option>Interview</option>
-  <option>Offer</option>
-  <option>Hired</option>
-  <option>Rejected</option>
-</select>
+  <div id="jobCount" onclick="showJobSummary()"></div>
+  <div id="stats" class="job"></div>
 
-<select id="priorityInput">
-  <option>Low</option>
-  <option selected>Medium</option>
-  <option>High</option>
-</select>
+  <div class="filter-buttons" aria-label="Job filters">
+    <button onclick="setFilter('all', this)" class="active-filter">All</button>
+    <button onclick="setFilter('overdue', this)">Overdue</button>
+    <button onclick="setFilter('today', this)">Today</button>
+    <button onclick="setFilter('nolink', this)">No Link</button>
+  </div>
 
-<label>&#128197; Follow-Up Reminder</label>
-<input id="followUpInput" type="date">
+  <section class="section-card" id="addSection">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">QUICK ADD</div>
+        <h2>Add a job</h2>
+      </div>
+      <p>Capture the basics now. You can edit the details later.</p>
+    </div>
 
-<button onclick="addJob()">Add Job</button>
+    <div class="form-grid">
+      <input id="jobInput" class="full" placeholder="Company name">
+      <input id="locationInput" placeholder="Location">
+      <input id="payInput" type="number" min="0" step="0.01" placeholder="Pay per hour">
+      <select id="statusInput">
+        <option>Applied</option>
+        <option>Interview</option>
+        <option>Offer</option>
+        <option>Hired</option>
+        <option>Rejected</option>
+      </select>
+      <select id="priorityInput">
+        <option>Low</option>
+        <option selected>Medium</option>
+        <option>High</option>
+      </select>
+      <input id="jobNotes" class="full" placeholder="Notes (optional)">
+      <div class="full">
+        <label class="field-label" for="followUpInput">📅 Follow-up reminder</label>
+        <input id="followUpInput" type="date">
+      </div>
+    </div>
 
-<div class="search-panel">
-  <input id="jobSearchInput" placeholder="Search jobs...">
-  <input id="jobSearchLocation" placeholder="Search location (default: Albuquerque, NM)">
+    <div class="form-actions">
+      <button class="primary-action" onclick="addJob()">＋ Add Job</button>
+    </div>
+  </section>
 
-  <select id="jobSite">
-    <option value="indeed">Indeed</option>
-    <option value="linkedin">LinkedIn Jobs</option>
-    <option value="ziprecruiter">ZipRecruiter</option>
-    <option value="glassdoor">Glassdoor</option>
-    <option value="google">Google Jobs</option>
-    <option value="snagajob">Snagajob</option>
-    <option value="careerbuilder">CareerBuilder</option>
-    <option value="simplyhired">SimplyHired</option>
-    <option value="monster">Monster</option>
-    <option value="usajobs">USAJOBS</option>
-    <option value="craigslist">Craigslist</option>
-  </select>
+  <section class="search-panel" id="searchSection">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">FIND WORK</div>
+        <h2>Search job boards</h2>
+      </div>
+      <p>Set the role, location, and site. ShiftStack opens the search for you.</p>
+    </div>
 
-  <button onclick="searchSelectedSite()">&#128269; Search Selected Site</button>
-</div>
+    <div class="search-grid">
+      <input id="jobSearchInput" placeholder="Job title or keywords">
+      <input id="jobSearchLocation" placeholder="Location (default: Albuquerque, NM)">
+      <select id="jobSite" class="full">
+        <option value="indeed">Indeed</option>
+        <option value="linkedin">LinkedIn Jobs</option>
+        <option value="ziprecruiter">ZipRecruiter</option>
+        <option value="glassdoor">Glassdoor</option>
+        <option value="google">Google Jobs</option>
+        <option value="snagajob">Snagajob</option>
+        <option value="careerbuilder">CareerBuilder</option>
+        <option value="simplyhired">SimplyHired</option>
+        <option value="monster">Monster</option>
+        <option value="usajobs">USAJOBS</option>
+        <option value="craigslist">Craigslist</option>
+      </select>
+      <button class="primary-action full" onclick="searchSelectedSite()">🔎 Search Selected Site</button>
+    </div>
+  </section>
 
-<button onclick="testLocation()">&#128205; My Location</button>
-<button onclick="exportJobs()">&#128190; Backup Jobs Only</button>
-<button onclick="showAbout()">&#8505;&#65039; About ShiftStack</button>
-<button onclick="showPrivacy()">&#128274; Privacy</button>
+  <section class="utility-panel">
+    <details>
+      <summary>Tools, backup & privacy</summary>
+      <div class="utility-grid">
+        <button class="secondary-action" onclick="testLocation()">📍 My Location</button>
+        <button class="secondary-action" onclick="exportJobs()">💾 Backup Jobs</button>
+        <label class="import" for="importFile">📂 Restore Backup</label>
+        <input type="file" id="importFile" onchange="importJobs(event)">
+        <button class="secondary-action" onclick="showAbout()">ℹ️ About</button>
+        <button class="secondary-action" onclick="showPrivacy()">🔒 Privacy</button>
+      </div>
+    </details>
+  </section>
 
-<label class="import" for="importFile">&#128194; Restore Jobs Backup</label>
-<input type="file" id="importFile" onchange="importJobs(event)">
+  <div id="list"></div>
 
-<div id="jobCount" onclick="showJobSummary()"></div>
+  <div class="app-footer">
+    ShiftStack v2.0<br>
+    Built by Jesse Perez<br>
+    With assistance from ChatGPT
+  </div>
+</main>
 
-<div class="filter-buttons">
-  <button onclick="setFilter('all', this)" class="active-filter">All</button>
-  <button onclick="setFilter('overdue', this)">Overdue</button>
-  <button onclick="setFilter('today', this)">Today</button>
-  <button onclick="setFilter('nolink', this)">No Link</button>
-</div>
-
-<div id="stats" class="job"></div>
-<div id="list"></div>
-
-<div style="text-align:center; color:#777; font-size:12px; margin:30px 0 15px;">
-  ShiftStack v2.0<br>
-  Built by Jesse Perez<br>
-  With assistance from ChatGPT
-</div>
+<nav class="bottom-nav" aria-label="ShiftStack navigation">
+  <button onclick="jumpToSection('jobsSection')"><span class="nav-icon">💼</span>Jobs</button>
+  <button onclick="jumpToSection('addSection')"><span class="nav-icon">＋</span>Add</button>
+  <button onclick="jumpToSection('searchSection')"><span class="nav-icon">🔎</span>Search</button>
+  <button onclick="openResumeFromNav()"><span class="nav-icon">📄</span>Resumes</button>
+</nav>
 
 <script>
 let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
@@ -1650,9 +2247,38 @@ function exportJobs() {
   alert("&#9989; Backup saved!\n" + jobs.length + " jobs exported.");
 }
 
-function toggleTheme() {
-  document.body.classList.toggle("light-mode");
+function updateThemeToggle() {
+  const button = document.getElementById("themeToggle");
+  if (!button) return;
+  const light = document.body.classList.contains("light-mode");
+  button.textContent = light ? "☀️" : "🌙";
+  button.title = light ? "Use dark mode" : "Use light mode";
 }
+
+function toggleTheme() {
+  const light = document.body.classList.toggle("light-mode");
+  localStorage.setItem("shiftstack_theme", light ? "light" : "dark");
+  updateThemeToggle();
+}
+
+function jumpToSection(id) {
+  const target = document.getElementById(id);
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function openResumeFromNav() {
+  const panel = document.getElementById("resumePanel");
+  if (!panel) return;
+  if (!panel.classList.contains("open")) toggleResumePanel();
+  else panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("shiftstack_theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+  updateThemeToggle();
+});
 
 function importJobs(e) {
   if (!confirm("Restore this backup and replace current jobs?")) return;
