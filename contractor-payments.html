@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ShiftStack | Contractor Payments</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#101520;color:#f4f7ff}
+*{box-sizing:border-box} body{margin:0;padding:24px 14px} main{max-width:620px;margin:12px auto}
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px}.logo{background:#263b5f;border-radius:15px;padding:12px;font-size:27px}
+h1{font-size:1.55rem;margin:0} .sub{color:#b4bfd2;font-size:.92rem;margin-top:5px}
+section{border:1px solid #37435a;border-radius:18px;background:#192230;padding:20px;margin-bottom:16px}
+h2{font-size:1.15rem;margin:0 0 10px}p{line-height:1.5;color:#c6d1e2;margin:0 0 14px}
+label{display:block;font-weight:600;font-size:.87rem;margin:15px 0 5px}
+input,textarea{display:block;width:100%;background:#0f1724;color:#fff;border:1px solid #53617b;border-radius:9px;padding:12px;font:inherit}
+textarea{min-height:76px;resize:vertical}input:focus,textarea:focus{outline:2px solid #60cfff}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:#71daec;color:#06111b;font-size:1rem;font-weight:750;cursor:pointer;margin-top:19px}
+button:disabled{opacity:.55;cursor:wait}.secondary{background:#34445a;color:#fff}
+.amounts{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:16px;border-top:1px solid #40516a;padding-top:14px}
+small,.muted{color:#acb8cb} .status{margin-top:14px;white-space:pre-wrap;word-break:break-word}
+.good{color:#9cf4bc}.bad{color:#ffc0bd}
+a{color:#8ae9fa;overflow-wrap:anywhere}.hidden{display:none}
+</style>
+</head>
+<body><main>
+<header><div class="logo">🧰</div><div><h1>ShiftStack Contractor Payments</h1><div class="sub">Separate from ShiftStack Premium and Google Play Billing</div></div></header>
+<section>
+<h2>Private invoice creator</h2>
+<p>For real-world services only. Agree on the service and price before issuing an invoice. Stripe securely processes payment and sends the contractor's share to their connected account.</p>
+<p class="muted">Admin access only. Your token stays in this page's memory, is never saved, and should only be entered on your trusted HTTPS site.</p>
+<form id="form">
+<label for="token">Contractor admin token</label>
+<input id="token" type="password" autocomplete="off" required minlength="24" placeholder="Admin token configured privately on Vercel">
+<label for="account">Contractor Stripe Connect account</label>
+<input id="account" required autocomplete="off" placeholder="acct_..." pattern="acct_[a-zA-Z0-9]{8,}">
+<label for="email">Customer email</label>
+<input id="email" type="email" autocomplete="off" required placeholder="customer@example.com">
+<label for="description">Approved physical service</label>
+<textarea id="description" required maxlength="200" minlength="5" placeholder="Lawn maintenance at agreed address on agreed date"></textarea>
+<label for="amount">Approved total (USD)</label>
+<input id="amount" inputmode="decimal" type="text" required pattern="(?:[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?" placeholder="70.00">
+<label for="quote">Unique quote reference</label>
+<input id="quote" required minlength="8" maxlength="64" pattern="[A-Za-z0-9_-]{8,64}">
+<div class="amounts"><span>ShiftStack fee <strong id="fee">$0.00</strong> (10%)</span><span>Contractor <strong id="net">$0.00</strong>*</span></div>
+<small>* Before Stripe processing fees and any other adjustments. Taxes and fee responsibility must be handled separately.</small>
+<button id="submit" type="submit">Create secure Stripe invoice</button>
+</form>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<div id="invoice-result" class="hidden">
+<p style="margin-top:16px"><strong>Secure invoice:</strong> <a id="invoice-link" target="_blank" rel="noopener noreferrer">Open Stripe invoice</a></p>
+<button id="copy" class="secondary" type="button">Copy payment link</button>
+<p class="muted" style="margin-top:12px">Share this link with the customer. Check the payment status in the Stripe Dashboard. A link is not proof of payment.</p>
+</div>
+</section>
+<section><h2>Important safeguards</h2>
+<p>This tool is for an authorized ShiftStack operator, not a public customer checkout. Each quote creates a one-time Stripe invoice. Verify the connected account before billing; handle disputes and refunds through Stripe. Never type your Stripe secret key into this page.</p>
+</section>
+</main>
+<script>
+const byId=id=>document.getElementById(id);
+byId('quote').value='SS-'+crypto.randomUUID();
+let invoiceUrl='';
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
+function recalc(){
+ const m=/^(?:[1-9]\d{0,3})(?:\.\d{1,2})?$/.exec(byId('amount').value.trim());
+ const s=m?byId('amount').value.trim().split('.'):[];
+ const total=m?Number(s[0])*100+Number((s[1]||'').padEnd(2,'0')):0;
+ const fee=Math.floor((total*1000+5000)/10000);
+ byId('fee').textContent=money(fee);byId('net').textContent=money(total-fee);
+}
+byId('amount').addEventListener('input',recalc);
+byId('form').addEventListener('submit',async(e)=>{
+ e.preventDefault();invoiceUrl='';byId('invoice-result').classList.add('hidden');
+ const button=byId('submit'),status=byId('status');button.disabled=true;
+ status.className='status';status.textContent='Creating invoice...';
+ try {
+  const result=await fetch('/api/contractor-invoice',{
+   method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+byId('token').value},
+   body:JSON.stringify({
+    contractorAccountId:byId('account').value.trim(),customerEmail:byId('email').value.trim(),
+    serviceDescription:byId('description').value.trim(),amountUsd:byId('amount').value.trim(),
+    quoteId:byId('quote').value.trim()
+   })
+  });
+  const data=await result.json();
+  if(!result.ok)throw new Error(data.error||'Could not create invoice');
+  const link=new URL(data.invoiceUrl);
+  if(link.protocol!=='https:'||!(link.hostname==='stripe.com'||link.hostname.endsWith('.stripe.com')))
+   throw new Error('Unexpected Stripe invoice URL');
+  invoiceUrl=link.href;byId('invoice-link').href=invoiceUrl;
+  byId('invoice-result').classList.remove('hidden');
+  status.classList.add('good');status.textContent='Invoice created. Reference: '+data.invoiceId;
+  byId('quote').value='SS-'+crypto.randomUUID();
+ }catch(err){status.classList.add('bad');status.textContent=err.message||'Unexpected error';}
+ finally{button.disabled=false;}
+});
+byId('copy').addEventListener('click',async()=>{
+ if(!invoiceUrl)return;
+ try{await navigator.clipboard.writeText(invoiceUrl);byId('copy').textContent='Copied!';}
+ catch{byId('status').textContent='Copy unavailable; long-press the invoice link instead.';}
+});
+</script>
+</body></html>
