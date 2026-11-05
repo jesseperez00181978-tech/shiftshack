@@ -1,0 +1,79 @@
+name: Build ShiftStack Android
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: android
+    env:
+      BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.BUBBLEWRAP_KEYSTORE_PASSWORD }}
+      BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.BUBBLEWRAP_KEY_PASSWORD }}
+      SHIFTSTACK_KEY_ALIAS: ${{ secrets.SHIFTSTACK_KEY_ALIAS }}
+      SHIFTSTACK_KEYSTORE_BASE64: ${{ secrets.SHIFTSTACK_KEYSTORE_BASE64 }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build packages
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Install Bubblewrap CLI
+        run: npm install --global @bubblewrap/cli@1.27.0
+
+      - name: Validate signing secrets and install temporary keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in SHIFTSTACK_KEYSTORE_BASE64 SHIFTSTACK_KEY_ALIAS BUBBLEWRAP_KEYSTORE_PASSWORD BUBBLEWRAP_KEY_PASSWORD; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Required GitHub secret is missing: $name" >&2
+              exit 1
+            fi
+          done
+          key="$RUNNER_TEMP/shiftstack-upload-key.jks"
+          printf '%s' "$SHIFTSTACK_KEYSTORE_BASE64" | base64 --decode > "$key"
+          chmod 600 "$key"
+          echo "SHIFTSTACK_KEYSTORE_PATH=$key" >> "$GITHUB_ENV"
+          echo 'Temporary signing material installed.'
+
+      - name: Build signed APK and AAB
+        shell: bash
+        run: |
+          set -euo pipefail
+          bubblewrap updateConfig --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
+          bubblewrap build \
+            --manifest=twa-manifest.json \
+            --signingKeyPath="$SHIFTSTACK_KEYSTORE_PATH" \
+            --signingKeyAlias="$SHIFTSTACK_KEY_ALIAS"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiftstack-android-v4
+          path: |
+            android/app-release-signed.apk
+            android/app-release-bundle.aab
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Remove temporary keystore
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/shiftstack-upload-key.jks"

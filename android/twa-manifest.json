@@ -1,0 +1,50 @@
+{
+  "packageId": "com.jesseperez.shiftstack",
+  "host": "shiftshack.vercel.app",
+  "name": "ShiftStack",
+  "launcherName": "ShiftStack",
+  "display": "standalone",
+  "themeColor": "#00F2FE",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0F0F0F",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "https://shiftshack.vercel.app/512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./.secrets/shiftstack-upload-key.jks",
+    "alias": "upload"
+  },
+  "appVersionName": "1.0.4",
+  "appVersionCode": 4,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://shiftshack.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://shiftshack.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1.0.4"
+}
