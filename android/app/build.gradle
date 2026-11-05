@@ -55,7 +55,7 @@ android {
     namespace "com.jesseperez.shiftstack"
     defaultConfig {
         applicationId "com.jesseperez.shiftstack"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 36
         versionCode 4
         versionName "1.0.4"
