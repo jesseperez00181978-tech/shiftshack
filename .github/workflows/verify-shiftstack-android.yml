@@ -29,11 +29,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Verify preinstalled Android SDK
-        shell: bash
-        run: |
-          test -n "${ANDROID_HOME:-}"
-          command -v sdkmanager
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
 
       - name: Install SDK packages
         run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
