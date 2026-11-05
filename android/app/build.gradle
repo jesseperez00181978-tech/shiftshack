@@ -151,6 +151,14 @@ android {
         
     }
     buildTypes {
+        debug {
+            // Install diagnostic builds alongside the existing Play-signed ShiftStack.
+            // Production package ID and release signing are unchanged.
+            applicationIdSuffix ".diagnostic"
+            resValue "string", "appName", "ShiftStack Test"
+            resValue "string", "launcherName", "ShiftStack Test"
+            resValue "string", "providerAuthority", "com.jesseperez.shiftstack.diagnostic.fileprovider"
+        }
         release {
             minifyEnabled true
         }
