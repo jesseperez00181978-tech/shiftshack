@@ -1,0 +1,51 @@
+name: Verify ShiftStack Android wrapper
+
+on:
+  push:
+    branches:
+      - fix/android-launcher-v4
+    paths:
+      - 'android/**'
+      - '.github/workflows/verify-shiftstack-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Validate wrapper files and launch configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f gradle/wrapper/gradle-wrapper.jar
+          test -f gradle/wrapper/gradle-wrapper.properties
+          grep -Fq "'shiftshack.vercel.app'" app/build.gradle
+          grep -Fq 'versionCode 4' app/build.gradle
+          grep -Fq 'applicationId "com.jesseperez.shiftstack"' app/build.gradle
+
+      - name: Compile release sources without signing or publishing
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:compileReleaseJavaWithJavac --no-daemon
