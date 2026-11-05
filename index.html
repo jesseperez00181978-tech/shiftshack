@@ -1659,7 +1659,17 @@
 </nav>
 
 <script>
-let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+function readStoredJobs() {
+  try {
+    const stored = JSON.parse(localStorage.getItem("jobs") || "[]");
+    return Array.isArray(stored) ? stored : [];
+  } catch (error) {
+    console.error("Could not read saved jobs; starting with an empty list.", error);
+    return [];
+  }
+}
+
+let jobs = readStoredJobs();
 let currentFilter = "all";
 
 function save() {
