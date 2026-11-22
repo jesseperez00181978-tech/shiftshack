@@ -38,11 +38,13 @@ a{color:#8ae9fa;overflow-wrap:anywhere}.hidden{display:none}
 <input id="email" type="email" autocomplete="off" required placeholder="customer@example.com">
 <label for="description">Approved physical service</label>
 <textarea id="description" required maxlength="200" minlength="5" placeholder="Lawn maintenance at agreed address on agreed date"></textarea>
-<label for="amount">Approved total (USD)</label>
-<input id="amount" inputmode="decimal" type="text" required pattern="(?:[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?" placeholder="70.00">
+<label for="labor">Approved service labor (USD)</label>
+<input id="labor" inputmode="decimal" type="text" required pattern="(?:[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?" placeholder="500.00">
+<label for="materials">Approved materials (USD, optional)</label>
+<input id="materials" inputmode="decimal" type="text" pattern="(?:0|[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?" placeholder="0.00">
 <label for="quote">Unique quote reference</label>
 <input id="quote" required minlength="8" maxlength="64" pattern="[A-Za-z0-9_-]{8,64}">
-<div class="amounts"><span>ShiftStack fee <strong id="fee">$0.00</strong> (10%)</span><span>Contractor <strong id="net">$0.00</strong>*</span></div>
+<div class="amounts"><span>Total invoice <strong id="total">$0.00</strong></span><span>ShiftStack fee <strong id="fee">$0.00</strong> (10% of labor)</span><span>Contractor gross <strong id="net">$0.00</strong>*</span></div>
 <small>* Before Stripe processing fees and any other adjustments. Taxes and fee responsibility must be handled separately.</small>
 <button id="submit" type="submit">Create secure Stripe invoice</button>
 </form>
@@ -62,14 +64,24 @@ const byId=id=>document.getElementById(id);
 byId('quote').value='SS-'+crypto.randomUUID();
 let invoiceUrl='';
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
-function recalc(){
- const m=/^(?:[1-9]\d{0,3})(?:\.\d{1,2})?$/.exec(byId('amount').value.trim());
- const s=m?byId('amount').value.trim().split('.'):[];
- const total=m?Number(s[0])*100+Number((s[1]||'').padEnd(2,'0')):0;
- const fee=Math.floor((total*1000+5000)/10000);
- byId('fee').textContent=money(fee);byId('net').textContent=money(total-fee);
+function cents(id){
+ const raw=byId(id).value.trim();
+ if(!/^(?:0|[1-9]\d{0,3})(?:\.\d{1,2})?$/.test(raw))return null;
+ const parts=raw.split('.');
+ return Number(parts[0])*100+Number((parts[1]||'').padEnd(2,'0'));
 }
-byId('amount').addEventListener('input',recalc);
+function recalc(){
+ const labor=cents('labor');
+ const materials=byId('materials').value.trim()===''?0:cents('materials');
+ const valid=labor!==null && labor>=1000 && materials!==null && labor+materials<=999999;
+ const total=valid?labor+materials:0;
+ const fee=valid?Math.floor((labor*1000+5000)/10000):0;
+ byId('total').textContent=money(total);
+ byId('fee').textContent=money(fee);
+ byId('net').textContent=money(total-fee);
+}
+byId('labor').addEventListener('input',recalc);
+byId('materials').addEventListener('input',recalc);
 byId('form').addEventListener('submit',async(e)=>{
  e.preventDefault();invoiceUrl='';byId('invoice-result').classList.add('hidden');
  const button=byId('submit'),status=byId('status');button.disabled=true;
@@ -79,7 +91,8 @@ byId('form').addEventListener('submit',async(e)=>{
    method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+byId('token').value},
    body:JSON.stringify({
     contractorAccountId:byId('account').value.trim(),customerEmail:byId('email').value.trim(),
-    serviceDescription:byId('description').value.trim(),amountUsd:byId('amount').value.trim(),
+    serviceDescription:byId('description').value.trim(),laborUsd:byId('labor').value.trim(),
+    materialsUsd:byId('materials').value.trim()||'0',
     quoteId:byId('quote').value.trim()
    })
   });
