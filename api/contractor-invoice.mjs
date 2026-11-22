@@ -31,8 +31,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST' });
 
   // Fail closed. A new branch or preview must not issue live invoices by accident.
-  if (process.env.CONTRACTOR_PAYMENTS_ENABLED !== 'true'
-      || !/^sk_(?:test|live)_/.test(process.env.STRIPE_SECRET_KEY || '')
+  if (process.env.VERCEL_ENV === 'production'
+      || process.env.CONTRACTOR_PAYMENTS_ENABLED !== 'true'
+      || !/^sk_test_/.test(process.env.STRIPE_SECRET_KEY || '')
       || !process.env.CONTRACTOR_ADMIN_TOKEN) {
     return res.status(503).json({ error: 'Contractor invoicing is not configured' });
   }
@@ -69,16 +70,28 @@ export default async function handler(req, res) {
       application_fee_amount: String(quote.platformFeeCents),
       'transfer_data[destination]': quote.contractorAccountId,
       'metadata[shiftstack_quote_id]': quote.quoteId,
-      'metadata[shiftstack_payment_type]': 'physical_contractor_service'
+      'metadata[shiftstack_payment_type]': 'physical_contractor_service',
+      'metadata[shiftstack_labor_cents]': String(quote.laborCents),
+      'metadata[shiftstack_materials_cents]': String(quote.materialsCents)
     }, prefix + '-invoice');
 
     await stripeRequest('/invoiceitems', {
       customer: customer.id,
       invoice: invoice.id,
-      amount: String(quote.amountCents),
+      amount: String(quote.laborCents),
       currency: 'usd',
-      description: quote.serviceDescription
-    }, prefix + '-item');
+      description: 'Service labor: ' + quote.serviceDescription
+    }, prefix + '-labor');
+
+    if (quote.materialsCents > 0) {
+      await stripeRequest('/invoiceitems', {
+        customer: customer.id,
+        invoice: invoice.id,
+        amount: String(quote.materialsCents),
+        currency: 'usd',
+        description: 'Materials for approved service'
+      }, prefix + '-materials');
+    }
 
     const finalized = await stripeRequest('/invoices/' + encodeURIComponent(invoice.id) + '/finalize', {
       auto_advance: 'false'
@@ -90,6 +103,8 @@ export default async function handler(req, res) {
       invoiceUrl: finalized.hosted_invoice_url,
       quoteId: quote.quoteId,
       amountCents: quote.amountCents,
+      laborCents: quote.laborCents,
+      materialsCents: quote.materialsCents,
       platformFeeCents: quote.platformFeeCents,
       status: finalized.status
     });
