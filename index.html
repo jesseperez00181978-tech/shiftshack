@@ -1633,9 +1633,9 @@
       <summary>Tools, backup & privacy</summary>
       <div class="utility-grid">
         <button class="secondary-action" onclick="testLocation()">📍 My Location</button>
-        <button class="secondary-action" onclick="exportJobs()">💾 Backup Jobs</button>
-        <label class="import" for="importFile">📂 Restore Backup</label>
-        <input type="file" id="importFile" onchange="importJobs(event)">
+        <button class="secondary-action" onclick="exportShiftStackData()">💾 Backup All Data</button>
+        <button class="secondary-action" onclick="document.getElementById('shiftStackImportFile').click()">📂 Import All Data</button>
+        
         <button class="secondary-action" onclick="showAbout()">ℹ️ About</button>
         <button class="secondary-action" onclick="showPrivacy()">🔒 Privacy</button>
       </div>
