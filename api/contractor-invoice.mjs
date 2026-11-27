@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST' });
 
   // Fail closed. A new branch or preview must not issue live invoices by accident.
-  if (process.env.VERCEL_ENV === 'production'
+  if (process.env.VERCEL_ENV !== 'preview'
       || process.env.CONTRACTOR_PAYMENTS_ENABLED !== 'true'
       || !/^sk_test_/.test(process.env.STRIPE_SECRET_KEY || '')
       || !process.env.CONTRACTOR_ADMIN_TOKEN) {
@@ -45,9 +45,14 @@ export default async function handler(req, res) {
       return res.status(415).json({ error: 'JSON required' });
     }
     if (Number(req.headers['content-length'] || 0) > 8192) return res.status(413).json({ error: 'Request too large' });
-    const input = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    if (JSON.stringify(input || {}).length > 8192) return res.status(413).json({ error: 'Request too large' });
-    const quote = validateQuote(input);
+    let quote;
+    try {
+      const input = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      if (JSON.stringify(input || {}).length > 8192) return res.status(413).json({ error: 'Request too large' });
+      quote = validateQuote(input);
+    } catch (err) {
+      return res.status(400).json({ error: err instanceof SyntaxError ? 'Invalid JSON' : err.message });
+    }
 
     // Confirm this is a Stripe account connected to this platform, ready to receive funds.
     const contractor = await stripeRequest('/accounts/' + encodeURIComponent(quote.contractorAccountId));
@@ -109,9 +114,6 @@ export default async function handler(req, res) {
       status: finalized.status
     });
   } catch (err) {
-    if (err instanceof SyntaxError || /^Enter |^Describe |^Use |^Price |^Invoice amount |^Invalid request/.test(err.message || '')) {
-      return res.status(400).json({ error: err.message });
-    }
     // Never log tokens, Stripe keys, email addresses, or request bodies.
     console.error('Contractor invoice creation failed', err?.name || 'Error');
     return res.status(502).json({ error: 'Unable to create invoice. Check Stripe dashboard before retrying this quote ID.' });
