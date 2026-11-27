@@ -42,3 +42,47 @@ test('token comparison helper accepts exact token only', () => {
   assert.equal(safeCompare('abcdef','abcdeg'),false);
   assert.equal(safeCompare('ab','abcdef'),false);
 });
+
+import handler from '../api/contractor-invoice.mjs';
+
+test('invoice endpoint rejects unsafe environments and invalid requests without contacting Stripe', async () => {
+  const names = ['VERCEL_ENV', 'CONTRACTOR_PAYMENTS_ENABLED', 'STRIPE_SECRET_KEY', 'CONTRACTOR_ADMIN_TOKEN'];
+  const original = Object.fromEntries(names.map(name => [name, process.env[name]]));
+  const originalFetch = globalThis.fetch;
+  let stripeCalls = 0;
+  globalThis.fetch = async () => { stripeCalls++; throw new Error('Unexpected network request'); };
+  const token = 'dummy-test-token-not-a-real-secret';
+  const invoke = async (overrides = {}) => {
+    const req = { method: 'POST', headers: { authorization: 'Bearer ' + token, 'content-type': 'application/json' }, body: valid, ...overrides };
+    const res = { code: 0, setHeader() {}, status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
+    await handler(req, res);
+    return res;
+  };
+  try {
+    Object.assign(process.env, { VERCEL_ENV: 'preview', CONTRACTOR_PAYMENTS_ENABLED: 'true', STRIPE_SECRET_KEY: 'sk_test_dummy', CONTRACTOR_ADMIN_TOKEN: token });
+    for (const env of ['production', 'development', 'unknown', undefined]) {
+      if (env === undefined) delete process.env.VERCEL_ENV;
+      else process.env.VERCEL_ENV = env;
+      assert.equal((await invoke()).code, 503, 'unsafe environment: ' + env);
+    }
+    process.env.VERCEL_ENV = 'preview';
+    process.env.CONTRACTOR_PAYMENTS_ENABLED = 'false';
+    assert.equal((await invoke()).code, 503);
+    process.env.CONTRACTOR_PAYMENTS_ENABLED = 'true';
+    process.env.STRIPE_SECRET_KEY = 'sk_live_dummy';
+    assert.equal((await invoke()).code, 503);
+    process.env.STRIPE_SECRET_KEY = 'sk_test_dummy';
+    assert.equal((await invoke({headers: {'content-type': 'application/json'}})).code, 401);
+    assert.equal((await invoke({method: 'GET'})).code, 405);
+    for (const body of [{...valid, laborUsd: '-2'}, {...valid, materialsUsd: '-1'}, {...valid, laborUsd: '9.99'}, {...valid, laborUsd: '9999.99', materialsUsd: '0.01'}, '{']) {
+      assert.equal((await invoke({body})).code, 400);
+    }
+    assert.equal(stripeCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const name of names) {
+      if (original[name] === undefined) delete process.env[name];
+      else process.env[name] = original[name];
+    }
+  }
+});
